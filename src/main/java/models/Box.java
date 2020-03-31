@@ -3,15 +3,15 @@ package models;
 import java.util.List;
 
 public class Box {
-	private int id;
+	private long id;
 	private int number;
 	private Location location;
 	List<Instrument> instruments;
 	List<Integer> instrumentsNumbers;
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public int getNumber() {
