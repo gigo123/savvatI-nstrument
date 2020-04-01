@@ -13,7 +13,7 @@ import models.Location;
 public class SqliteLocationDAO implements LocationDAO {
 	private final static String SELECT_ID_QUERY = "SELECT * FROM location WHERE id = ?";
 	private final static String SELECT_NAME_QUERY = "SELECT * FROM location WHERE NAME = ?";
-	private final static String INSERT_QUERY = "INSERT INTO location(name, boxes, comment)" + " VALUES(?, ?)";
+	private final static String INSERT_QUERY = "INSERT INTO location(name, boxes, comment)" + " VALUES(?,?,?)";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError= false;
 	public boolean isSqlError() {
