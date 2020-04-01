@@ -17,6 +17,15 @@
 	<bean id="BoxDAO" class="sqlite.SqliteBoxDAO">
 		<property name="conectionHolder" ref="connectrionHolder" />
 	</bean>
+	<bean id="ExDocDAO" class="sqlite.SqliteExDocDAO">
+		<property name="conectionHolder" ref="connectrionHolder" />
+	</bean>
+	<bean id="InDocDAO" class="sqlite.SqliteInDocDAO">
+		<property name="conectionHolder" ref="connectrionHolder" />
+	</bean>
+	<bean id="OutDOcDAO" class="sqlite.SqliteOutDocDAO">
+		<property name="conectionHolder" ref="connectrionHolder" />
+	</bean>
 	<bean id="connectrionHolder" class="sqlite.SQLConectionHolder">
 		<property name="connString" value="${jdbc.url}" />
 	</bean>
