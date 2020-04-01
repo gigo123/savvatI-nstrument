@@ -1,6 +1,7 @@
 package sqlite;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,13 +17,15 @@ import models.Location;
 public class SqliteExDocDAO implements ExDocDAO {
 
 	private final static String SELECT_ID_QUERY = "SELECT * FROM exDoc WHERE id = ?";
-	private final static String SELECT_LOCATION_QUERY = "SELECT * FROM exDoc WHERE outLocation = ? OR inLocation = ?"+
-	"AND outBox = ? OR inBox = ?";
+	private final static String SELECT_LOCATION_QUERY = "SELECT * FROM exDoc WHERE outLocation = ? OR inLocation = ?"
+			+ "AND outBox = ? OR inBox = ?";
 	private final static String SELECT_INST_QUERY = "SELECT * FROM exDoc WHERE instrument = ? ";
 	private final static String SELECT_DATE_QUERY = "SELECT * FROM exDoc WHERE date = ?";
-	private final static String INSERT_QUERY = "INSERT INTO location(name, boxes, comment)" + " VALUES(?, ?)";
+	private final static String INSERT_QUERY = "INSERT INTO exDoc(outLocation, inLocation, outBox, "
+			+ "inBox, date, instrument, amount)" + " VALUES(?,?,?,?,?,?,?)";
 	private SQLConectionHolder conectionHolder;
-	private boolean sqlError= false;
+	private boolean sqlError = false;
+
 	public boolean isSqlError() {
 		return sqlError;
 	}
@@ -38,10 +41,41 @@ public class SqliteExDocDAO implements ExDocDAO {
 	public void setConectionHolder(SQLConectionHolder conectionHolder) {
 		this.conectionHolder = conectionHolder;
 	}
+
 	@Override
 	public boolean createExDoc(ExDoc exDoc) {
-	
-		return false;
+		Connection conn = conectionHolder.getConnection();
+		PreparedStatement prepSt = null;
+		if (!conectionHolder.isError()) {
+			try {
+				prepSt = conn.prepareStatement(INSERT_QUERY);
+				prepSt.setInt(1, exDoc.getOutLocation().getId());
+				prepSt.setInt(2, exDoc.getInLocation().getId());
+				prepSt.setInt(3, (int) exDoc.getOutBox().getId());
+				prepSt.setInt(4, (int) exDoc.getInBox().getId());
+				prepSt.setDate(5, exDoc.getDate());
+				prepSt.setInt(6, (int) exDoc.getInstrument().getId());
+				prepSt.setFloat(7, exDoc.getAmount());
+				prepSt.execute();
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+				return false;
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
+			}
+			return true;
+		} else {
+			sqlError = true;
+			return false;
+		}
 	}
 
 	@SuppressWarnings("null")
@@ -53,7 +87,7 @@ public class SqliteExDocDAO implements ExDocDAO {
 		SqliteInstrumentDAO instDao = new SqliteInstrumentDAO();
 		SqliteBoxDAO boxDao = new SqliteBoxDAO();
 		List<ExDoc> docList = new ArrayList<ExDoc>();
-		ExDoc exdoc= new ExDoc();
+		ExDoc exdoc = new ExDoc();
 		Connection conn = conectionHolder.getConnection();
 		if (!conectionHolder.isError()) {
 			try {
@@ -65,8 +99,8 @@ public class SqliteExDocDAO implements ExDocDAO {
 					break;
 				}
 				case 2: {
-					prepSt = conn.prepareStatement(SELECT_LOCATION_QUERY);
-					prepSt.setString(1, (String) obj);
+					prepSt = conn.prepareStatement(SELECT_DATE_QUERY);
+					prepSt.setDate(1, (Date) obj);
 					rs = prepSt.executeQuery();
 					break;
 				}
@@ -77,12 +111,13 @@ public class SqliteExDocDAO implements ExDocDAO {
 					break;
 				}
 				case 4: {
-					prepSt = conn.prepareStatement(SELECT_DATE_QUERY);
+					prepSt = conn.prepareStatement(SELECT_LOCATION_QUERY);
 					prepSt.setInt(1, (int) obj);
+					prepSt.setInt(2, (int) obj2);
 					rs = prepSt.executeQuery();
 					break;
 				}
-			
+
 				default:
 					sqlError = true;
 				}
@@ -99,7 +134,7 @@ public class SqliteExDocDAO implements ExDocDAO {
 						exdoc.setOutLocation(locDao.getLocById(rs.getInt("outLocation")));
 						return exdoc;
 					} else {
-						exdoc= new ExDoc();
+						exdoc = new ExDoc();
 						exdoc.setId(rs.getInt("id"));
 						exdoc.setInLocation(locDao.getLocById(rs.getInt("inLocation")));
 						exdoc.setInBox(boxDao.getBoxByID(rs.getInt("inBox")));
@@ -130,28 +165,29 @@ public class SqliteExDocDAO implements ExDocDAO {
 		}
 		return docList;
 	}
+
 	@Override
 	public ExDoc getExDocById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return (ExDoc) selectQ(id, null, 1);
+
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ExDoc> getExDocByDate(String date) {
-		// TODO Auto-generated method stub
-		return null;
+		return (List<ExDoc>) selectQ(date, null, 2);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ExDoc> getExDocByInstrum(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return (List<ExDoc>) selectQ(id, null, 3);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ExDoc> getExDocByBox(long idB, long idL) {
-		// TODO Auto-generated method stub
-		return null;
+		return (List<ExDoc>) selectQ(idB, idL, 4);
 	}
 
 	@Override
