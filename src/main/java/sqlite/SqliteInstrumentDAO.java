@@ -20,6 +20,7 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 	private final static String SELECT_BOX_QUERY = "SELECT * FROM box WHERE  box = ? AND loaction = ?";
 	private final static String SELECT_LOC_QUERY = "SELECT * FROM box WHERE  loaction = ?";
 	private final static String SELECT_ALL_QUERY = "SELECT * FROM box";
+	private final static String INSERT_QUERY = "INSERT INTO instrumen(name, measure, comment,)" + " VALUES(?, ?, ?)";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
 
@@ -40,13 +41,13 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 	}
 
 	@SuppressWarnings("null")
-	private Object selectQ(Object obj,Object obj2, int type) {
+	private Object selectQ(Object obj, Object obj2, int type) {
 
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
 		Instrument inst = null;
-		SqliteLocationDAO locDao =new SqliteLocationDAO();
-		List<Box> boxList =new ArrayList<Box>();
+		SqliteLocationDAO locDao = new SqliteLocationDAO();
+		List<Box> boxList = new ArrayList<Box>();
 		Connection conn = conectionHolder.getConnection();
 		if (!conectionHolder.isError()) {
 			try {
@@ -82,7 +83,7 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 					break;
 				}
 				case 6: {
-					rs= prepSt.executeQuery(SELECT_ALL_QUERY);
+					rs = prepSt.executeQuery(SELECT_ALL_QUERY);
 					break;
 				}
 				default:
@@ -97,8 +98,8 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 						inst.setMeasure(rs.getString("measure"));
 						return inst;
 					} else {
-					
-						Box box =new Box();
+
+						Box box = new Box();
 						box.setId(rs.getInt("id"));
 						box.setInstruments(getInstrumentByID(rs.getInt("instruments")));
 						box.setInstrumentsNumbers(rs.getFloat("instrumentsNumbers"));
@@ -130,48 +131,68 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 
 	@Override
 	public Instrument getInstrumentByID(long id) {
-		return (Instrument)selectQ(id,null,1);
+		return (Instrument) selectQ(id, null, 1);
 	}
 
 	@Override
 	public Instrument getInstrumentByName(String name) {
-			return (Instrument)selectQ(name,null,2);
+		return (Instrument) selectQ(name, null, 2);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Box> getInstrumentByNameL(String name) {
-		return (List<Box>)selectQ(name,null,3);
+		return (List<Box>) selectQ(name, null, 3);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Box> getInstrumentByBox(long idB, int idL) {
-		return (List<Box>)selectQ(idB,idL,4);
+		return (List<Box>) selectQ(idB, idL, 4);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Box> getInstrumentByLocation(Location loacation) {
-		return (List<Box>)selectQ(loacation,null,5);
+		return (List<Box>) selectQ(loacation, null, 5);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Box> getAllInstrument() {
-		return (List<Box>)selectQ(null,null,6);
+		return (List<Box>) selectQ(null, null, 6);
 	}
 
 	@Override
-	public boolean createInstrument(String name, String measure, String comment) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean createInstrument(String name, String measure) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean createInstrument(Instrument instrument) {
+		Connection conn = conectionHolder.getConnection();
+		PreparedStatement prepSt = null;
+		if (!conectionHolder.isError()) {
+			try {
+				prepSt = conn.prepareStatement(INSERT_QUERY);
+				prepSt.setString(1, instrument.getName());
+				prepSt.setString(2, instrument.getMeasure());
+				prepSt.setString(3, instrument.getComment());
+				prepSt.execute();
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+				return false;
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
+			}
+			return true;
+		} else {
+			sqlError = true;
+			return false;
+		}
 	}
 
 	@Override
