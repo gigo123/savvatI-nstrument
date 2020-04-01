@@ -8,10 +8,10 @@ import models.Instrument;
 import models.Location;
 
 public interface OutDocDAO {
-	public boolean OutDoc(Location outLocation, Box outBox, String date, Instrument instrument, float amount);
+	public boolean OutDoc(OutDoc outDoc);
 	public OutDoc getOutDocById(int id);
 	public List<OutDoc> getOutDocByDate(String date);
 	public List<OutDoc> getOutDocByInstrum(long id);
-	public List<OutDoc> getOutDocByBox(long id);
+	public List<OutDoc> getOutDocByBox(long idB,long idL);
 	public boolean deleteInDoc(int id);
 }
