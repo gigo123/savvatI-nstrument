@@ -6,8 +6,8 @@ public class Box {
 	private long id;
 	private int number;
 	private Location location;
-	List<Instrument> instruments;
-	List<Integer> instrumentsNumbers;
+	Instrument instrument;
+	int amount;
 	public long getId() {
 		return id;
 	}
@@ -26,24 +26,24 @@ public class Box {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-	public List<Instrument> getInstruments() {
-		return instruments;
+	public Instrument getInstruments() {
+		return instrument;
 	}
-	public void setInstruments(List<Instrument> instruments) {
-		this.instruments = instruments;
+	public void setInstruments(Instrument instruments) {
+		this.instrument = instruments;
 	}
-	public List<Integer> getInstrumentsNumbers() {
-		return instrumentsNumbers;
+	public int getInstrumentsNumbers() {
+		return amount;
 	}
-	public void setInstrumentsNumbers(List<Integer> instrumentsNumbers) {
-		this.instrumentsNumbers = instrumentsNumbers;
+	public void setInstrumentsNumbers(int instrumentsNumbers) {
+		amount = instrumentsNumbers;
 	}
-	public Box(int number, Location location, List<Instrument> instruments, List<Integer> instrumentsNumbers) {
+	public Box(int number, Location location, Instrument instruments, int instrumentsNumbers) {
 		super();
 		this.number = number;
 		this.location = location;
-		this.instruments = instruments;
-		this.instrumentsNumbers = instrumentsNumbers;
+		this.instrument = instruments;
+		this.amount= instrumentsNumbers;
 	}
 	public Box(int number, Location location) {
 		super();
