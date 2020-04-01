@@ -6,8 +6,9 @@ public class Box {
 	private long id;
 	private int number;
 	private Location location;
-	Instrument instrument;
-	int amount;
+	private Instrument instrument;
+	private float amount;
+	
 	public long getId() {
 		return id;
 	}
@@ -32,13 +33,13 @@ public class Box {
 	public void setInstruments(Instrument instruments) {
 		this.instrument = instruments;
 	}
-	public int getInstrumentsNumbers() {
+	public float getInstrumentsNumbers() {
 		return amount;
 	}
-	public void setInstrumentsNumbers(int instrumentsNumbers) {
+	public void setInstrumentsNumbers(float instrumentsNumbers) {
 		amount = instrumentsNumbers;
 	}
-	public Box(int number, Location location, Instrument instruments, int instrumentsNumbers) {
+	public Box(int number, Location location, Instrument instruments, float instrumentsNumbers) {
 		super();
 		this.number = number;
 		this.location = location;
