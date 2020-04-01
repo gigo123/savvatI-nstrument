@@ -42,7 +42,7 @@ public class SqliteLocationDAO implements LocationDAO {
 	public Location getLocById(int id) {
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
-		Location loc = null;
+		Location loc = new Location();
 		Connection conn = conectionHolder.getConnection();
 		if(!conectionHolder.isError()){
 		try {
