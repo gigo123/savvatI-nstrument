@@ -13,7 +13,6 @@ public interface InstrumentDAO {
 	public List<Box> getInstrumentByBox(long idB,int idL);
 	public List<Box> getInstrumentByLocation(Location loacation);
 	public List<Box> getAllInstrument();
-	public boolean createInstrument(String name, String measure, String comment);
-	public boolean createInstrument(String name, String measure);
+	public boolean createInstrument(Instrument instrument);
 	public boolean deleteInstrument(int id);
 }
