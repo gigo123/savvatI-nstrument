@@ -7,7 +7,7 @@
    http://www.springframework.org/schema/context
 	http://www.springframework.org/schema/context/spring-context.xsd"><!-- bean definitions here -->
 	<context:property-placeholder
-		location="classpath:shop.properties" />
+		location="classpath:instrument.properties" />
 	<bean id="InstrumentDAO" class="sqlite.SqliteInstrumentDAO">
 		<property name="conectionHolder" ref="connectrionHolder" />
 	</bean>
