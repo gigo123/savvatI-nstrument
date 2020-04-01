@@ -13,6 +13,7 @@ import models.Location;
 public class SqliteLocationDAO implements LocationDAO {
 	private final static String SELECT_ID_QUERY = "SELECT * FROM location WHERE id = ?";
 	private final static String SELECT_NAME_QUERY = "SELECT * FROM location WHERE NAME = ?";
+	private final static String INSERT_QUERY = "INSERT INTO location(name, boxes, comment)" + " VALUES(?, ?)";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError= false;
 	public boolean isSqlError() {
@@ -32,9 +33,34 @@ public class SqliteLocationDAO implements LocationDAO {
 	}
 
 	@Override
-	public boolean createLocation(String name, boolean boxes) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean createLocation(Location location) {
+		Connection conn = conectionHolder.getConnection();
+		PreparedStatement prepSt = null;
+		if (!conectionHolder.isError()) {
+			try {
+				prepSt = conn.prepareStatement(INSERT_QUERY);
+				prepSt.setString(1, location.getName());
+				prepSt.setBoolean(2, location.isBoxes());
+				prepSt.execute();
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+				return false;
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
+			}
+			return true;
+		} else {
+			sqlError = true;
+			return false;
+		}
 	}
 
 	@SuppressWarnings("null")
