@@ -40,13 +40,14 @@ public class SQLConectionHolder {
 		if (conn == null)
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
-				//conn = DriverManager.getConnection("jdbc:mysql://localhost/iteashop?" + "user=root&password=");
+				//conn = DriverManager.getConnection("jdbc:mysql://localhost/instrument1?" + "user=root&password=");
 				conn = DriverManager.getConnection(connString);
 				error= false;
 			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
 				error= true;
 				errorMessage = "DataBase conection error";
 				System.out.println("DataBase conection error");
+				System.out.println(ex);
 			} catch (SQLException ex) {
 				error= true;
 				errorMessage = "SQLException: " + ex.getMessage();
