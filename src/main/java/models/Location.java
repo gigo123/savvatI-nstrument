@@ -29,6 +29,10 @@ public class Location {
 		this.name = name;
 		this.boxes = boxes;
 	}
+	@Override
+	public String toString() {
+		return "Location [id=" + id + ", name=" + name + ", boxes=" + boxes + "]";
+	}
 	
 
 }
