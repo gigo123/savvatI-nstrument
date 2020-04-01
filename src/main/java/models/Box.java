@@ -1,6 +1,5 @@
 package models;
 
-import java.util.List;
 
 public class Box {
 	private long id;

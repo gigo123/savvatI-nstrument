@@ -1,5 +1,10 @@
 package sqlite;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.BoxDAO;
@@ -9,10 +14,66 @@ import models.Location;
 
 public class SqliteBoxDAO implements BoxDAO{
 
+	private final static String SELECT_ID_QUERY = "SELECT * FROM box WHERE id = ?";
+	private final static String SELECT_NUMBER_QUERY = "SELECT * FROM box WHERE number = ? AND location =?";
+	private final static String INSERT_QUERY = "INSERT INTO box(number, location, instrument,amount)" + " VALUES(?, ?, ?,?)";
+	private SQLConectionHolder conectionHolder;
+	private boolean sqlError = false;
+
+	public boolean isSqlError() {
+		return sqlError;
+	}
+
+	public void setSqlError(boolean sqlError) {
+		this.sqlError = sqlError;
+	}
+
+	public SQLConectionHolder getConectionHolder() {
+		return conectionHolder;
+	}
+
+	public void setConectionHolder(SQLConectionHolder conectionHolder) {
+		this.conectionHolder = conectionHolder;
+	}
 	@Override
 	public Box getBoxByID(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		ResultSet rs = null;
+		PreparedStatement prepSt = null;
+		Box box = new Box();
+		Connection conn = conectionHolder.getConnection();
+		SqliteLocationDAO locDao = new SqliteLocationDAO();
+		SqliteInstrumentDAO instDao = new SqliteInstrumentDAO();
+		if(!conectionHolder.isError()){
+		try {
+			prepSt = conn.prepareStatement(SELECT_ID_QUERY);
+			prepSt.setInt(1, (int)id);
+			rs = prepSt.executeQuery();
+
+			while (rs.next()) {
+				box.setId(rs.getInt("id"));
+				box.setInstruments(instDao.getInstrumentByID(rs.getInt("instrument")));
+				box.setInstrumentsNumbers(rs.getFloat(("amount")));
+				box.setLocation(locDao.getLocById(rs.getInt("location")));
+				box.setNumber(rs.getInt("number"));
+			}
+			conectionHolder.closeConnection();
+		} catch (SQLException e) {
+			sqlError=true;
+			e.printStackTrace();
+		} finally {
+			if (prepSt != null) {
+				try {
+					prepSt.close();
+				} catch (SQLException sqlEx) {
+				}
+				prepSt = null;
+			}
+		}
+		}
+		else {
+			sqlError=true;
+		}
+		return box;
 	}
 
 	@Override
@@ -22,22 +83,81 @@ public class SqliteBoxDAO implements BoxDAO{
 	}
 
 	@Override
-	public Box getBoxByNumber(int number, Location loacation) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Box> getBoxByNumber(int number, int idLocation) {
+		ResultSet rs = null;
+		PreparedStatement prepSt = null;
+		Box box = new Box();
+		Connection conn = conectionHolder.getConnection();
+		SqliteLocationDAO locDao = new SqliteLocationDAO();
+		SqliteInstrumentDAO instDao = new SqliteInstrumentDAO();
+		List<Box> boxList = new ArrayList<Box>();
+		if(!conectionHolder.isError()){
+		try {
+			prepSt = conn.prepareStatement(SELECT_NUMBER_QUERY);
+			prepSt.setInt(1, number);
+			prepSt.setInt(2, idLocation);
+			rs = prepSt.executeQuery();
+
+			while (rs.next()) {
+				box = new Box();
+				box.setId(rs.getInt("id"));
+				box.setInstruments(instDao.getInstrumentByID(rs.getInt("instrument")));
+				box.setInstrumentsNumbers(rs.getFloat(("amount")));
+				box.setLocation(locDao.getLocById(rs.getInt("location")));
+				box.setNumber(rs.getInt("number"));
+				boxList.add(box);
+			}
+			conectionHolder.closeConnection();
+		} catch (SQLException e) {
+			sqlError=true;
+			e.printStackTrace();
+		} finally {
+			if (prepSt != null) {
+				try {
+					prepSt.close();
+				} catch (SQLException sqlEx) {
+				}
+				prepSt = null;
+			}
+		}
+		}
+		else {
+			sqlError=true;
+		}
+		return boxList;
 	}
 
 	@Override
-	public boolean createBox(int number, Location location, List<Instrument> instruments,
-			List<Integer> instrumentsNumbers) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean createBox(int number, Location location) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean createBox(Box box) {
+		Connection conn = conectionHolder.getConnection();
+		PreparedStatement prepSt = null;
+		if (!conectionHolder.isError()) {
+			try {
+				prepSt = conn.prepareStatement(INSERT_QUERY);
+				prepSt.setInt(1, box.getNumber());
+				prepSt.setInt(2, box.getLocation().getId());
+				prepSt.setInt(3, (int)box.getInstruments().getId());
+				prepSt.setFloat(4, box.getInstrumentsNumbers());
+				prepSt.execute();
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+				return false;
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
+			}
+			return true;
+		} else {
+			sqlError = true;
+			return false;
+		}
 	}
 
 	@Override
