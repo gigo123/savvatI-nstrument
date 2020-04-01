@@ -16,7 +16,7 @@ import models.Location;
 
 public class SqliteInDocDAO implements InDocDAO{
 	private final static String SELECT_ID_QUERY = "SELECT * FROM inDoc WHERE id = ?";
-	private final static String SELECT_LOCATION_QUERY = "SELECT * FROM inDoc WHERE outLocation = ? OR inLocation = ?"
+	private final static String SELECT_LOCATION_QUERY = "SELECT * FROM inDoc WHERE inLocation = ?"
 			+ "AND outBox = ? OR inBox = ?";
 	private final static String SELECT_INST_QUERY = "SELECT * FROM inDoc WHERE instrument = ? ";
 	private final static String SELECT_DATE_QUERY = "SELECT * FROM inDoc WHERE date = ?";
@@ -177,7 +177,7 @@ public class SqliteInDocDAO implements InDocDAO{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<InDoc> getInDocByBox(long idB,long idL) {
-		return (List<InDoc> ) selectQ(idB, idL, 3);
+		return (List<InDoc> ) selectQ(idB, idL, 4);
 	}
 
 	@Override
