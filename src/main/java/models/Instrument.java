@@ -35,6 +35,7 @@ public class Instrument {
 		super();
 		this.name = name;
 		this.measure = measure;
+		this.comment="";
 	}
 	public Instrument(String name, String measure, String comment) {
 		this(name, measure);
