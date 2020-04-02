@@ -11,31 +11,59 @@ import sqlite.SQLConectionHolder;
 import sqlite.SqliteLocationDAO;
 
 class SQLLoocation {
+	SqliteLocationDAO locationDAO;
+	
+	void initConnection() {
+		SQLConectionHolder conectHolder = new SQLConectionHolder();
+		conectHolder.setConnString("jdbc:mysql://localhost/instrument1?user=root&password=");
+		locationDAO = new SqliteLocationDAO();
+		locationDAO.setConectionHolder(conectHolder);
+	}
 
 	@Test
 	void setConnection() {
-		SQLConectionHolder conectHolder = new SQLConectionHolder();
-		conectHolder.setConnString("jdbc:mysql://localhost/instrument1?user=root&password=");
-		SqliteLocationDAO locationDAO = new SqliteLocationDAO();
-		locationDAO.setConectionHolder(conectHolder);
+		initConnection();
 		SQLConectionHolder conectHolder2  = locationDAO.getConectionHolder();
-		assertTrue(conectHolder2!=null,"connetion must not be null");
+		Connection conn =conectHolder2.getConnection();
+		assertTrue(conn!=null,"connetion must not be null");
 	}
 	@Test
 	void createLocation() {
-		SqliteLocationDAO locationDAO = new SqliteLocationDAO();
+		SqliteLocationDAO locationDAOc = new SqliteLocationDAO();
 		Location location = new Location();
 		location.setName("test1");
 		location.setBoxes(false);
-		locationDAO.createLocation(location);
-		boolean error = locationDAO.hasError();
+		locationDAOc.createLocation(location);
+		boolean error = locationDAOc.hasError();
 		assertTrue(error,"must be error");
-		SQLConectionHolder conectHolder = new SQLConectionHolder();
-		conectHolder.setConnString("jdbc:mysql://localhost/instrument1?user=root&password=");
-		locationDAO.setConectionHolder(conectHolder);
+		initConnection();
 		locationDAO.createLocation(location);
 		error = locationDAO.hasError();
-		 assertTrue(!error,"must be ok");
+		assertTrue(!error,"must be ok");
+	}
+	@Test
+	void getLocById() {
+		SqliteLocationDAO locationDAOc = new SqliteLocationDAO();
+		locationDAOc.getLocById(1);
+		boolean error = locationDAOc.hasError();
+		assertTrue(error,"must be error");
+		initConnection();
+		Location location = locationDAO.getLocById(1);
+		error = locationDAO.hasError();
+		assertTrue(!error,"must be ok");
+	}
+	@Test
+	void getLocByName() {
+		SqliteLocationDAO locationDAOc = new SqliteLocationDAO();
+		locationDAOc.getLocByName("test1");
+		boolean error = locationDAOc.hasError();
+		assertTrue(error,"must be error");
+		initConnection();
+		Location location = locationDAO.getLocByName("test1");
+		error = locationDAO.hasError();
+		assertTrue(!error,"must be ok");
+		assertTrue(location.getName().equals("test1"),"must be test1");
+		assertTrue(!location.isBoxes(),"must be false");
 	}
 
 }
