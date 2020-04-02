@@ -14,4 +14,5 @@ public interface OutDocDAO {
 	public List<OutDoc> getOutDocByInstrum(long id);
 	public List<OutDoc> getOutDocByBox(long idB,long idL);
 	public boolean deleteInDoc(int id);
+	public boolean hasError();
 }

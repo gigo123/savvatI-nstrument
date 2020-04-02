@@ -11,7 +11,6 @@ import dao.InstrumentDAO;
 import models.Box;
 import models.Instrument;
 import models.Location;
-import savvats.InstrumentWNum;
 
 public class SqliteInstrumentDAO implements InstrumentDAO {
 
@@ -24,7 +23,8 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
 
-	public boolean isSqlError() {
+	@Override
+	public boolean hasError() {
 		return sqlError;
 	}
 

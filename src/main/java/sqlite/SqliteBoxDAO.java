@@ -10,7 +10,6 @@ import java.util.List;
 import dao.BoxDAO;
 import models.Box;
 import models.Instrument;
-import models.Location;
 
 public class SqliteBoxDAO implements BoxDAO{
 
@@ -20,7 +19,8 @@ public class SqliteBoxDAO implements BoxDAO{
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
 
-	public boolean isSqlError() {
+	@Override
+	public boolean hasError() {
 		return sqlError;
 	}
 

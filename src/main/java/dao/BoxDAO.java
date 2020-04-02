@@ -10,4 +10,5 @@ public interface BoxDAO {
 	public List<Box> getBoxByNumber(int number,int idLocation);
 	public boolean createBox(Box box);
 	public boolean deleteBox(int id);
+	public boolean hasError();
 }

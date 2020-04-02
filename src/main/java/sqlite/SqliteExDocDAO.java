@@ -7,12 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import dao.ExDocDAO;
-import models.Box;
 import models.ExDoc;
-import models.Instrument;
-import models.Location;
+
 
 public class SqliteExDocDAO implements ExDocDAO {
 
@@ -26,7 +23,8 @@ public class SqliteExDocDAO implements ExDocDAO {
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
 
-	public boolean isSqlError() {
+	@Override
+	public boolean hasError() {
 		return sqlError;
 	}
 

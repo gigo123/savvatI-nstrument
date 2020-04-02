@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.OutDocDAO;
-import models.InDoc;
 import models.OutDoc;
 
 public class SqliteOutDocDAO implements OutDocDAO {
@@ -23,7 +22,8 @@ public class SqliteOutDocDAO implements OutDocDAO {
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
 
-	public boolean isSqlError() {
+	@Override
+	public boolean hasError() {
 		return sqlError;
 	}
 

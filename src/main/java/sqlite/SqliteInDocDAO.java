@@ -7,12 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import dao.InDocDAO;
-import models.Box;
 import models.InDoc;
-import models.Instrument;
-import models.Location;
+
 
 public class SqliteInDocDAO implements InDocDAO{
 	private final static String SELECT_ID_QUERY = "SELECT * FROM inDoc WHERE id = ?";
@@ -25,7 +22,8 @@ public class SqliteInDocDAO implements InDocDAO{
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
 
-	public boolean isSqlError() {
+	@Override
+	public boolean hasError() {
 		return sqlError;
 	}
 

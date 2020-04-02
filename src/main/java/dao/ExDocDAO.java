@@ -14,5 +14,6 @@ public interface ExDocDAO {
 	public List<ExDoc> getExDocByInstrum(long id);
 	public List<ExDoc> getExDocByBox(long idB, long idL);
 	public boolean deleteExDoc(int id);
+	public boolean hasError();
 
 }
