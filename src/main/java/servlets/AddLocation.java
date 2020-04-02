@@ -4,6 +4,8 @@ package servlets;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,31 +23,35 @@ public class AddLocation {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getLocationCF() {
-		ModelAndView model = new ModelAndView("AddLocationView");
-
-		return model;
+		ModelAndView model = new ModelAndView("AddLocation", "command", new Location());
+		if (error) {
+			error = false;
+			model.addObject("errorText", errorText.toString());
+		}
+		return  model;
 
 	}
 
-	@RequestMapping(method = RequestMethod.POST, params = { "name", "hasbox" })
-	public ModelAndView postLocationCF(@RequestParam("name") String name, @RequestParam("hasbox") String hasbox) {
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView postLocationCF(@ModelAttribute("SpringWeb")Location location, 
+		      ModelMap model) {
 		error = false;
 		errorText = new StringBuilder("<ul>");
 		@SuppressWarnings("resource")
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		locDAO = (LocationDAO) context.getBean("LocationDAO");
-		checkErrors(name);
+		if (!locDAO.createLocation(location)) {
+			error = true;
+			errorText.append("<li>ошибка бази данних </li>");
+		}
+		/*checkErrors(name);
 		if (!error) {
 			boolean boxes = true;
 			if (hasbox == null) {
 				boxes = false;
 			}
-			Location location = new Location(name, boxes);
-			if (!locDAO.createLocation(location)) {
-				error = true;
-				errorText.append("<li>ошибка бази данних </li>");
-			}
 		}
+		*/
 		return getLocationCF();
 
 	}
