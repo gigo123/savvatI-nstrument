@@ -31,9 +31,10 @@ public class SqliteLocationDAO implements LocationDAO {
 
 	@Override
 	public boolean createLocation(Location location) {
-		Connection conn = conectionHolder.getConnection();
-		PreparedStatement prepSt = null;
-		if (!conectionHolder.isError()) {
+		sqlError = false;
+		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
+			PreparedStatement prepSt = null;
 			try {
 				prepSt = conn.prepareStatement(INSERT_QUERY);
 				prepSt.setString(1, location.getName());
@@ -63,11 +64,12 @@ public class SqliteLocationDAO implements LocationDAO {
 	@SuppressWarnings("null")
 	@Override
 	public Location getLocById(int id) {
+		sqlError = false;
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
 		Location loc = new Location();
-		Connection conn = conectionHolder.getConnection();
-		if (!conectionHolder.isError()) {
+		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
 			try {
 				prepSt = conn.prepareStatement(SELECT_ID_QUERY);
 				prepSt.setInt(1, id);
@@ -100,11 +102,12 @@ public class SqliteLocationDAO implements LocationDAO {
 	@SuppressWarnings("null")
 	@Override
 	public Location getLocByName(String name) {
+		sqlError = false;
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
 		Location loc = null;
-		Connection conn = conectionHolder.getConnection();
-		if (!conectionHolder.isError()) {
+		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
 			try {
 				prepSt = conn.prepareStatement(SELECT_NAME_QUERY);
 				prepSt.setString(1, name);
@@ -139,12 +142,13 @@ public class SqliteLocationDAO implements LocationDAO {
 	@SuppressWarnings("null")
 	@Override
 	public List<Location> getLocByNameL(String name) {
+		sqlError = false;
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
 		List<Location> locList = new ArrayList<Location>();
 		Location loc = null;
-		Connection conn = conectionHolder.getConnection();
-		if (!conectionHolder.isError()) {
+		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
 			try {
 				prepSt = conn.prepareStatement(SELECT_NAME_QUERY);
 				prepSt.setString(1, name);
