@@ -13,9 +13,9 @@ import models.Location;
 public class SqliteLocationDAO implements LocationDAO {
 	private final static String SELECT_ID_QUERY = "SELECT * FROM location WHERE id = ?";
 	private final static String SELECT_NAME_QUERY = "SELECT * FROM location WHERE NAME = ?";
-	private final static String INSERT_QUERY = "INSERT INTO location(name, boxes, comment)" + " VALUES(?,?,?)";
+	private final static String INSERT_QUERY = "INSERT INTO location(name, boxes)" + " VALUES(?,?)";
 	private SQLConectionHolder conectionHolder;
-	private boolean sqlError= false;
+	private boolean sqlError = false;
 
 	public void setSqlError(boolean sqlError) {
 		this.sqlError = sqlError;
@@ -67,33 +67,32 @@ public class SqliteLocationDAO implements LocationDAO {
 		PreparedStatement prepSt = null;
 		Location loc = new Location();
 		Connection conn = conectionHolder.getConnection();
-		if(!conectionHolder.isError()){
-		try {
-			prepSt = conn.prepareStatement(SELECT_ID_QUERY);
-			prepSt.setInt(1, id);
-			rs = prepSt.executeQuery();
+		if (!conectionHolder.isError()) {
+			try {
+				prepSt = conn.prepareStatement(SELECT_ID_QUERY);
+				prepSt.setInt(1, id);
+				rs = prepSt.executeQuery();
 
-			while (rs.next()) {
-				loc.setId(rs.getInt("id"));
-				loc.setName(rs.getString("name"));
-				loc.setBoxes(rs.getBoolean("boxes"));
-			}
-			conectionHolder.closeConnection();
-		} catch (SQLException e) {
-			sqlError=true;
-			e.printStackTrace();
-		} finally {
-			if (prepSt != null) {
-				try {
-					prepSt.close();
-				} catch (SQLException sqlEx) {
+				while (rs.next()) {
+					loc.setId(rs.getInt("id"));
+					loc.setName(rs.getString("name"));
+					loc.setBoxes(rs.getBoolean("boxes"));
 				}
-				prepSt = null;
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
 			}
-		}
-		}
-		else {
-			sqlError=true;
+		} else {
+			sqlError = true;
 		}
 		return loc;
 	}
@@ -105,35 +104,34 @@ public class SqliteLocationDAO implements LocationDAO {
 		PreparedStatement prepSt = null;
 		Location loc = null;
 		Connection conn = conectionHolder.getConnection();
-		if(!conectionHolder.isError()){
-		try {
-			prepSt = conn.prepareStatement(SELECT_NAME_QUERY);
-			prepSt.setString(1, name);
-			rs = prepSt.executeQuery();
+		if (!conectionHolder.isError()) {
+			try {
+				prepSt = conn.prepareStatement(SELECT_NAME_QUERY);
+				prepSt.setString(1, name);
+				rs = prepSt.executeQuery();
 
-			while (rs.next()) {
-				loc = new Location();
-				loc.setId(rs.getInt("id"));
-				loc.setName(rs.getString("name"));
-				loc.setBoxes(rs.getBoolean("boxes"));
-				break;
-			}
-			conectionHolder.closeConnection();
-		} catch (SQLException e) {
-			sqlError=true;
-			e.printStackTrace();
-		} finally {
-			if (prepSt != null) {
-				try {
-					prepSt.close();
-				} catch (SQLException sqlEx) {
+				while (rs.next()) {
+					loc = new Location();
+					loc.setId(rs.getInt("id"));
+					loc.setName(rs.getString("name"));
+					loc.setBoxes(rs.getBoolean("boxes"));
+					break;
 				}
-				prepSt = null;
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
 			}
-		}
-		}
-		else {
-			sqlError=true;
+		} else {
+			sqlError = true;
 		}
 		return loc;
 	}
@@ -143,38 +141,37 @@ public class SqliteLocationDAO implements LocationDAO {
 	public List<Location> getLocByNameL(String name) {
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
-		List<Location> locList =new ArrayList<Location>() ;
+		List<Location> locList = new ArrayList<Location>();
 		Location loc = null;
 		Connection conn = conectionHolder.getConnection();
-		if(!conectionHolder.isError()){
-		try {
-			prepSt = conn.prepareStatement(SELECT_NAME_QUERY);
-			prepSt.setString(1, name);
-			rs = prepSt.executeQuery();
+		if (!conectionHolder.isError()) {
+			try {
+				prepSt = conn.prepareStatement(SELECT_NAME_QUERY);
+				prepSt.setString(1, name);
+				rs = prepSt.executeQuery();
 
-			while (rs.next()) {
-				loc = null;
-				loc.setId(rs.getInt("id"));
-				loc.setName(rs.getString("name"));
-				loc.setBoxes(rs.getBoolean("boxes"));
-				locList.add(loc);
-			}
-			conectionHolder.closeConnection();
-		} catch (SQLException e) {
-			sqlError=true;
-			e.printStackTrace();
-		} finally {
-			if (prepSt != null) {
-				try {
-					prepSt.close();
-				} catch (SQLException sqlEx) {
+				while (rs.next()) {
+					loc = null;
+					loc.setId(rs.getInt("id"));
+					loc.setName(rs.getString("name"));
+					loc.setBoxes(rs.getBoolean("boxes"));
+					locList.add(loc);
 				}
-				prepSt = null;
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
 			}
-		}
-		}
-		else {
-			sqlError=true;
+		} else {
+			sqlError = true;
 		}
 		return locList;
 	}
