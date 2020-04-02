@@ -8,7 +8,7 @@ public class SQLConectionHolder {
 	private static Connection conn;
 	private boolean error = false;
 	private String errorMessage; 
-	
+	private String connString;
 	
 	public boolean isError() {
 		return error;
@@ -25,8 +25,6 @@ public class SQLConectionHolder {
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
-
-	private String connString;
 	
 	public String getConnString() {
 		return connString;
