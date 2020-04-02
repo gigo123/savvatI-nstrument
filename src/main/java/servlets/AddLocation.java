@@ -1,6 +1,5 @@
 package servlets;
 
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -8,7 +7,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import dao.LocationDAO;
@@ -28,40 +26,32 @@ public class AddLocation {
 			error = false;
 			model.addObject("errorText", errorText.toString());
 		}
-		return  model;
-
+		return model;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView postLocationCF(@ModelAttribute("SpringWeb")Location location, 
-		      ModelMap model) {
+	public ModelAndView postLocationCF(@ModelAttribute("SpringWeb") Location location, ModelMap model) {
 		error = false;
 		errorText = new StringBuilder("<ul>");
 		@SuppressWarnings("resource")
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		locDAO = (LocationDAO) context.getBean("LocationDAO");
-		if (!locDAO.createLocation(location)) {
-			error = true;
-			errorText.append("<li>ошибка бази данних </li>");
-		}
-		/*checkErrors(name);
+		checkErrors(location);
 		if (!error) {
-			boolean boxes = true;
-			if (hasbox == null) {
-				boxes = false;
+			if (!locDAO.createLocation(location)) {
+				error = true;
+				errorText.append("<li>ошибка бази данних </li>");
 			}
 		}
-		*/
 		return getLocationCF();
-
 	}
 
-	private void checkErrors(String name) {
-		if (name.length() < 4) {
+	private void checkErrors(Location location) {
+		if (location.getName().length() < 4) {
 			error = true;
 			errorText.append("<li> короткое имя </li>");
 		}
-		Location loc = locDAO.getLocByName(name);
+		Location loc = locDAO.getLocByName(location.getName());
 		if (locDAO.hasError()) {
 			error = true;
 			errorText.append("<li> ошибка бази данних </li>");
