@@ -40,22 +40,26 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 		this.conectionHolder = conectionHolder;
 	}
 
-	@SuppressWarnings("null")
 	private Object selectQ(Object obj, Object obj2, int type) {
-
-		ResultSet rs = null;
-		PreparedStatement prepSt = null;
-		Instrument inst = null;
-		SqliteLocationDAO locDao = new SqliteLocationDAO();
+		sqlError = false;
 		List<Box> boxList = new ArrayList<Box>();
-		Connection conn = conectionHolder.getConnection();
-		if (!conectionHolder.isError()) {
+		System.out.println(type);
+		System.out.println(conectionHolder);
+		System.out.println(conectionHolder.isError());
+		if (conectionHolder != null && !conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
+			ResultSet rs = null;
+			PreparedStatement prepSt = null;
+			Instrument inst = null;
+			SqliteLocationDAO locDao = new SqliteLocationDAO();
 			try {
+				System.out.println("swith");
 				switch (type) {
-				case 1: {
+				case (1): {
 					prepSt = conn.prepareStatement(SELECT_ID_QUERY);
 					prepSt.setInt(1, (int) obj);
 					rs = prepSt.executeQuery();
+					System.out.println("first");
 					break;
 				}
 				case 2: {
@@ -86,27 +90,36 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 					rs = prepSt.executeQuery(SELECT_ALL_QUERY);
 					break;
 				}
-				default:
+				default: {
 					sqlError = true;
+					System.out.println("default");
 				}
-
+				}
 				while (rs.next()) {
-					if (type == 1 || type == 2) {
+					System.out.println(type);
+					if (type == 1) {
+						inst.setId(rs.getInt("id"));
+						inst.setName(rs.getString("name"));
+						inst.setComment(rs.getString("comment"));
+						inst.setMeasure(rs.getString("measure"));
+
+						return inst;
+					}
+					if (type == 2) {
 						inst.setId(rs.getInt("id"));
 						inst.setName(rs.getString("name"));
 						inst.setComment(rs.getString("comment"));
 						inst.setMeasure(rs.getString("measure"));
 						return inst;
-					} else {
-
-						Box box = new Box();
-						box.setId(rs.getInt("id"));
-						box.setInstruments(getInstrumentByID(rs.getInt("instruments")));
-						box.setInstrumentsNumbers(rs.getFloat("instrumentsNumbers"));
-						box.setLocation(locDao.getLocById(rs.getInt("location")));
-						box.setNumber(rs.getInt("number"));
-						boxList.add(box);
 					}
+					System.out.println("another");
+					Box box = new Box();
+					box.setId(rs.getInt("id"));
+					box.setInstruments(getInstrumentByID(rs.getInt("instruments")));
+					box.setInstrumentsNumbers(rs.getFloat("instrumentsNumbers"));
+					box.setLocation(locDao.getLocById(rs.getInt("location")));
+					box.setNumber(rs.getInt("number"));
+					boxList.add(box);
 				}
 				conectionHolder.closeConnection();
 
@@ -165,9 +178,10 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 
 	@Override
 	public boolean createInstrument(Instrument instrument) {
-		Connection conn = conectionHolder.getConnection();
-		PreparedStatement prepSt = null;
-		if (!conectionHolder.isError()) {
+		sqlError = false;
+		if (conectionHolder != null && !conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
+			PreparedStatement prepSt = null;
 			try {
 				prepSt = conn.prepareStatement(INSERT_QUERY);
 				prepSt.setString(1, instrument.getName());
