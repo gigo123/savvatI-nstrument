@@ -83,14 +83,13 @@ public class SqliteBoxDAO implements BoxDAO{
 	}
 
 	@Override
-	public List<Box> getBoxByNumber(int number, int idLocation) {
+	public Box getBoxByNumber(int number, int idLocation) {
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
 		Box box = new Box();
 		Connection conn = conectionHolder.getConnection();
 		SqliteLocationDAO locDao = new SqliteLocationDAO();
 		SqliteInstrumentDAO instDao = new SqliteInstrumentDAO();
-		List<Box> boxList = new ArrayList<Box>();
 		if(!conectionHolder.isError()){
 		try {
 			prepSt = conn.prepareStatement(SELECT_NUMBER_QUERY);
@@ -99,13 +98,12 @@ public class SqliteBoxDAO implements BoxDAO{
 			rs = prepSt.executeQuery();
 
 			while (rs.next()) {
-				box = new Box();
 				box.setId(rs.getInt("id"));
 				box.setInstruments(instDao.getInstrumentByID(rs.getInt("instrument")));
 				box.setInstrumentsNumbers(rs.getFloat(("amount")));
 				box.setLocation(locDao.getLocById(rs.getInt("location")));
 				box.setNumber(rs.getInt("number"));
-				boxList.add(box);
+				return box;
 			}
 			conectionHolder.closeConnection();
 		} catch (SQLException e) {
@@ -124,7 +122,7 @@ public class SqliteBoxDAO implements BoxDAO{
 		else {
 			sqlError=true;
 		}
-		return boxList;
+		return box;
 	}
 
 	@Override
