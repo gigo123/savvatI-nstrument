@@ -91,7 +91,6 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 				}
 				}
 				while (rs.next()) {
-					System.out.println(type);
 					if (type == 1||type == 2) {
 						inst = new Instrument();
 						inst.setId(rs.getInt("id"));

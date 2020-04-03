@@ -47,7 +47,6 @@ SqliteInstrumentDAO instrumentDAO;
 		boolean error = instrumentDAOc.hasError();
 		assertTrue(error,"must be error");
 		initConnection();
-		System.out.println(instrumentDAO.getConectionHolder());
 		 instrumentDAO.getInstrumentByID(1);
 		error = instrumentDAO.hasError();
 		assertTrue(!error,"must be ok");

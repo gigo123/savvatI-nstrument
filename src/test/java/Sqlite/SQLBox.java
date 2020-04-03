@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import models.Box;
 import models.Instrument;
+import models.Location;
 import sqlite.SQLConectionHolder;
 import sqlite.SqliteBoxDAO;
 import sqlite.SqliteInstrumentDAO;
@@ -38,8 +39,11 @@ class SQLBox {
 	}
 	@Test
 	void createBox() {
+		initConnection();
 		SqliteBoxDAO  boxDAOc = new SqliteBoxDAO();
-		Box box = new Box(1, locationDAO.getLocById(1), instrumentDAO.getInstrumentByID(1), 1);
+		Instrument inst = instrumentDAO.getInstrumentByID(1);
+		Location location =  locationDAO.getLocById(1);
+		Box box = new Box(1, location, inst, 1);
 		boxDAOc.createBox(box);
 		boolean error = boxDAOc.hasError();
 		assertTrue(error,"must be error");

@@ -40,10 +40,10 @@ public class SqliteBoxDAO implements BoxDAO{
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
 		Box box = new Box();
-		Connection conn = conectionHolder.getConnection();
 		SqliteLocationDAO locDao = new SqliteLocationDAO();
 		SqliteInstrumentDAO instDao = new SqliteInstrumentDAO();
-		if(!conectionHolder.isError()){
+		if (conectionHolder != null && !conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
 		try {
 			prepSt = conn.prepareStatement(SELECT_ID_QUERY);
 			prepSt.setInt(1, (int)id);
@@ -87,10 +87,10 @@ public class SqliteBoxDAO implements BoxDAO{
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
 		Box box = new Box();
-		Connection conn = conectionHolder.getConnection();
 		SqliteLocationDAO locDao = new SqliteLocationDAO();
 		SqliteInstrumentDAO instDao = new SqliteInstrumentDAO();
-		if(!conectionHolder.isError()){
+		if (conectionHolder != null && !conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
 		try {
 			prepSt = conn.prepareStatement(SELECT_NUMBER_QUERY);
 			prepSt.setInt(1, number);
@@ -127,9 +127,9 @@ public class SqliteBoxDAO implements BoxDAO{
 
 	@Override
 	public boolean createBox(Box box) {
-		Connection conn = conectionHolder.getConnection();
-		PreparedStatement prepSt = null;
-		if (!conectionHolder.isError()) {
+		if (conectionHolder != null && !conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
+			PreparedStatement prepSt = null;
 			try {
 				prepSt = conn.prepareStatement(INSERT_QUERY);
 				prepSt.setInt(1, box.getNumber());
