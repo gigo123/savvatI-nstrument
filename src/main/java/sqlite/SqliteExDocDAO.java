@@ -11,12 +11,11 @@ import java.util.List;
 import dao.ExDocDAO;
 import models.ExDoc;
 
-
 public class SqliteExDocDAO implements ExDocDAO {
 
 	private final static String SELECT_ID_QUERY = "SELECT * FROM exDoc WHERE id = ?";
-	private final static String SELECT_LOCATION_QUERY = "SELECT * FROM exDoc WHERE outLocation = ? OR inLocation = ?"
-			+ "AND outBox = ? OR inBox = ?";
+	private final static String SELECT_LOCATION_QUERY = "SELECT * FROM exDoc WHERE (outLocation = ? OR inLocation = ?)"
+			+ " AND (outBox = ? OR inBox = ?)";
 	private final static String SELECT_INST_QUERY = "SELECT * FROM exDoc WHERE instrument = ? ";
 	private final static String SELECT_DATE_QUERY = "SELECT * FROM exDoc WHERE date = ?";
 	private final static String INSERT_QUERY = "INSERT INTO exDoc(outLocation, inLocation, outBox, "
@@ -43,9 +42,10 @@ public class SqliteExDocDAO implements ExDocDAO {
 
 	@Override
 	public boolean createExDoc(ExDoc exDoc) {
-		Connection conn = conectionHolder.getConnection();
-		PreparedStatement prepSt = null;
-		if (!conectionHolder.isError()) {
+		sqlError = false;
+		if (conectionHolder != null && !conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
+			PreparedStatement prepSt = null;
 			try {
 				prepSt = conn.prepareStatement(INSERT_QUERY);
 				prepSt.setInt(1, exDoc.getOutLocation().getId());
@@ -78,77 +78,76 @@ public class SqliteExDocDAO implements ExDocDAO {
 		}
 	}
 
-	@SuppressWarnings("null")
 	private Object selectQ(Object obj, Object obj2, int type) {
-
-		ResultSet rs = null;
-		PreparedStatement prepSt = null;
-		SqliteLocationDAO locDao = new SqliteLocationDAO();
-		SqliteInstrumentDAO instDao = new SqliteInstrumentDAO();
-		SqliteBoxDAO boxDao = new SqliteBoxDAO();
-		List<ExDoc> docList = new ArrayList<ExDoc>();
-		ExDoc exdoc = new ExDoc();
-		Connection conn = conectionHolder.getConnection();
-		if (!conectionHolder.isError()) {
+		sqlError = false;
+		if (conectionHolder != null && !conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
+			ResultSet rs = null;
+			PreparedStatement prepSt = null;
+			SqliteLocationDAO locDao = new SqliteLocationDAO();
+			SqliteInstrumentDAO instDao = new SqliteInstrumentDAO();
+			SqliteBoxDAO boxDao = new SqliteBoxDAO();
+			List<ExDoc> docList = new ArrayList<ExDoc>();
+			ExDoc exdoc = null;
 			try {
 				switch (type) {
 				case 1: {
 					prepSt = conn.prepareStatement(SELECT_ID_QUERY);
-					prepSt.setInt(1, (int) obj);
+					prepSt.setLong(1, (long) obj);
 					rs = prepSt.executeQuery();
 					break;
 				}
 				case 2: {
 					prepSt = conn.prepareStatement(SELECT_DATE_QUERY);
-					prepSt.setDate(1, (Date) obj);
+					LocalDate locDate= (LocalDate) obj;
+					Date exDate = java.sql.Date.valueOf(locDate.toString());
+					prepSt.setDate(1, exDate);
 					rs = prepSt.executeQuery();
 					break;
 				}
 				case 3: {
 					prepSt = conn.prepareStatement(SELECT_INST_QUERY);
-					prepSt.setInt(1, (int) obj);
+					prepSt.setLong(1, (long) obj);
 					rs = prepSt.executeQuery();
 					break;
 				}
 				case 4: {
 					prepSt = conn.prepareStatement(SELECT_LOCATION_QUERY);
-					prepSt.setInt(1, (int) obj);
-					prepSt.setInt(2, (int) obj2);
+					prepSt.setLong(1, (long) obj);
+					prepSt.setLong(2, (long) obj);
+					prepSt.setLong(3, (long) obj2);
+					prepSt.setLong(4, (long) obj2);
 					rs = prepSt.executeQuery();
 					break;
 				}
 
-				default:
+				default: {
 					sqlError = true;
 				}
-
+				}
 				while (rs.next()) {
+					exdoc = new ExDoc();
+					exdoc.setId(rs.getInt("id"));
+					exdoc.setInLocation(locDao.getLocById(rs.getInt("inLocation")));
+					exdoc.setInBox(boxDao.getBoxByID(rs.getInt("inBox")));
+					exdoc.setOutBox(boxDao.getBoxByID(rs.getInt("outBox")));
+					exdoc.setInstrument(instDao.getInstrumentByID(rs.getInt("instrument")));
+					Date exDate = rs.getDate("date");
+					exdoc.setDate(exDate.toLocalDate());
+					exdoc.setAmount(rs.getFloat("amount"));
+					exdoc.setOutLocation(locDao.getLocById(rs.getInt("outLocation")));
 					if (type == 1) {
-						exdoc.setId(rs.getInt("id"));
-						exdoc.setInLocation(locDao.getLocById(rs.getInt("inLocation")));
-						exdoc.setInBox(boxDao.getBoxByID(rs.getInt("inBox")));
-						exdoc.setOutBox(boxDao.getBoxByID(rs.getInt("outBox")));
-						exdoc.setInstrument(instDao.getInstrumentByID(rs.getInt("istrument")));
-						Date exDate = rs.getDate("date");
-						exdoc.setDate(exDate.toLocalDate());
-						exdoc.setAmount(rs.getFloat("amount"));
-						exdoc.setOutLocation(locDao.getLocById(rs.getInt("outLocation")));
-						return exdoc;
+						break;
 					} else {
-						exdoc = new ExDoc();
-						exdoc.setId(rs.getInt("id"));
-						exdoc.setInLocation(locDao.getLocById(rs.getInt("inLocation")));
-						exdoc.setInBox(boxDao.getBoxByID(rs.getInt("inBox")));
-						exdoc.setOutBox(boxDao.getBoxByID(rs.getInt("outBox")));
-						exdoc.setInstrument(instDao.getInstrumentByID(rs.getInt("istrument")));
-						Date exDate = rs.getDate("date");
-						exdoc.setDate(exDate.toLocalDate());
-						exdoc.setAmount(rs.getFloat("amount"));
-						exdoc.setOutLocation(locDao.getLocById(rs.getInt("outLocation")));
 						docList.add(exdoc);
 					}
 				}
 				conectionHolder.closeConnection();
+				if (type == 1) {
+					return exdoc;
+				} else {
+					return docList;
+				}
 
 			} catch (SQLException e) {
 				sqlError = true;
@@ -165,18 +164,18 @@ public class SqliteExDocDAO implements ExDocDAO {
 		} else {
 			sqlError = true;
 		}
-		return docList;
+		return null;
 	}
 
 	@Override
-	public ExDoc getExDocById(int id) {
+	public ExDoc getExDocById(long id) {
 		return (ExDoc) selectQ(id, null, 1);
 
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ExDoc> getExDocByDate(String date) {
+	public List<ExDoc> getExDocByDate(LocalDate date) {
 		return (List<ExDoc>) selectQ(date, null, 2);
 	}
 
@@ -193,7 +192,7 @@ public class SqliteExDocDAO implements ExDocDAO {
 	}
 
 	@Override
-	public boolean deleteExDoc(int id) {
+	public boolean deleteExDoc(long id) {
 		// TODO Auto-generated method stub
 		return false;
 	}
