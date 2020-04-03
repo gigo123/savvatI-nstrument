@@ -43,9 +43,6 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 	private Object selectQ(Object obj, Object obj2, int type) {
 		sqlError = false;
 		List<Box> boxList = new ArrayList<Box>();
-		System.out.println(type);
-		System.out.println(conectionHolder);
-		System.out.println(conectionHolder.isError());
 		if (conectionHolder != null && !conectionHolder.isError()) {
 			Connection conn = conectionHolder.getConnection();
 			ResultSet rs = null;
@@ -53,13 +50,11 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 			Instrument inst = null;
 			SqliteLocationDAO locDao = new SqliteLocationDAO();
 			try {
-				System.out.println("swith");
 				switch (type) {
 				case (1): {
 					prepSt = conn.prepareStatement(SELECT_ID_QUERY);
-					prepSt.setInt(1, (int) obj);
+					prepSt.setLong(1, (long) obj);
 					rs = prepSt.executeQuery();
-					System.out.println("first");
 					break;
 				}
 				case 2: {
@@ -87,32 +82,24 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 					break;
 				}
 				case 6: {
-					rs = prepSt.executeQuery(SELECT_ALL_QUERY);
+					prepSt = conn.prepareStatement(SELECT_ALL_QUERY);
+					rs = prepSt.executeQuery();
 					break;
 				}
 				default: {
 					sqlError = true;
-					System.out.println("default");
 				}
 				}
 				while (rs.next()) {
 					System.out.println(type);
-					if (type == 1) {
-						inst.setId(rs.getInt("id"));
-						inst.setName(rs.getString("name"));
-						inst.setComment(rs.getString("comment"));
-						inst.setMeasure(rs.getString("measure"));
-
-						return inst;
-					}
-					if (type == 2) {
+					if (type == 1||type == 2) {
+						inst = new Instrument();
 						inst.setId(rs.getInt("id"));
 						inst.setName(rs.getString("name"));
 						inst.setComment(rs.getString("comment"));
 						inst.setMeasure(rs.getString("measure"));
 						return inst;
 					}
-					System.out.println("another");
 					Box box = new Box();
 					box.setId(rs.getInt("id"));
 					box.setInstruments(getInstrumentByID(rs.getInt("instruments")));
@@ -138,7 +125,7 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 		} else {
 			sqlError = true;
 		}
-		return boxList;
+		return null;
 
 	}
 
