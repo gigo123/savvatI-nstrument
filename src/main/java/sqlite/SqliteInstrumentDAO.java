@@ -196,7 +196,7 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 	}
 
 	@Override
-	public boolean deleteInstrument(int id) {
+	public boolean deleteInstrument(long id) {
 		// TODO Auto-generated method stub
 		return false;
 	}

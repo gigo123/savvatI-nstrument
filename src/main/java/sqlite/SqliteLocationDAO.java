@@ -63,7 +63,7 @@ public class SqliteLocationDAO implements LocationDAO {
 
 	@SuppressWarnings("null")
 	@Override
-	public Location getLocById(int id) {
+	public Location getLocById(long id) {
 		sqlError = false;
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
@@ -72,7 +72,7 @@ public class SqliteLocationDAO implements LocationDAO {
 			Connection conn = conectionHolder.getConnection();
 			try {
 				prepSt = conn.prepareStatement(SELECT_ID_QUERY);
-				prepSt.setInt(1, id);
+				prepSt.setLong(1, id);
 				rs = prepSt.executeQuery();
 
 				while (rs.next()) {
@@ -181,7 +181,7 @@ public class SqliteLocationDAO implements LocationDAO {
 	}
 
 	@Override
-	public boolean deleteLocation(int id) {
+	public boolean deleteLocation(long id) {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -14,6 +14,6 @@ public interface InstrumentDAO {
 	public List<Box> getInstrumentByLocation(Location loacation);
 	public List<Box> getAllInstrument();
 	public boolean createInstrument(Instrument instrument);
-	public boolean deleteInstrument(int id);
+	public boolean deleteInstrument(long id);
 	public boolean hasError();
 }

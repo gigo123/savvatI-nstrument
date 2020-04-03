@@ -187,7 +187,7 @@ public class SqliteOutDocDAO implements OutDocDAO {
 	}
 
 	@Override
-	public boolean deleteInDoc(int id) {
+	public boolean deleteInDoc(long id) {
 		// TODO Auto-generated method stub
 		return false;
 	}

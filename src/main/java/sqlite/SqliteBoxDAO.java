@@ -159,7 +159,7 @@ public class SqliteBoxDAO implements BoxDAO{
 	}
 
 	@Override
-	public boolean deleteBox(int id) {
+	public boolean deleteBox(long id) {
 		// TODO Auto-generated method stub
 		return false;
 	}

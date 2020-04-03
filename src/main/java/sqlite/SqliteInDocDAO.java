@@ -183,7 +183,7 @@ public class SqliteInDocDAO implements InDocDAO{
 	}
 
 	@Override
-	public boolean deleteInDoc(int id) {
+	public boolean deleteInDoc(long id) {
 		// TODO Auto-generated method stub
 		return false;
 	}

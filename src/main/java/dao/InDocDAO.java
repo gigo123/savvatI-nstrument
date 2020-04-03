@@ -11,7 +11,7 @@ public interface InDocDAO {
 	public List<InDoc> getInDocByDate(LocalDate date);
 	public List<InDoc> getInDocByInstrum(long id);
 	public List<InDoc> getInDocByBox(long idB,long idL);
-	public boolean deleteInDoc(int id);
+	public boolean deleteInDoc(long id);
 	public boolean hasError();
 
 }
