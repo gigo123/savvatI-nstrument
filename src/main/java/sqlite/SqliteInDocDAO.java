@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import dao.InDocDAO;
@@ -14,7 +15,7 @@ import models.InDoc;
 public class SqliteInDocDAO implements InDocDAO{
 	private final static String SELECT_ID_QUERY = "SELECT * FROM inDoc WHERE id = ?";
 	private final static String SELECT_LOCATION_QUERY = "SELECT * FROM inDoc WHERE inLocation = ?"
-			+ "AND outBox = ? OR inBox = ?";
+			+ " AND inBox = ?";
 	private final static String SELECT_INST_QUERY = "SELECT * FROM inDoc WHERE instrument = ? ";
 	private final static String SELECT_DATE_QUERY = "SELECT * FROM inDoc WHERE date = ?";
 	private final static String INSERT_QUERY = "INSERT INTO inDoc( inLocation, "
@@ -40,16 +41,18 @@ public class SqliteInDocDAO implements InDocDAO{
 	}
 	@Override
 	public boolean createInDoc(InDoc inDoc) {
-		Connection conn = conectionHolder.getConnection();
-		PreparedStatement prepSt = null;
-		if (!conectionHolder.isError()) {
+		sqlError = false;
+		if (conectionHolder != null && !conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
+			PreparedStatement prepSt = null;
 			try {
 				prepSt = conn.prepareStatement(INSERT_QUERY);
-				prepSt.setInt(2, inDoc.getInLocation().getId());
-				prepSt.setInt(4, (int) inDoc.getInBox().getId());
-				prepSt.setDate(5, inDoc.getDate());
-				prepSt.setInt(6, (int) inDoc.getInstrument().getId());
-				prepSt.setFloat(7, inDoc.getAmount());
+				prepSt.setInt(1, inDoc.getInLocation().getId());
+				prepSt.setInt(2, (int) inDoc.getInBox().getId());
+				Date exDate = java.sql.Date.valueOf(inDoc.getDate().toString());
+				prepSt.setDate(3, exDate);
+				prepSt.setInt(4, (int) inDoc.getInstrument().getId());
+				prepSt.setFloat(5, inDoc.getAmount());
 				prepSt.execute();
 				conectionHolder.closeConnection();
 			} catch (SQLException e) {
@@ -72,72 +75,73 @@ public class SqliteInDocDAO implements InDocDAO{
 		}
 	}
 
-	@SuppressWarnings("null")
 	private Object selectQ(Object obj, Object obj2, int type) {
-
-		ResultSet rs = null;
-		PreparedStatement prepSt = null;
-		SqliteLocationDAO locDao = new SqliteLocationDAO();
-		SqliteInstrumentDAO instDao = new SqliteInstrumentDAO();
-		SqliteBoxDAO boxDao = new SqliteBoxDAO();
-		List<InDoc> docList = new ArrayList<InDoc>();
-		InDoc indoc = new InDoc();
-		Connection conn = conectionHolder.getConnection();
-		if (!conectionHolder.isError()) {
+		sqlError = false;
+		if (conectionHolder != null && !conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
+			ResultSet rs = null;
+			PreparedStatement prepSt = null;
+			SqliteLocationDAO locDao = new SqliteLocationDAO();
+			SqliteInstrumentDAO instDao = new SqliteInstrumentDAO();
+			SqliteBoxDAO boxDao = new SqliteBoxDAO();
+			List<InDoc> docList = new ArrayList<InDoc>();
+			InDoc indoc = null;
 			try {
 				switch (type) {
 				case 1: {
 					prepSt = conn.prepareStatement(SELECT_ID_QUERY);
-					prepSt.setInt(1, (int) obj);
+					prepSt.setLong(1, (long) obj);
 					rs = prepSt.executeQuery();
 					break;
 				}
 				case 2: {
 					prepSt = conn.prepareStatement(SELECT_DATE_QUERY);
-					prepSt.setDate(1, (Date) obj);
+					LocalDate locDate= (LocalDate) obj;
+					Date exDate = java.sql.Date.valueOf(locDate.toString());
+					prepSt.setDate(1, exDate);
 					rs = prepSt.executeQuery();
 					break;
 				}
 				case 3: {
 					prepSt = conn.prepareStatement(SELECT_INST_QUERY);
-					prepSt.setInt(1, (int) obj);
+					prepSt.setLong(1, (long) obj);
 					rs = prepSt.executeQuery();
 					break;
 				}
 				case 4: {
 					prepSt = conn.prepareStatement(SELECT_LOCATION_QUERY);
-					prepSt.setInt(1, (int) obj);
-					prepSt.setInt(2, (int) obj2);
+					prepSt.setLong(1, (long) obj);
+					prepSt.setLong(2, (long) obj2);
 					rs = prepSt.executeQuery();
 					break;
 				}
 
 				default:
+				{
 					sqlError = true;
 				}
-
+				}
 				while (rs.next()) {
+					indoc = new InDoc();
+					indoc.setId(rs.getInt("id"));
+					indoc.setInLocation(locDao.getLocById(rs.getInt("inLocation")));
+					indoc.setInBox(boxDao.getBoxByID(rs.getInt("inBox")));
+					indoc.setInstrument(instDao.getInstrumentByID(rs.getInt("instrument")));
+					Date inDate = rs.getDate("date");
+					indoc.setDate(inDate.toLocalDate());
+					indoc.setAmount(rs.getFloat("amount"));
 					if (type == 1) {
-						indoc.setId(rs.getInt("id"));
-						indoc.setInLocation(locDao.getLocById(rs.getInt("inLocation")));
-						indoc.setInBox(boxDao.getBoxByID(rs.getInt("inBox")));
-						indoc.setInstrument(instDao.getInstrumentByID(rs.getInt("istrument")));
-						indoc.setDate(rs.getDate("date"));
-						indoc.setAmount(rs.getFloat("amount"));
-						return indoc;
+						break;
 					} else {
-						indoc = new InDoc();
-						indoc.setId(rs.getInt("id"));
-						indoc.setInLocation(locDao.getLocById(rs.getInt("inLocation")));
-						indoc.setInBox(boxDao.getBoxByID(rs.getInt("inBox")));
-						indoc.setInstrument(instDao.getInstrumentByID(rs.getInt("istrument")));
-						indoc.setDate(rs.getDate("date"));
-						indoc.setAmount(rs.getFloat("amount"));
 						docList.add(indoc);
 					}
 				}
 				conectionHolder.closeConnection();
-
+				if (type == 1) {
+					return indoc;
+				} else {
+					return docList;
+				}
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();
@@ -153,16 +157,16 @@ public class SqliteInDocDAO implements InDocDAO{
 		} else {
 			sqlError = true;
 		}
-		return docList;
+		return null;
 	}
 	@Override
-	public InDoc getInDocById(int id) {
+	public InDoc getInDocById(long id) {
 		return (InDoc) selectQ(id, null, 1);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<InDoc> getInDocByDate(String date) {
+	public List<InDoc> getInDocByDate(LocalDate date) {
 		return (List<InDoc> ) selectQ(date, null, 2);
 	}
 
