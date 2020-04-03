@@ -23,7 +23,7 @@ public class AddInstrument {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getLocationCF() {
-		ModelAndView model = new ModelAndView("AddLocation", "command", new Instrument());
+		ModelAndView model = new ModelAndView("AddInstrument", "command", new Instrument());
 		if (error) {
 			error = false;
 			model.addObject("errorText", errorText.toString());
