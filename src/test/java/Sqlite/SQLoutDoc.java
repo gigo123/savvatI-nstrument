@@ -102,5 +102,15 @@ class SQLoutDoc {
 		assertTrue(!error,"must be ok");
 		assertTrue(exDocList.size()!=0,"must not be 0");
 	}
-
+	@Test
+	void deleteOutDoc() {
+		initConnection();
+		List<OutDoc> exDocList  = outDocDAO.getOutDocByDate(LocalDate.now());
+		boolean error = outDocDAO.hasError();
+		assertTrue(!error,"must be ok");
+		long id= exDocList.get(exDocList.size()-1).getId();
+		outDocDAO.deleteOutDoc(id);
+		OutDoc exdoc =outDocDAO.getOutDocById(id);
+		assertTrue(exdoc==null,"doc must be null(deletet)");
+	}
 }

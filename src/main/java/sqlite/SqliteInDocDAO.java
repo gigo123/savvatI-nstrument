@@ -20,6 +20,7 @@ public class SqliteInDocDAO implements InDocDAO{
 	private final static String SELECT_DATE_QUERY = "SELECT * FROM inDoc WHERE date = ?";
 	private final static String INSERT_QUERY = "INSERT INTO inDoc( inLocation, "
 			+ "inBox, date, instrument, amount)" + " VALUES(?,?,?,?,?)";
+	private final static String DELETE_QUERY = "DELETE FROM inDoc WHERE id = ?";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
 
@@ -184,7 +185,30 @@ public class SqliteInDocDAO implements InDocDAO{
 
 	@Override
 	public boolean deleteInDoc(long id) {
-		// TODO Auto-generated method stub
+		sqlError = false;
+		PreparedStatement prepSt = null;
+		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
+			try {
+				prepSt = conn.prepareStatement(DELETE_QUERY);
+				prepSt.setLong(1, id);
+				prepSt.execute();
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
+			}
+		} else {
+			sqlError = true;
+		}
 		return false;
 	}
 

@@ -20,6 +20,7 @@ public class SqliteExDocDAO implements ExDocDAO {
 	private final static String SELECT_DATE_QUERY = "SELECT * FROM exDoc WHERE date = ?";
 	private final static String INSERT_QUERY = "INSERT INTO exDoc(outLocation, inLocation, outBox, "
 			+ "inBox, date, instrument, amount)" + " VALUES(?,?,?,?,?,?,?)";
+	private final static String DELETE_QUERY = "DELETE FROM exDoc WHERE id = ?";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
 
@@ -193,7 +194,30 @@ public class SqliteExDocDAO implements ExDocDAO {
 
 	@Override
 	public boolean deleteExDoc(long id) {
-		// TODO Auto-generated method stub
+		sqlError = false;
+		PreparedStatement prepSt = null;
+		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
+			try {
+				prepSt = conn.prepareStatement(DELETE_QUERY);
+				prepSt.setLong(1, id);
+				prepSt.execute();
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
+			}
+		} else {
+			sqlError = true;
+		}
 		return false;
 	}
 

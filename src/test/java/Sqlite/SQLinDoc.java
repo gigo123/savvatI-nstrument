@@ -12,6 +12,7 @@ import models.Box;
 import models.InDoc;
 import models.Instrument;
 import models.Location;
+import models.OutDoc;
 import sqlite.SQLConectionHolder;
 import sqlite.SqliteBoxDAO;
 import sqlite.SqliteInDocDAO;
@@ -100,6 +101,17 @@ class SQLinDoc {
 		boolean error = inDocDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exDocList.size()!=0,"must not be 0");
+	}
+	@Test
+	void deleteInDoc() {
+		initConnection();
+		List<InDoc> exDocList  = inDocDAO.getInDocByDate(LocalDate.now());
+		boolean error = inDocDAO.hasError();
+		assertTrue(!error,"must be ok");
+		long id= exDocList.get(exDocList.size()-1).getId();
+		inDocDAO.deleteInDoc(id);
+		InDoc exdoc =inDocDAO.getInDocById(id);
+		assertTrue(exdoc==null,"doc must be null(deletet)");
 	}
 
 }

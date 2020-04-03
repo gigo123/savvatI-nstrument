@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import models.Box;
 import models.ExDoc;
+import models.InDoc;
 import models.Instrument;
 import models.Location;
 import sqlite.SQLConectionHolder;
@@ -99,5 +100,16 @@ class SQLExDoc {
 		boolean error = exDocDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exDocList.size()!=0,"must not be 0");
+	}
+	@Test
+	void deleteExDoc() {
+		initConnection();
+		List<ExDoc> exDocList  = exDocDAO.getExDocByDate(LocalDate.now());
+		boolean error = exDocDAO.hasError();
+		assertTrue(!error,"must be ok");
+		long id= exDocList.get(exDocList.size()-1).getId();
+		exDocDAO.deleteExDoc(id);
+		ExDoc exdoc =exDocDAO.getExDocById(id);
+		assertTrue(exdoc==null,"doc must be null(deletet)");
 	}
 }
