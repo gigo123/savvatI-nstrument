@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import dao.ExDocDAO;
@@ -51,7 +52,8 @@ public class SqliteExDocDAO implements ExDocDAO {
 				prepSt.setInt(2, exDoc.getInLocation().getId());
 				prepSt.setInt(3, (int) exDoc.getOutBox().getId());
 				prepSt.setInt(4, (int) exDoc.getInBox().getId());
-				prepSt.setDate(5, exDoc.getDate());
+				Date exDate = java.sql.Date.valueOf(LocalDate.now().toString());
+				prepSt.setDate(5, exDate);
 				prepSt.setInt(6, (int) exDoc.getInstrument().getId());
 				prepSt.setFloat(7, exDoc.getAmount());
 				prepSt.execute();
@@ -127,7 +129,8 @@ public class SqliteExDocDAO implements ExDocDAO {
 						exdoc.setInBox(boxDao.getBoxByID(rs.getInt("inBox")));
 						exdoc.setOutBox(boxDao.getBoxByID(rs.getInt("outBox")));
 						exdoc.setInstrument(instDao.getInstrumentByID(rs.getInt("istrument")));
-						exdoc.setDate(rs.getDate("date"));
+						Date exDate = rs.getDate("date");
+						exdoc.setDate(exDate.toLocalDate());
 						exdoc.setAmount(rs.getFloat("amount"));
 						exdoc.setOutLocation(locDao.getLocById(rs.getInt("outLocation")));
 						return exdoc;
@@ -138,7 +141,7 @@ public class SqliteExDocDAO implements ExDocDAO {
 						exdoc.setInBox(boxDao.getBoxByID(rs.getInt("inBox")));
 						exdoc.setOutBox(boxDao.getBoxByID(rs.getInt("outBox")));
 						exdoc.setInstrument(instDao.getInstrumentByID(rs.getInt("istrument")));
-						exdoc.setDate(rs.getDate("date"));
+						//exdoc.setDate(rs.getDate("date"));
 						exdoc.setAmount(rs.getFloat("amount"));
 						exdoc.setOutLocation(locDao.getLocById(rs.getInt("outLocation")));
 						docList.add(exdoc);

@@ -1,6 +1,8 @@
 package models;
 
-import java.sql.Date;
+
+import java.time.LocalDate;
+import java.util.Date;
 
 public class ExDoc {
 	private int id;
@@ -8,7 +10,7 @@ public class ExDoc {
 	private Location inLocation;
 	private Box outBox;
 	private Box inBox;
-	private Date date;
+	private LocalDate date;
 	private Instrument instrument;
 	private float amount;
 	public int getId() {
@@ -41,10 +43,10 @@ public class ExDoc {
 	public void setInBox(Box inBox) {
 		this.inBox = inBox;
 	}
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 	public Instrument getInstrument() {
@@ -59,14 +61,14 @@ public class ExDoc {
 	public void setAmount(float amount) {
 		this.amount = amount;
 	}
-	public ExDoc(Location outLocation, Location inLocation, Box outBox, Box inBox, Date date, Instrument instrument,
+	public ExDoc(Location outLocation, Location inLocation, Box outBox, Box inBox, LocalDate today, Instrument instrument,
 			float amount) {
 		super();
 		this.outLocation = outLocation;
 		this.inLocation = inLocation;
 		this.outBox = outBox;
 		this.inBox = inBox;
-		this.date = date;
+		this.date = today;
 		this.instrument = instrument;
 		this.amount = amount;
 	}
