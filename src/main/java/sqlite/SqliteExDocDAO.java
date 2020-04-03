@@ -141,7 +141,8 @@ public class SqliteExDocDAO implements ExDocDAO {
 						exdoc.setInBox(boxDao.getBoxByID(rs.getInt("inBox")));
 						exdoc.setOutBox(boxDao.getBoxByID(rs.getInt("outBox")));
 						exdoc.setInstrument(instDao.getInstrumentByID(rs.getInt("istrument")));
-						//exdoc.setDate(rs.getDate("date"));
+						Date exDate = rs.getDate("date");
+						exdoc.setDate(exDate.toLocalDate());
 						exdoc.setAmount(rs.getFloat("amount"));
 						exdoc.setOutLocation(locDao.getLocById(rs.getInt("outLocation")));
 						docList.add(exdoc);
