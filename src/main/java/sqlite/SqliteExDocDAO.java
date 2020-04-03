@@ -52,7 +52,7 @@ public class SqliteExDocDAO implements ExDocDAO {
 				prepSt.setInt(2, exDoc.getInLocation().getId());
 				prepSt.setInt(3, (int) exDoc.getOutBox().getId());
 				prepSt.setInt(4, (int) exDoc.getInBox().getId());
-				Date exDate = java.sql.Date.valueOf(LocalDate.now().toString());
+				Date exDate = java.sql.Date.valueOf(exDoc.getDate().toString());
 				prepSt.setDate(5, exDate);
 				prepSt.setInt(6, (int) exDoc.getInstrument().getId());
 				prepSt.setFloat(7, exDoc.getAmount());
