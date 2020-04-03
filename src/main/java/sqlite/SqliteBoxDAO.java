@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import dao.BoxDAO;
 import models.Box;
@@ -16,6 +14,7 @@ public class SqliteBoxDAO implements BoxDAO{
 	private final static String SELECT_ID_QUERY = "SELECT * FROM box WHERE id = ?";
 	private final static String SELECT_NUMBER_QUERY = "SELECT * FROM box WHERE number = ? AND location =?";
 	private final static String INSERT_QUERY = "INSERT INTO box(number, location, instrument,amount)" + " VALUES(?, ?, ?,?)";
+	private final static String DELETE_QUERY = "DELETE FROM box WHERE id = ?";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
 
@@ -39,7 +38,7 @@ public class SqliteBoxDAO implements BoxDAO{
 	public Box getBoxByID(long id) {
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
-		Box box = new Box();
+		Box box = null;
 		SqliteLocationDAO locDao = new SqliteLocationDAO();
 		SqliteInstrumentDAO instDao = new SqliteInstrumentDAO();
 		if (conectionHolder != null && !conectionHolder.isError()) {
@@ -50,6 +49,7 @@ public class SqliteBoxDAO implements BoxDAO{
 			rs = prepSt.executeQuery();
 
 			while (rs.next()) {
+				box= new Box();
 				box.setId(rs.getInt("id"));
 				box.setInstruments(instDao.getInstrumentByID(rs.getInt("instrument")));
 				box.setInstrumentsNumbers(rs.getFloat(("amount")));
@@ -160,7 +160,30 @@ public class SqliteBoxDAO implements BoxDAO{
 
 	@Override
 	public boolean deleteBox(long id) {
-		// TODO Auto-generated method stub
+		sqlError = false;
+		PreparedStatement prepSt = null;
+		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
+			try {
+				prepSt = conn.prepareStatement(DELETE_QUERY);
+				prepSt.setLong(1, id);
+				prepSt.execute();
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
+			}
+		} else {
+			sqlError = true;
+		}
 		return false;
 	}
 

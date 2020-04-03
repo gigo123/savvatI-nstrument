@@ -3,12 +3,15 @@ package Sqlite;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Connection;
+import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 import models.Box;
 import models.Instrument;
 import models.Location;
+import models.OutDoc;
 import sqlite.SQLConectionHolder;
 import sqlite.SqliteBoxDAO;
 import sqlite.SqliteInstrumentDAO;
@@ -74,6 +77,17 @@ class SQLBox {
 		error = boxDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(box.getNumber()==1,"must be test1");
+	}
+	@Test
+	void deleteBox() {
+		initConnection();
+		Box box  = boxDAO.getBoxByNumber(1, 1);
+		boolean error = boxDAO.hasError();
+		assertTrue(!error,"must be ok");
+		long id= box.getId();
+		boxDAO.deleteBox(id);
+		box  = boxDAO.getBoxByID(id);
+		assertTrue(box==null,"box must be null(deletet)");
 	}
 
 }
