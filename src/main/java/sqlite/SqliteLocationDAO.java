@@ -14,6 +14,7 @@ public class SqliteLocationDAO implements LocationDAO {
 	private final static String SELECT_ID_QUERY = "SELECT * FROM location WHERE id = ?";
 	private final static String SELECT_NAME_QUERY = "SELECT * FROM location WHERE NAME = ?";
 	private final static String INSERT_QUERY = "INSERT INTO location(name, boxes)" + " VALUES(?,?)";
+	private final static String DELETE_QUERY = "DELETE FROM location WHERE id = ?";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
 
@@ -67,7 +68,7 @@ public class SqliteLocationDAO implements LocationDAO {
 		sqlError = false;
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
-		Location loc = new Location();
+		Location loc = null;
 		if ( conectionHolder!=null&&!conectionHolder.isError()) {
 			Connection conn = conectionHolder.getConnection();
 			try {
@@ -76,6 +77,7 @@ public class SqliteLocationDAO implements LocationDAO {
 				rs = prepSt.executeQuery();
 
 				while (rs.next()) {
+					loc = new Location();
 					loc.setId(rs.getInt("id"));
 					loc.setName(rs.getString("name"));
 					loc.setBoxes(rs.getBoolean("boxes"));
@@ -182,7 +184,30 @@ public class SqliteLocationDAO implements LocationDAO {
 
 	@Override
 	public boolean deleteLocation(long id) {
-		// TODO Auto-generated method stub
+		sqlError = false;
+		PreparedStatement prepSt = null;
+		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
+			try {
+				prepSt = conn.prepareStatement(DELETE_QUERY);
+				prepSt.setLong(1, id);
+				prepSt.execute();
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
+			}
+		} else {
+			sqlError = true;
+		}
 		return false;
 	}
 

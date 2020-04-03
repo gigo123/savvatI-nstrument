@@ -3,7 +3,6 @@ package Sqlite;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Connection;
-
 import org.junit.jupiter.api.Test;
 
 import models.Location;
@@ -51,6 +50,7 @@ class SQLLoocation {
 		Location location = locationDAO.getLocById(1);
 		error = locationDAO.hasError();
 		assertTrue(!error,"must be ok");
+		assertTrue(location!=null,"must not be null");
 	}
 	@Test
 	void getLocByName() {
@@ -64,6 +64,17 @@ class SQLLoocation {
 		assertTrue(!error,"must be ok");
 		assertTrue(location.getName().equals("test1"),"must be test1");
 		assertTrue(!location.isBoxes(),"must be false");
+	}
+	@Test
+	void deleteLocation() {
+		initConnection();
+		Location location = locationDAO.getLocByName("test1");
+		boolean error = locationDAO.hasError();
+		assertTrue(!error,"must be ok");
+		long id= location.getId();
+		locationDAO.deleteLocation(id);
+		location  = locationDAO.getLocById(id);
+		assertTrue(location == null,"box must be null(deletet)");
 	}
 
 }
