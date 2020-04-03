@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import dao.InstrumentDAO;
-import dao.LocationDAO;
 import models.Instrument;
-import models.Location;
 
 @Controller
 @RequestMapping("/addinstument")
@@ -22,7 +20,7 @@ public class AddInstrument {
 	private InstrumentDAO instDAO;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView getLocationCF() {
+	public ModelAndView getInstrumentCF() {
 		ModelAndView model = new ModelAndView("AddInstrument", "command", new Instrument());
 		if (error) {
 			error = false;
@@ -32,23 +30,37 @@ public class AddInstrument {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView postLocationCF(@ModelAttribute("SpringWeb") Instrument instrument, ModelMap model) {
+	public ModelAndView postInstrumentCF(@ModelAttribute("SpringWeb") Instrument instrument, ModelMap model) {
 		error = false;
 		errorText = new StringBuilder("<ul>");
 		@SuppressWarnings("resource")
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
+		checkErrors(instrument);
 		if (!error) {
 			if (!instDAO.createInstrument(instrument)) {
 				error = true;
 				errorText.append("<li>ошибка бази данних </li>");
 			}
 		}
-		return getLocationCF();
+		return getInstrumentCF();
 	}
 
-	
-
-
+	private void checkErrors(Instrument inst) {
+		if (inst.getName().length() < 4) {
+			error = true;
+			errorText.append("<li> короткое имя </li>");
+		}
+		Instrument instrum = instDAO.getInstrumentByName(inst.getName());
+		if (instDAO.hasError()) {
+			error = true;
+			errorText.append("<li> ошибка бази данних </li>");
+		} else {
+			if (instrum != null) {
+				error = true;
+				errorText.append("<li> место хранения существует </li>");
+			}
+		}
+	}
 
 }
