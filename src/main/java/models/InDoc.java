@@ -1,12 +1,12 @@
 package models;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 public class InDoc {
 	private int id;
 	private Location inLocation;
 	private Box inBox;
-	private Date date;
+	private LocalDate date;
 	private Instrument instrument;
 	private float amount;
 	public int getId() {
@@ -27,10 +27,10 @@ public class InDoc {
 	public void setInBox(Box inBox) {
 		this.inBox = inBox;
 	}
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 	public Instrument getInstrument() {
@@ -45,7 +45,7 @@ public class InDoc {
 	public void setAmount(float amount) {
 		this.amount = amount;
 	}
-	public InDoc(Location inLocation, Box inBox, Date date, Instrument instrument, float amount) {
+	public InDoc(Location inLocation, Box inBox, LocalDate date, Instrument instrument, float amount) {
 		super();
 		this.inLocation = inLocation;
 		this.inBox = inBox;
