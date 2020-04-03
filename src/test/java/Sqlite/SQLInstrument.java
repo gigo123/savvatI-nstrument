@@ -41,18 +41,19 @@ SqliteInstrumentDAO instrumentDAO;
 		assertTrue(!error,"must be ok");
 	}
 	@Test
-	void getLocById() {
+	void getInstById() {
 		SqliteInstrumentDAO instrumentDAOc = new SqliteInstrumentDAO();
 		instrumentDAOc.getInstrumentByID(1);
 		boolean error = instrumentDAOc.hasError();
 		assertTrue(error,"must be error");
 		initConnection();
+		System.out.println(instrumentDAO.getConectionHolder());
 		 instrumentDAO.getInstrumentByID(1);
 		error = instrumentDAO.hasError();
 		assertTrue(!error,"must be ok");
 	}
 	@Test
-	void getLocByName() {
+	void getInstByName() {
 		SqliteInstrumentDAO instrumentDAOc = new SqliteInstrumentDAO();
 		instrumentDAOc.getInstrumentByName("test1");
 		boolean error = instrumentDAOc.hasError();
