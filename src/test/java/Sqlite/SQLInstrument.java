@@ -1,11 +1,10 @@
 package Sqlite;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.sql.Connection;
-
 import org.junit.jupiter.api.Test;
 
+import models.Box;
 import models.Instrument;
 import sqlite.SQLConectionHolder;
 import sqlite.SqliteInstrumentDAO;
@@ -63,6 +62,17 @@ SqliteInstrumentDAO instrumentDAO;
 		assertTrue(!error,"must be ok");
 		assertTrue(instrum.getName().equals("test1"),"must be test1");
 		assertTrue(instrum.getMeasure().equals("шт"),"must be false");
+	}
+	@Test
+	void deleteInstrument() {
+		initConnection();
+		Instrument instrum = instrumentDAO.getInstrumentByName("test1");
+		boolean error = instrumentDAO.hasError();
+		assertTrue(!error,"must be ok");
+		long id= instrum.getId();
+		instrumentDAO.deleteInstrument(id);
+		instrum  = instrumentDAO.getInstrumentByID(id);
+		assertTrue(instrum==null,"box must be null(deletet)");
 	}
 
 }

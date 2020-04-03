@@ -20,6 +20,7 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 	private final static String SELECT_LOC_QUERY = "SELECT * FROM box WHERE  loaction = ?";
 	private final static String SELECT_ALL_QUERY = "SELECT * FROM box";
 	private final static String INSERT_QUERY = "INSERT INTO instrument(name, measure, comment)" + " VALUES(?, ?, ?)";
+	private final static String DELETE_QUERY = "DELETE FROM instrument WHERE id = ?";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
 
@@ -97,7 +98,7 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 						inst.setName(rs.getString("name"));
 						inst.setComment(rs.getString("comment"));
 						inst.setMeasure(rs.getString("measure"));
-						return inst;
+						break;
 					}
 					Box box = new Box();
 					box.setId(rs.getInt("id"));
@@ -107,8 +108,14 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 					box.setNumber(rs.getInt("number"));
 					boxList.add(box);
 				}
+				
 				conectionHolder.closeConnection();
-
+				if(type == 1||type == 2){
+					return inst;
+				}
+				else {
+					return boxList;
+				}
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();
@@ -197,7 +204,30 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 
 	@Override
 	public boolean deleteInstrument(long id) {
-		// TODO Auto-generated method stub
+		sqlError = false;
+		PreparedStatement prepSt = null;
+		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
+			try {
+				prepSt = conn.prepareStatement(DELETE_QUERY);
+				prepSt.setLong(1, id);
+				prepSt.execute();
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
+			}
+		} else {
+			sqlError = true;
+		}
 		return false;
 	}
 
