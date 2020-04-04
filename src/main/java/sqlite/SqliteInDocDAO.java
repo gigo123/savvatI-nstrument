@@ -48,7 +48,7 @@ public class SqliteInDocDAO implements InDocDAO{
 			PreparedStatement prepSt = null;
 			try {
 				prepSt = conn.prepareStatement(INSERT_QUERY);
-				prepSt.setInt(1, inDoc.getInLocation().getId());
+				prepSt.setLong(1, inDoc.getInLocation().getId());
 				prepSt.setInt(2, (int) inDoc.getInBox().getId());
 				Date exDate = java.sql.Date.valueOf(inDoc.getDate().toString());
 				prepSt.setDate(3, exDate);

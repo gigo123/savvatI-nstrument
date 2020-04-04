@@ -15,6 +15,8 @@ public class SqliteLocationDAO implements LocationDAO {
 	private final static String SELECT_NAME_QUERY = "SELECT * FROM location WHERE NAME = ?";
 	private final static String INSERT_QUERY = "INSERT INTO location(name, boxes)" + " VALUES(?,?)";
 	private final static String DELETE_QUERY = "DELETE FROM location WHERE id = ?";
+	private final static String SELECT_ALL = "SELECT * FROM location";
+	private final static String SELECT_ALL_WB = "SELECT * FROM location WHERE BOXES = '1'";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
 
@@ -141,47 +143,7 @@ public class SqliteLocationDAO implements LocationDAO {
 		return loc;
 	}
 
-	@SuppressWarnings("null")
-	@Override
-	public List<Location> getLocByNameL(String name) {
-		sqlError = false;
-		ResultSet rs = null;
-		PreparedStatement prepSt = null;
-		List<Location> locList = new ArrayList<Location>();
-		Location loc = null;
-		if ( conectionHolder!=null&&!conectionHolder.isError()) {
-			Connection conn = conectionHolder.getConnection();
-			try {
-				prepSt = conn.prepareStatement(SELECT_NAME_QUERY);
-				prepSt.setString(1, name);
-				rs = prepSt.executeQuery();
-
-				while (rs.next()) {
-					loc = null;
-					loc.setId(rs.getInt("id"));
-					loc.setName(rs.getString("name"));
-					loc.setBoxes(rs.getBoolean("boxes"));
-					locList.add(loc);
-				}
-				conectionHolder.closeConnection();
-			} catch (SQLException e) {
-				sqlError = true;
-				e.printStackTrace();
-			} finally {
-				if (prepSt != null) {
-					try {
-						prepSt.close();
-					} catch (SQLException sqlEx) {
-					}
-					prepSt = null;
-				}
-			}
-		} else {
-			sqlError = true;
-		}
-		return locList;
-	}
-
+	
 	@Override
 	public boolean deleteLocation(long id) {
 		sqlError = false;
@@ -214,6 +176,85 @@ public class SqliteLocationDAO implements LocationDAO {
 	@Override
 	public boolean hasError() {
 		return sqlError;
+	}
+
+	@SuppressWarnings("null")
+	@Override
+	public List<Location> getAllLocatin() {
+		sqlError = false;
+		ResultSet rs = null;
+		PreparedStatement prepSt = null;
+		List<Location> locList = new ArrayList<Location>();
+		Location loc = null;
+		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
+			try {
+				prepSt = conn.prepareStatement(SELECT_ALL);
+				rs = prepSt.executeQuery();
+
+				while (rs.next()) {
+					loc = null;
+					loc.setId(rs.getInt("id"));
+					loc.setName(rs.getString("name"));
+					loc.setBoxes(rs.getBoolean("boxes"));
+					locList.add(loc);
+				}
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
+			}
+		} else {
+			sqlError = true;
+		}
+		return locList;
+	}
+
+	@Override
+	public List<Location> getAllLocatinWB() {
+		sqlError = false;
+		ResultSet rs = null;
+		PreparedStatement prepSt = null;
+		List<Location> locList = new ArrayList<Location>();
+		Location loc = null;
+		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
+			try {
+				prepSt = conn.prepareStatement(SELECT_ALL_WB);
+				rs = prepSt.executeQuery();
+
+				while (rs.next()) {
+					loc = null;
+					loc.setId(rs.getInt("id"));
+					loc.setName(rs.getString("name"));
+					loc.setBoxes(rs.getBoolean("boxes"));
+					locList.add(loc);
+				}
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
+			}
+		} else {
+			sqlError = true;
+		}
+		return locList;
 	}
 
 }

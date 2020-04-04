@@ -49,7 +49,7 @@ public class SqliteOutDocDAO implements OutDocDAO {
 			PreparedStatement prepSt = null;
 			try {
 				prepSt = conn.prepareStatement(INSERT_QUERY);
-				prepSt.setInt(1, outDoc.getOutLocation().getId());
+				prepSt.setLong(1, outDoc.getOutLocation().getId());
 				prepSt.setInt(2, (int) outDoc.getOutBox().getId());
 				Date exDate = java.sql.Date.valueOf(outDoc.getDate().toString());
 				prepSt.setDate(3, exDate);

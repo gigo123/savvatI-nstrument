@@ -49,8 +49,8 @@ public class SqliteExDocDAO implements ExDocDAO {
 			PreparedStatement prepSt = null;
 			try {
 				prepSt = conn.prepareStatement(INSERT_QUERY);
-				prepSt.setInt(1, exDoc.getOutLocation().getId());
-				prepSt.setInt(2, exDoc.getInLocation().getId());
+				prepSt.setLong(1, exDoc.getOutLocation().getId());
+				prepSt.setLong(2, exDoc.getInLocation().getId());
 				prepSt.setInt(3, (int) exDoc.getOutBox().getId());
 				prepSt.setInt(4, (int) exDoc.getInBox().getId());
 				Date exDate = java.sql.Date.valueOf(exDoc.getDate().toString());
