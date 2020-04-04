@@ -178,7 +178,7 @@ public class SqliteLocationDAO implements LocationDAO {
 		return sqlError;
 	}
 
-	@SuppressWarnings("null")
+
 	@Override
 	public List<Location> getAllLocatin() {
 		sqlError = false;
@@ -193,7 +193,7 @@ public class SqliteLocationDAO implements LocationDAO {
 				rs = prepSt.executeQuery();
 
 				while (rs.next()) {
-					loc = null;
+					loc = new Location();
 					loc.setId(rs.getInt("id"));
 					loc.setName(rs.getString("name"));
 					loc.setBoxes(rs.getBoolean("boxes"));
@@ -232,7 +232,7 @@ public class SqliteLocationDAO implements LocationDAO {
 				rs = prepSt.executeQuery();
 
 				while (rs.next()) {
-					loc = null;
+					loc = new Location();
 					loc.setId(rs.getInt("id"));
 					loc.setName(rs.getString("name"));
 					loc.setBoxes(rs.getBoolean("boxes"));

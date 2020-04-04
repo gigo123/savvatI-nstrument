@@ -3,6 +3,8 @@ package Sqlite;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Connection;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import models.Location;
@@ -64,6 +66,26 @@ class SQLLoocation {
 		assertTrue(!error,"must be ok");
 		assertTrue(location.getName().equals("test1"),"must be test1");
 		assertTrue(!location.isBoxes(),"must be false");
+	}
+	@Test
+	void getAllLocatin() {
+		initConnection();
+		List<Location> locList = locationDAO.getAllLocatin();
+		boolean error = locationDAO.hasError();
+		assertTrue(!error,"must be ok");
+		assertTrue(locList.size()!=0,"must not be 0");
+	}
+	@Test
+	void getAllLocatinWb() {
+		initConnection();
+		Location location = new Location();
+		location.setName("test2");
+		location.setBoxes(true);
+		locationDAO.createLocation(location);
+		List<Location> locList = locationDAO.getAllLocatinWB();
+		boolean error = locationDAO.hasError();
+		assertTrue(!error,"must be ok");
+		assertTrue(locList.size()!=0,"must not be 0");
 	}
 	@Test
 	void deleteLocation() {
