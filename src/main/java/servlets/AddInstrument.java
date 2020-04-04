@@ -40,7 +40,7 @@ public class AddInstrument {
 		if (!error) {
 			if (!instDAO.createInstrument(instrument)) {
 				error = true;
-				errorText.append("<li>ошибка бази данних </li>");
+				errorText.append("<li>ошыбка бази данних </li>");
 			}
 		}
 		return getInstrumentCF();
@@ -54,7 +54,7 @@ public class AddInstrument {
 		Instrument instrum = instDAO.getInstrumentByName(inst.getName());
 		if (instDAO.hasError()) {
 			error = true;
-			errorText.append("<li> ошибка бази данних </li>");
+			errorText.append("<li> ошыбка бази данних </li>");
 		} else {
 			if (instrum != null) {
 				error = true;

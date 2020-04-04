@@ -40,7 +40,7 @@ public class AddLocation {
 		if (!error) {
 			if (!locDAO.createLocation(location)) {
 				error = true;
-				errorText.append("<li>ошибка бази данних </li>");
+				errorText.append("<li>ошыбка бази данних </li>");
 			}
 		}
 		return getLocationCF();
@@ -54,7 +54,7 @@ public class AddLocation {
 		Location loc = locDAO.getLocByName(location.getName());
 		if (locDAO.hasError()) {
 			error = true;
-			errorText.append("<li> ошибка бази данних </li>");
+			errorText.append("<li> ошыбка бази данних </li>");
 		} else {
 			if (loc != null) {
 				error = true;
