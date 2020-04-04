@@ -7,7 +7,6 @@ import java.sql.SQLException;
 
 import dao.BoxDAO;
 import models.Box;
-import models.Instrument;
 
 public class SqliteBoxDAO implements BoxDAO{
 
