@@ -3,6 +3,9 @@ package Sqlite;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Connection;
+import java.util.List;
+
+import org.junit.AfterClass;
 import org.junit.jupiter.api.Test;
 import models.Box;
 import models.Location;
@@ -55,9 +58,10 @@ class SQLBox {
 		boolean error = boxDAOc.hasError();
 		assertTrue(error,"must be error");
 		initConnection();
-		 boxDAO.getBoxByID(1);
+		Box box = boxDAO.getBoxByID(9);
 		error = boxDAO.hasError();
 		assertTrue(!error,"must be ok");
+		assertTrue(box!=null,"must not be null");
 	}
 	@Test
 	void getBoxByNumber() {
@@ -72,6 +76,23 @@ class SQLBox {
 		assertTrue(box.getNumber()==1,"must be test1");
 	}
 	@Test
+	void getAllBox() {
+		initConnection();
+		List<Box> boxList  = boxDAO.getAllBox();
+		boolean error = boxDAO.hasError();
+		assertTrue(!error,"must be ok");
+		assertTrue(boxList.size()!=0,"must be at lease one element");
+	}
+	@Test
+	void getAllBoxBylocotion() {
+		initConnection();
+		List<Box> boxList  = boxDAO.getAllBoxByLocation(1);
+		boolean error = boxDAO.hasError();
+		assertTrue(!error,"must be ok");
+		assertTrue(boxList.size()!=0,"must be at lease one element");
+	}
+	@Test
+	@AfterClass
 	void deleteBox() {
 		initConnection();
 		Box box  = boxDAO.getBoxByNumber(1, 1);

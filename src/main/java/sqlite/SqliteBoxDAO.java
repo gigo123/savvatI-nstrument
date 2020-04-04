@@ -4,16 +4,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import dao.BoxDAO;
 import models.Box;
 
-public class SqliteBoxDAO implements BoxDAO{
-
+public class SqliteBoxDAO implements BoxDAO {
 	private final static String SELECT_ID_QUERY = "SELECT * FROM box WHERE id = ?";
 	private final static String SELECT_NUMBER_QUERY = "SELECT * FROM box WHERE number = ? AND location =?";
 	private final static String INSERT_QUERY = "INSERT INTO box(number, location)" + " VALUES(?, ?)";
 	private final static String DELETE_QUERY = "DELETE FROM box WHERE id = ?";
+	private final static String SELECT_ALL = "SELECT * FROM box";
+	private final static String SELECT_ALL_LOCATION = "SELECT * FROM box WHERE location = ?";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
 
@@ -33,84 +36,15 @@ public class SqliteBoxDAO implements BoxDAO{
 	public void setConectionHolder(SQLConectionHolder conectionHolder) {
 		this.conectionHolder = conectionHolder;
 	}
+
 	@Override
 	public Box getBoxByID(long id) {
-		ResultSet rs = null;
-		PreparedStatement prepSt = null;
-		Box box = null;
-		SqliteLocationDAO locDao = new SqliteLocationDAO();
-		if (conectionHolder != null && !conectionHolder.isError()) {
-			Connection conn = conectionHolder.getConnection();
-		try {
-			prepSt = conn.prepareStatement(SELECT_ID_QUERY);
-			prepSt.setInt(1, (int)id);
-			rs = prepSt.executeQuery();
-
-			while (rs.next()) {
-				box= new Box();
-				box.setId(rs.getInt("id"));
-				box.setLocation(locDao.getLocById(rs.getInt("location")));
-				box.setNumber(rs.getInt("number"));
-			}
-			conectionHolder.closeConnection();
-		} catch (SQLException e) {
-			sqlError=true;
-			e.printStackTrace();
-		} finally {
-			if (prepSt != null) {
-				try {
-					prepSt.close();
-				} catch (SQLException sqlEx) {
-				}
-				prepSt = null;
-			}
-		}
-		}
-		else {
-			sqlError=true;
-		}
-		return box;
+		return (Box)selectQ(id,null,1);
 	}
 
-
 	@Override
-	public Box getBoxByNumber(int number, int idLocation) {
-		ResultSet rs = null;
-		PreparedStatement prepSt = null;
-		Box box = new Box();
-		SqliteLocationDAO locDao = new SqliteLocationDAO();
-		if (conectionHolder != null && !conectionHolder.isError()) {
-			Connection conn = conectionHolder.getConnection();
-		try {
-			prepSt = conn.prepareStatement(SELECT_NUMBER_QUERY);
-			prepSt.setInt(1, number);
-			prepSt.setInt(2, idLocation);
-			rs = prepSt.executeQuery();
-
-			while (rs.next()) {
-				box.setId(rs.getInt("id"));
-				box.setLocation(locDao.getLocById(rs.getInt("location")));
-				box.setNumber(rs.getInt("number"));
-				return box;
-			}
-			conectionHolder.closeConnection();
-		} catch (SQLException e) {
-			sqlError=true;
-			e.printStackTrace();
-		} finally {
-			if (prepSt != null) {
-				try {
-					prepSt.close();
-				} catch (SQLException sqlEx) {
-				}
-				prepSt = null;
-			}
-		}
-		}
-		else {
-			sqlError=true;
-		}
-		return box;
+	public Box getBoxByNumber(int number, long idLocation) {
+		return (Box)selectQ(number,idLocation,2);
 	}
 
 	@Override
@@ -148,7 +82,7 @@ public class SqliteBoxDAO implements BoxDAO{
 	public boolean deleteBox(long id) {
 		sqlError = false;
 		PreparedStatement prepSt = null;
-		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+		if (conectionHolder != null && !conectionHolder.isError()) {
 			Connection conn = conectionHolder.getConnection();
 			try {
 				prepSt = conn.prepareStatement(DELETE_QUERY);
@@ -173,4 +107,93 @@ public class SqliteBoxDAO implements BoxDAO{
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Box> getAllBox() {
+		return (List<Box>)selectQ(null,null,3);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Box> getAllBoxByLocation(long idLocation) {
+		
+		return (List<Box>)selectQ(idLocation,null,4);
+	}
+
+	private Object selectQ(Object obj, Object obj2, int type) {
+		sqlError = false;
+		if (conectionHolder != null && !conectionHolder.isError()) {
+			Connection conn = conectionHolder.getConnection();
+			ResultSet rs = null;
+			PreparedStatement prepSt = null;
+			SqliteLocationDAO locDao = new SqliteLocationDAO();
+			List<Box> boxList = new ArrayList<Box>();
+			Box box = null;
+			try {
+				switch (type) {
+				case 1: {
+					prepSt = conn.prepareStatement(SELECT_ID_QUERY);
+					prepSt.setLong(1, (long) obj);
+					rs = prepSt.executeQuery();
+					break;
+				}
+				case 2: {
+					prepSt = conn.prepareStatement(SELECT_NUMBER_QUERY);
+					prepSt.setInt(1, (int)obj);
+					prepSt.setLong(2, (long)obj2);
+					rs = prepSt.executeQuery();
+					break;
+				}
+				case 3: {
+					prepSt = conn.prepareStatement(SELECT_ALL);
+					rs = prepSt.executeQuery();
+					break;
+				}
+				case 4: {
+					prepSt = conn.prepareStatement(SELECT_ALL_LOCATION);
+					prepSt.setLong(1, (long) obj);
+					rs = prepSt.executeQuery();
+					break;
+				}
+
+				default: {
+					sqlError = true;
+				}
+				}
+				while (rs.next()) {
+					box = new Box();
+					box.setId(rs.getInt("id"));
+					box.setLocation(locDao.getLocById(rs.getInt("location")));
+					box.setNumber(rs.getInt("number"));
+					if (type == 1||type ==2) {
+						break;
+					} else {
+						boxList.add(box);
+					}
+				}
+				conectionHolder.closeConnection();
+				if (type == 1||type ==2) {
+					return box;
+				} else {
+					return boxList;
+				}
+
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
+			}
+		} else {
+			sqlError = true;
+		}
+		return null;
+
+	}
 }
