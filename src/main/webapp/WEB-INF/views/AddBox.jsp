@@ -22,9 +22,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<
 			<div class="col-3">
-
 				<form:label path="locationWB">место хранения</form:label>
 			</div>
 			<div class="col-3">

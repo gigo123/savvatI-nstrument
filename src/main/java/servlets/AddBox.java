@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import dao.BoxDAO;
 import dao.LocationDAO;
 import models.Box;
+import models.Instrument;
 import models.Location;
 import savvats.BoxListLocation;
 
@@ -36,13 +37,14 @@ public class AddBox {
 		return model;
 	}
 
+	@SuppressWarnings("resource")
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView postBoxCF(@ModelAttribute("SpringWeb") Box box, ModelMap model) {
+	public ModelAndView postBoxCF(@ModelAttribute("SpringWeb") BoxListLocation box, ModelMap model) {
 		error = false;
 		errorText = new StringBuilder("<ul>");
-		@SuppressWarnings("resource")
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		boxDAO = (BoxDAO) context.getBean("BoxDAO");
+		checkErrors(box);
 		if (!error) {
 			if (!boxDAO.createBox(box)) {
 				error = true;
@@ -63,6 +65,18 @@ public class AddBox {
 			locationWB.put(location.getId(), location.getName());
 		}
 		return locationWB;
+	}
+
+	private void checkErrors(BoxListLocation box) {
+		if (box.getNumber() == 0) {
+			error = true;
+			errorText.append("<li> не можеть бить  нуловой номер </li>");
+		}
+
+		if (box.getLocation() != null) {
+			error = true;
+			errorText.append("<li> не вибрано место хранения </li>");
+		}
 	}
 
 }
