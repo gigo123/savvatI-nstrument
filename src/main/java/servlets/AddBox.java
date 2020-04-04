@@ -1,5 +1,9 @@
 package servlets;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -13,6 +17,7 @@ import dao.BoxDAO;
 import dao.InstrumentDAO;
 import models.Box;
 import models.Instrument;
+import savvats.BoxListLocation;
 
 @Controller
 @RequestMapping("/addbox")
@@ -23,7 +28,7 @@ public class AddBox {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getBoxCF() {
-		ModelAndView model = new ModelAndView("AddBox", "command", new Box());
+		ModelAndView model = new ModelAndView("AddBox", "command", new BoxListLocation());
 		if (error) {
 			error = false;
 			model.addObject("errorText", errorText.toString());
@@ -48,6 +53,16 @@ public class AddBox {
 		}
 		return getBoxCF();
 	}
+	
 
+	   @ModelAttribute("locationWB")
+	   public Map<Long, String> getLocationWB() {
+	      Map<Long, String> locationWB = new HashMap<Long, String>();
+	      locationWB.put((long) 1, "Hibernate");
+	      locationWB.put((long) 2, "Spring");
+	      locationWB.put((long) 3, "Apache Wicket");
+	      locationWB.put((long) 4, "Struts");
+	      return locationWB;
+	   }
 
 }
