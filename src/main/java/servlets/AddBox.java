@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import dao.BoxDAO;
-import dao.InstrumentDAO;
+import dao.LocationDAO;
 import models.Box;
-import models.Instrument;
+import models.Location;
 import savvats.BoxListLocation;
 
 @Controller
@@ -36,8 +36,6 @@ public class AddBox {
 		return model;
 	}
 
-	
-
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView postBoxCF(@ModelAttribute("SpringWeb") Box box, ModelMap model) {
 		error = false;
@@ -46,23 +44,25 @@ public class AddBox {
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		boxDAO = (BoxDAO) context.getBean("BoxDAO");
 		if (!error) {
-			if (!boxDAO.createBox(box)){
+			if (!boxDAO.createBox(box)) {
 				error = true;
 				errorText.append("<li>ошыбка бази данних </li>");
 			}
 		}
 		return getBoxCF();
 	}
-	
 
-	   @ModelAttribute("locationWB")
-	   public Map<Long, String> getLocationWB() {
-	      Map<Long, String> locationWB = new HashMap<Long, String>();
-	      locationWB.put((long) 1, "Hibernate");
-	      locationWB.put((long) 2, "Spring");
-	      locationWB.put((long) 3, "Apache Wicket");
-	      locationWB.put((long) 4, "Struts");
-	      return locationWB;
-	   }
+	@SuppressWarnings("resource")
+	@ModelAttribute("locationWB")
+	public Map<Long, String> getLocationWB() {
+		Map<Long, String> locationWB = new HashMap<Long, String>();
+		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+		LocationDAO locDAO = (LocationDAO) context.getBean("LoctionDAO");
+		List<Location> locList = locDAO.getAllLocatinWB();
+		for (Location location : locList) {
+			locationWB.put(location.getId(), location.getName());
+		}
+		return locationWB;
+	}
 
 }
