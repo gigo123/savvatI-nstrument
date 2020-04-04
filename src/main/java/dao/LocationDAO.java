@@ -8,7 +8,8 @@ public interface LocationDAO {
 	public  boolean createLocation(Location location);
 	public Location getLocById(long id);
 	public Location getLocByName(String name);
-	public List<Location> getLocByNameL(String name);
+	public List<Location> getAllLocatin();
+	public List<Location> getAllLocatinWB();
 	public boolean deleteLocation(long id);
 	public boolean hasError();
 }

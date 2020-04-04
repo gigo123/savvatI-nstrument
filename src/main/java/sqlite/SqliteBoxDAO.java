@@ -55,7 +55,7 @@ public class SqliteBoxDAO implements BoxDAO {
 			try {
 				prepSt = conn.prepareStatement(INSERT_QUERY);
 				prepSt.setInt(1, box.getNumber());
-				prepSt.setInt(2, box.getLocation().getId());
+				prepSt.setLong(2, box.getLocation().getId());
 				prepSt.execute();
 				conectionHolder.closeConnection();
 			} catch (SQLException e) {
