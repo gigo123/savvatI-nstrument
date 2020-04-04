@@ -13,7 +13,7 @@ public class SqliteBoxDAO implements BoxDAO{
 
 	private final static String SELECT_ID_QUERY = "SELECT * FROM box WHERE id = ?";
 	private final static String SELECT_NUMBER_QUERY = "SELECT * FROM box WHERE number = ? AND location =?";
-	private final static String INSERT_QUERY = "INSERT INTO box(number, location, instrument,amount)" + " VALUES(?, ?, ?,?)";
+	private final static String INSERT_QUERY = "INSERT INTO box(number, location)" + " VALUES(?, ?)";
 	private final static String DELETE_QUERY = "DELETE FROM box WHERE id = ?";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
@@ -40,7 +40,6 @@ public class SqliteBoxDAO implements BoxDAO{
 		PreparedStatement prepSt = null;
 		Box box = null;
 		SqliteLocationDAO locDao = new SqliteLocationDAO();
-		SqliteInstrumentDAO instDao = new SqliteInstrumentDAO();
 		if (conectionHolder != null && !conectionHolder.isError()) {
 			Connection conn = conectionHolder.getConnection();
 		try {
@@ -51,8 +50,6 @@ public class SqliteBoxDAO implements BoxDAO{
 			while (rs.next()) {
 				box= new Box();
 				box.setId(rs.getInt("id"));
-				box.setInstruments(instDao.getInstrumentByID(rs.getInt("instrument")));
-				box.setInstrumentsNumbers(rs.getFloat(("amount")));
 				box.setLocation(locDao.getLocById(rs.getInt("location")));
 				box.setNumber(rs.getInt("number"));
 			}
@@ -76,11 +73,6 @@ public class SqliteBoxDAO implements BoxDAO{
 		return box;
 	}
 
-	@Override
-	public boolean operatonWBox(Box box, Instrument instrument, float amount, boolean type) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public Box getBoxByNumber(int number, int idLocation) {
@@ -88,7 +80,6 @@ public class SqliteBoxDAO implements BoxDAO{
 		PreparedStatement prepSt = null;
 		Box box = new Box();
 		SqliteLocationDAO locDao = new SqliteLocationDAO();
-		SqliteInstrumentDAO instDao = new SqliteInstrumentDAO();
 		if (conectionHolder != null && !conectionHolder.isError()) {
 			Connection conn = conectionHolder.getConnection();
 		try {
@@ -99,8 +90,6 @@ public class SqliteBoxDAO implements BoxDAO{
 
 			while (rs.next()) {
 				box.setId(rs.getInt("id"));
-				box.setInstruments(instDao.getInstrumentByID(rs.getInt("instrument")));
-				box.setInstrumentsNumbers(rs.getFloat(("amount")));
 				box.setLocation(locDao.getLocById(rs.getInt("location")));
 				box.setNumber(rs.getInt("number"));
 				return box;
@@ -134,8 +123,6 @@ public class SqliteBoxDAO implements BoxDAO{
 				prepSt = conn.prepareStatement(INSERT_QUERY);
 				prepSt.setInt(1, box.getNumber());
 				prepSt.setInt(2, box.getLocation().getId());
-				prepSt.setInt(3, (int)box.getInstruments().getId());
-				prepSt.setFloat(4, box.getInstrumentsNumbers());
 				prepSt.execute();
 				conectionHolder.closeConnection();
 			} catch (SQLException e) {

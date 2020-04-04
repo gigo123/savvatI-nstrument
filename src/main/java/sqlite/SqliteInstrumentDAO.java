@@ -102,8 +102,6 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 					}
 					Box box = new Box();
 					box.setId(rs.getInt("id"));
-					box.setInstruments(getInstrumentByID(rs.getInt("instruments")));
-					box.setInstrumentsNumbers(rs.getFloat("instrumentsNumbers"));
 					box.setLocation(locDao.getLocById(rs.getInt("location")));
 					box.setNumber(rs.getInt("number"));
 					boxList.add(box);
