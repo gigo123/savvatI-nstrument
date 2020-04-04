@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import dao.BoxDAO;
 import dao.InstrumentDAO;
 import models.Box;
 import models.Instrument;
@@ -18,10 +19,10 @@ import models.Instrument;
 public class AddBox {
 	private boolean error = false;
 	private StringBuilder errorText;
-	private InstrumentDAO instDAO;
+	private BoxDAO boxDAO;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView getInstrumentCF() {
+	public ModelAndView getBoxCF() {
 		ModelAndView model = new ModelAndView("AddBox", "command", new Box());
 		if (error) {
 			error = false;
@@ -32,6 +33,21 @@ public class AddBox {
 
 	
 
-	
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView postBoxCF(@ModelAttribute("SpringWeb") Box box, ModelMap model) {
+		error = false;
+		errorText = new StringBuilder("<ul>");
+		@SuppressWarnings("resource")
+		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+		boxDAO = (BoxDAO) context.getBean("BoxDAO");
+		if (!error) {
+			if (!boxDAO.createBox(box)){
+				error = true;
+				errorText.append("<li>ошыбка бази данних </li>");
+			}
+		}
+		return getBoxCF();
+	}
+
 
 }
