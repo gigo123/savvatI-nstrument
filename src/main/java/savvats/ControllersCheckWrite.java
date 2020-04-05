@@ -65,11 +65,11 @@ public class ControllersCheckWrite {
 		} else {
 			if (instrum != null) {
 				error = true;
-				errorText.append("<li> инструмен с таким именем уже существует </li>");
+				errorText.append("<li> инструмент с таким именем уже существует </li>");
 			}
 		}
 		if (!error) {
-			if (!instDAO.createInstrument(instrum)) {
+			if (!instDAO.createInstrument(ininstr)) {
 				error = true;
 				errorText.append("<li>ошыбка бази данних </li>");
 			}

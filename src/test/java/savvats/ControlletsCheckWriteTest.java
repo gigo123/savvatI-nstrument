@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import models.Instrument;
 import models.Location;
 
 class ControlletsCheckWriteTest {
@@ -24,6 +25,21 @@ class ControlletsCheckWriteTest {
 		location.setBoxes(true);
 		 message = ControllersCheckWrite.addLocationWork(location);
 		assertTrue(message.equals("место хранения успешно создано"),"sucsecfuly created");
+	
+	}
+	@Test
+	void addInstrumentWork() {
+		Instrument inst = new Instrument("tes", "шт");
+		String message = ControllersCheckWrite.addInstrumentWork(inst);
+		assertTrue(message.equals("<ul><li> короткое имя </li></ul>"),"must be shor name");
+		inst.setName("test1");
+		 message = ControllersCheckWrite.addInstrumentWork(inst);
+		assertTrue(message.equals("<ul><li> инструмент с таким именем уже существует </li></ul>"),"placae is exist");
+		// check that name is not exist in db
+		inst.setName("testInst1");
+
+		 message = ControllersCheckWrite.addInstrumentWork(inst);
+		assertTrue(message.equals("Инструмет успешно создан"),"sucsecfuly created");
 	
 	}
 
