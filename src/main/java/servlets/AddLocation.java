@@ -22,10 +22,6 @@ public class AddLocation {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getLocationCF() {
 		ModelAndView model = new ModelAndView("AddLocation", "command", new Location());
-		if (error) {
-			error = false;
-			model.addObject("errorText", errorText.toString());
-		}
 		return model;
 	}
 
@@ -43,7 +39,7 @@ public class AddLocation {
 				errorText.append("<li>ошыбка бази данних </li>");
 			}
 		}
-		return getLocationCF();
+		return showInfoPage();
 	}
 
 	private void checkErrors(Location location) {
@@ -61,6 +57,15 @@ public class AddLocation {
 				errorText.append("<li> место хранения существует </li>");
 			}
 		}
+	}
+	
+	public ModelAndView showInfoPage() {
+		ModelAndView model = new ModelAndView();
+		if (error) {
+			error = false;
+			model.addObject("errorText", errorText.toString());
+		}
+		return model;
 	}
 
 }
