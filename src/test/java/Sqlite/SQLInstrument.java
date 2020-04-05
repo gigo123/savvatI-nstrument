@@ -2,6 +2,8 @@ package Sqlite;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.sql.Connection;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import models.Box;
@@ -49,6 +51,14 @@ SqliteInstrumentDAO instrumentDAO;
 		 instrumentDAO.getInstrumentByID(1);
 		error = instrumentDAO.hasError();
 		assertTrue(!error,"must be ok");
+	}
+	@Test
+	void getAllInst() {
+		initConnection();
+		List<Instrument> instrumList  = instrumentDAO.getAllInstrument();
+		boolean error = instrumentDAO.hasError();
+		assertTrue(!error,"must be ok");
+		assertTrue(instrumList.size()!=0,"must not be 0");
 	}
 	@Test
 	void getInstByName() {
