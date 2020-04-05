@@ -52,7 +52,7 @@ public class AddBox {
 	public ModelAndView showInfoPage(String message) {
 		ModelAndView model = new ModelAndView("OperationInfo");
 		model.addObject("errorText", message);
-		model.addObject("page", "addinstument");
+		model.addObject("page", "addbox");
 		return model;
 	}
 
