@@ -94,10 +94,27 @@ public class ControllersCheckWrite {
 			errorText.append("<li> не можеть бить  нуловой номер </li>");
 		}
 
-		if (box.getLocation() != null) {
+		if (box.getLocation() == null) {
 			error = true;
 			errorText.append("<li> не вибрано место хранения </li>");
+		} else {
+			LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
+			Location loc = locDAO.getLocByName(box.getLocation().getName());
+			if (loc == null) {
+				error = true;
+				errorText.append("<li> неправильное место хранения </li>");
+			}
+			Box tempBox = boxDAO.getBoxByNumber(box.getNumber(), box.getLocation().getId());
+			if (tempBox != null) {
+				error = true;
+				errorText.append("<li> ячейка с таким номером уже существует </li>");
+			}
+			if (!box.getLocation().isBoxes()) {
+				error = true;
+				errorText.append("<li> место хранения не может содержать ячейки </li>");
+			}
 		}
+
 		if (!error) {
 			if (!boxDAO.createBox(box)) {
 				error = true;
