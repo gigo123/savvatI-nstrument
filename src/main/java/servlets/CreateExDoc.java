@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import dao.BoxDAO;
+import dao.InstrumentDAO;
 import dao.LocationDAO;
+import models.Box;
+import models.Instrument;
 import models.Location;
 import savvats.ExDocWEB;
 
@@ -23,11 +27,14 @@ public class CreateExDoc {
 	private boolean error = false;
 	private StringBuilder errorText;
 	private Map<Integer, ExDocWEB> docMap= new HashMap<Integer, ExDocWEB>();
-	private int docCount;
+	private int docCount=0;
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getExDocCF() {
 		docMap.put(docCount, new ExDocWEB());
-		ModelAndView model = new ModelAndView("CreateExDoc", "command", docMap);
+		ModelAndView model = new ModelAndView("CreateExDoc");
+		model.addObject("docMap", docMap);
+		model.addObject("doc", new ExDocWEB());
+		model = createMaps(model);
 		return model;
 		
 	}
@@ -54,15 +61,30 @@ public class CreateExDoc {
 	
 	private ModelAndView createMaps(ModelAndView model) {
 		
-		 Map<Long, String> LociationMap= new HashMap<Long, String>();
+		 Map<Long, String> lociationMap= new HashMap<Long, String>();
 		 ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
-			LocationDAO locDAO = (LocationDAO) context.getBean("LoctionDAO");
+			LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
 			List<Location> locList = locDAO.getAllLocatin();
 			for (Location location : locList) {
-				LociationMap.put(location.getId(), location.getName());
+				lociationMap.put(location.getId(), location.getName());
 			}
-			
+			model.addObject("lociationMap", lociationMap);
+		/*	Map<Long, String> BoxMap= new HashMap<Long, String>();
+				BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
+				List<Box> boxList = boxDAO.getAllBoxByLocation(idLocation);
+				for (Location location : locList) {
+					LociationMap.put(location.getId(), location.getName());
+				}
+				*/
+			 Map<Long, String> instrumentMap= new HashMap<Long, String>();
+				InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
+				List<Instrument> instList =instDAO.getAllInstrument();
+				for (Instrument instrument : instList) {
+					instrumentMap.put(instrument.getId(), instrument.getName());
+				}
+				model.addObject("instrumentMap", instrumentMap);
 		return model;
+		
 		
 	}
 }
