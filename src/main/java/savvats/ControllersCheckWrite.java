@@ -3,8 +3,10 @@ package savvats;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import dao.BoxDAO;
 import dao.InstrumentDAO;
 import dao.LocationDAO;
+import models.Box;
 import models.Instrument;
 import models.Location;
 
@@ -63,7 +65,7 @@ public class ControllersCheckWrite {
 		} else {
 			if (instrum != null) {
 				error = true;
-				errorText.append("<li> место хранения существует </li>");
+				errorText.append("<li> инструмен с таким именем уже существует </li>");
 			}
 		}
 		if (!error) {
@@ -75,9 +77,40 @@ public class ControllersCheckWrite {
 		errorText.append("</ul>");
 		String errString = errorText.toString();
 		if (errString.equals("<ul></ul>")) {
-			return "место хранения успешно создано";
+			return "Инструмет успешно создан";
 		} else {
 			return errString;
 		}
+	}
+
+	@SuppressWarnings("resource")
+	public static String addBoxWork(Box box) {
+		StringBuilder errorText = new StringBuilder("<ul>");
+		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
+		boolean error = false;
+		if (box.getNumber() == 0) {
+			error = true;
+			errorText.append("<li> не можеть бить  нуловой номер </li>");
+		}
+
+		if (box.getLocation() != null) {
+			error = true;
+			errorText.append("<li> не вибрано место хранения </li>");
+		}
+		if (!error) {
+			if (!boxDAO.createBox(box)) {
+				error = true;
+				errorText.append("<li>ошыбка бази данних </li>");
+			}
+		}
+		errorText.append("</ul>");
+		String errString = errorText.toString();
+		if (errString.equals("<ul></ul>")) {
+			return "Ячейка успесно создана";
+		} else {
+			return errString;
+		}
+
 	}
 }

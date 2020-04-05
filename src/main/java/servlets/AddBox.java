@@ -13,45 +13,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import dao.BoxDAO;
+
 import dao.LocationDAO;
-import models.Box;
-import models.Instrument;
 import models.Location;
 import savvats.BoxListLocation;
+import savvats.ControllersCheckWrite;
 
 @Controller
 @RequestMapping("/addbox")
 public class AddBox {
-	private boolean error = false;
-	private StringBuilder errorText;
-	private BoxDAO boxDAO;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getBoxCF() {
 		ModelAndView model = new ModelAndView("AddBox", "command", new BoxListLocation());
-		if (error) {
-			error = false;
-			model.addObject("errorText", errorText.toString());
-		}
+
 		return model;
 	}
 
-	@SuppressWarnings("resource")
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView postBoxCF(@ModelAttribute("SpringWeb") BoxListLocation box, ModelMap model) {
-		error = false;
-		errorText = new StringBuilder("<ul>");
-		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
-		boxDAO = (BoxDAO) context.getBean("BoxDAO");
-		checkErrors(box);
-		if (!error) {
-			if (!boxDAO.createBox(box)) {
-				error = true;
-				errorText.append("<li>ошыбка бази данних </li>");
-			}
-		}
-		return getBoxCF();
+		String message = ControllersCheckWrite.addBoxWork(box);
+		return showInfoPage(message);
 	}
 
 	@SuppressWarnings("resource")
@@ -67,16 +49,11 @@ public class AddBox {
 		return locationWB;
 	}
 
-	private void checkErrors(BoxListLocation box) {
-		if (box.getNumber() == 0) {
-			error = true;
-			errorText.append("<li> не можеть бить  нуловой номер </li>");
-		}
-
-		if (box.getLocation() != null) {
-			error = true;
-			errorText.append("<li> не вибрано место хранения </li>");
-		}
+	public ModelAndView showInfoPage(String message) {
+		ModelAndView model = new ModelAndView("OperationInfo");
+		model.addObject("errorText", message);
+		model.addObject("page", "addinstument");
+		return model;
 	}
 
 }
