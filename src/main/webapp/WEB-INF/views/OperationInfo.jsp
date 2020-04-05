@@ -9,6 +9,14 @@
 	результат
 	${errorText}
 	</div>
+	<div class="row">
+			<div class="col-12">
+				<div class="form__group">
+					<input type="submit" value="создать снова"
+						class="btn btn-size-md" /><a class="nav-link"
+							href="./${page}">создать снова</a> 
+				</div>
+			</div>
 <!--  close div of SideMenuView -->
 </div>
 </div>
