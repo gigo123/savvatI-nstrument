@@ -34,9 +34,10 @@ public class ControllersCheckWrite {
 			errorText.append("<li>ошыбка бази данних </li>");
 		}
 		}
+		errorText.append("</ul>");
 		String errString = errorText.toString();
-		if(errString.equals("<ul>")) {
-			return "успешно создано";
+		if(errString.equals("<ul></ul>")) {
+			return "место хранения успешно создано";
 		}
 		else {
 			return errString;
