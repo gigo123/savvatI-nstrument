@@ -18,7 +18,7 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 	private final static String SELECT_NAME_QUERY = "SELECT * FROM instrument WHERE NAME = ?";
 	private final static String SELECT_BOX_QUERY = "SELECT * FROM box WHERE  box = ? AND loaction = ?";
 	private final static String SELECT_LOC_QUERY = "SELECT * FROM box WHERE  loaction = ?";
-	private final static String SELECT_ALL_QUERY = "SELECT * FROM box";
+	private final static String SELECT_ALL_QUERY = "SELECT * FROM instrument";
 	private final static String INSERT_QUERY = "INSERT INTO instrument(name, measure, comment)" + " VALUES(?, ?, ?)";
 	private final static String DELETE_QUERY = "DELETE FROM instrument WHERE id = ?";
 	private SQLConectionHolder conectionHolder;
@@ -43,13 +43,15 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 
 	private Object selectQ(Object obj, Object obj2, int type) {
 		sqlError = false;
-		List<Box> boxList = new ArrayList<Box>();
+		
 		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			ResultSet rs = null;
 			PreparedStatement prepSt = null;
 			Instrument inst = null;
 			SqliteLocationDAO locDao = new SqliteLocationDAO();
+			List<Box> boxList = new ArrayList<Box>();
+			List<Instrument> instList = new ArrayList<Instrument>();
 			try {
 				switch (type) {
 				case (1): {
@@ -100,6 +102,17 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 						inst.setMeasure(rs.getString("measure"));
 						break;
 					}
+					if(type == 6) {
+						inst = new Instrument();
+						inst.setId(rs.getInt("id"));
+						inst.setName(rs.getString("name"));
+						inst.setComment(rs.getString("comment"));
+						inst.setMeasure(rs.getString("measure"));
+						instList.add(inst);
+					}
+					else {
+						
+					}
 					Box box = new Box();
 					box.setId(rs.getInt("id"));
 					box.setLocation(locDao.getLocById(rs.getInt("location")));
@@ -111,9 +124,11 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 				if(type == 1||type == 2){
 					return inst;
 				}
-				else {
-					return boxList;
+				if(type == 6) {
+					return instList;
 				}
+					return boxList;
+					
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();
@@ -163,8 +178,8 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Box> getAllInstrument() {
-		return (List<Box>) selectQ(null, null, 6);
+	public List<Instrument> getAllInstrument() {
+		return (List<Instrument>) selectQ(null, null, 6);
 	}
 
 	@Override

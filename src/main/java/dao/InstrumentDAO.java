@@ -12,7 +12,7 @@ public interface InstrumentDAO {
 	public List<Box> getInstrumentByNameL(String name);
 	public List<Box> getInstrumentByBox(long idB,int idL);
 	public List<Box> getInstrumentByLocation(Location loacation);
-	public List<Box> getAllInstrument();
+	public List<Instrument> getAllInstrument();
 	public boolean createInstrument(Instrument instrument);
 	public boolean deleteInstrument(long id);
 	public boolean hasError();
