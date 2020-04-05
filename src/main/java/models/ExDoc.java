@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.Date;
 
 public class ExDoc {
-	private int id;
+	private long id;
 	private Location outLocation;
 	private Location inLocation;
 	private Box outBox;
@@ -13,10 +13,10 @@ public class ExDoc {
 	private LocalDate date;
 	private Instrument instrument;
 	private float amount;
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public Location getOutLocation() {
@@ -69,6 +69,17 @@ public class ExDoc {
 		this.outBox = outBox;
 		this.inBox = inBox;
 		this.date = today;
+		this.instrument = instrument;
+		this.amount = amount;
+	}
+	public ExDoc(Location outLocation, Location inLocation, Box outBox, Box inBox, Instrument instrument,
+			float amount) {
+		super();
+		this.outLocation = outLocation;
+		this.inLocation = inLocation;
+		this.outBox = outBox;
+		this.inBox = inBox;
+		this.date = LocalDate.now();
 		this.instrument = instrument;
 		this.amount = amount;
 	}
