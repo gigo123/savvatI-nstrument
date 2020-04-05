@@ -102,7 +102,7 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 						inst.setMeasure(rs.getString("measure"));
 						break;
 					}
-					if(type == 6) {
+					if(type == 6||type == 3) {
 						inst = new Instrument();
 						inst.setId(rs.getInt("id"));
 						inst.setName(rs.getString("name"));
@@ -111,20 +111,20 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 						instList.add(inst);
 					}
 					else {
-						
+						Box box = new Box();
+						box.setId(rs.getInt("id"));
+						box.setLocation(locDao.getLocById(rs.getInt("location")));
+						box.setNumber(rs.getInt("number"));
+						boxList.add(box);
 					}
-					Box box = new Box();
-					box.setId(rs.getInt("id"));
-					box.setLocation(locDao.getLocById(rs.getInt("location")));
-					box.setNumber(rs.getInt("number"));
-					boxList.add(box);
+					
 				}
 				
 				conectionHolder.closeConnection();
 				if(type == 1||type == 2){
 					return inst;
 				}
-				if(type == 6) {
+				if(type == 6||type == 3) {
 					return instList;
 				}
 					return boxList;
@@ -160,20 +160,20 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Box> getInstrumentByNameL(String name) {
-		return (List<Box>) selectQ(name, null, 3);
+	public List<Instrument> getInstrumentByNameL(String name) {
+		return (List<Instrument>) selectQ(name, null, 3);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Box> getInstrumentByBox(long idB, int idL) {
-		return (List<Box>) selectQ(idB, idL, 4);
+	public List<Instrument> getInstrumentByBox(long idB, int idL) {
+		return (List<Instrument>) selectQ(idB, idL, 4);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Box> getInstrumentByLocation(Location loacation) {
-		return (List<Box>) selectQ(loacation, null, 5);
+	public List<Instrument> getInstrumentByLocation(Location loacation) {
+		return (List<Instrument>) selectQ(loacation, null, 5);
 	}
 
 	@SuppressWarnings("unchecked")
