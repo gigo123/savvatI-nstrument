@@ -13,9 +13,6 @@ public class ExDocWEB {
 	private LocalDate date;
 	private long instrument;
 	private float amount;
-	private String locations;
-	private String boxes;
-	private String instruments;
 	public long getId() {
 		return id;
 	}
