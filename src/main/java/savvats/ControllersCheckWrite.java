@@ -4,9 +4,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import dao.BoxDAO;
+import dao.ExDocDAO;
 import dao.InstrumentDAO;
 import dao.LocationDAO;
 import models.Box;
+import models.ExDoc;
 import models.Instrument;
 import models.Location;
 
@@ -121,6 +123,72 @@ public class ControllersCheckWrite {
 				errorText.append("<li>ошыбка бази данних </li>");
 			}
 		}
+		errorText.append("</ul>");
+		String errString = errorText.toString();
+		if (errString.equals("<ul></ul>")) {
+			return "Ячейка успесно создана";
+		} else {
+			return errString;
+		}
+
+	}
+	@SuppressWarnings("resource")
+	public static String addExDocWork(ExDoc doc) {
+		StringBuilder errorText = new StringBuilder("<ul>");
+		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+		ExDocDAO exDocDAO = (ExDocDAO) context.getBean("ExDocDAO");
+		boolean error = false;
+		if(doc.getInLocation()==null) {
+			error=true;
+		}
+		if(doc.getOutLocation()==null) {
+			error=true;
+		}
+		if(doc.getInBox()==null) {
+			error=true;
+		}
+		if(doc.getOutBox()==null) {
+			error=true;
+		}
+		if(doc.getAmount()==0) {
+			error=true;
+		}
+		if(doc.getInstrument()==null) {
+			error=true;
+		}
+		/*if (box.getNumber() == 0) {
+			error = true;
+			errorText.append("<li> не можеть бить  нуловой номер </li>");
+		}
+
+		if (box.getLocation() == null) {
+			error = true;
+			errorText.append("<li> не вибрано место хранения </li>");
+		} else {
+			LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
+			Location loc = locDAO.getLocByName(box.getLocation().getName());
+			if (loc == null) {
+				error = true;
+				errorText.append("<li> неправильное место хранения </li>");
+			}
+			Box tempBox = boxDAO.getBoxByNumber(box.getNumber(), box.getLocation().getId());
+			if (tempBox != null) {
+				error = true;
+				errorText.append("<li> ячейка с таким номером уже существует </li>");
+			}
+			if (!box.getLocation().isBoxes()) {
+				error = true;
+				errorText.append("<li> место хранения не может содержать ячейки </li>");
+			}
+		}
+
+		if (!error) {
+			if (!boxDAO.createBox(box)) {
+				error = true;
+				errorText.append("<li>ошыбка бази данних </li>");
+			}
+		}
+		*/
 		errorText.append("</ul>");
 		String errString = errorText.toString();
 		if (errString.equals("<ul></ul>")) {
