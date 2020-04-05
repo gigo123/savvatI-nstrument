@@ -41,5 +41,10 @@ public class Instrument {
 		this(name, measure);
 		this.comment = comment;
 	}
-	public Instrument() {};
+	public Instrument() {}
+	@Override
+	public String toString() {
+		return "Instrument [id=" + id + ", name=" + name + ", comment=" + comment + ", measure=" + measure + "]";
+	};
+	
 }
