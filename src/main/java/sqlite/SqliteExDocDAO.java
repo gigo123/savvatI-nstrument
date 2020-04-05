@@ -44,7 +44,7 @@ public class SqliteExDocDAO implements ExDocDAO {
 	@Override
 	public boolean createExDoc(ExDoc exDoc) {
 		sqlError = false;
-		if (conectionHolder != null && !conectionHolder.isError()) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			PreparedStatement prepSt = null;
 			try {
@@ -81,7 +81,7 @@ public class SqliteExDocDAO implements ExDocDAO {
 
 	private Object selectQ(Object obj, Object obj2, int type) {
 		sqlError = false;
-		if (conectionHolder != null && !conectionHolder.isError()) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			ResultSet rs = null;
 			PreparedStatement prepSt = null;

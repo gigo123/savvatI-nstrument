@@ -44,7 +44,7 @@ public class SqliteOutDocDAO implements OutDocDAO {
 	@Override
 	public boolean createOutDoc(OutDoc outDoc) {
 		sqlError = false;
-		if (conectionHolder != null && !conectionHolder.isError()) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			PreparedStatement prepSt = null;
 			try {
@@ -82,7 +82,7 @@ public class SqliteOutDocDAO implements OutDocDAO {
 		ResultSet rs = null;
 		
 		sqlError = false;
-		if (conectionHolder != null && !conectionHolder.isError()) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			PreparedStatement prepSt = null;
 			SqliteLocationDAO locDao = new SqliteLocationDAO();

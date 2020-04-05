@@ -44,7 +44,7 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 	private Object selectQ(Object obj, Object obj2, int type) {
 		sqlError = false;
 		List<Box> boxList = new ArrayList<Box>();
-		if (conectionHolder != null && !conectionHolder.isError()) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			ResultSet rs = null;
 			PreparedStatement prepSt = null;
@@ -170,7 +170,7 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 	@Override
 	public boolean createInstrument(Instrument instrument) {
 		sqlError = false;
-		if (conectionHolder != null && !conectionHolder.isError()) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			PreparedStatement prepSt = null;
 			try {

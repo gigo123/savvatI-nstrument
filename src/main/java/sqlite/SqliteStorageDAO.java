@@ -28,7 +28,7 @@ private boolean sqlError = false;
 		Storage storage = null;
 		BoxDAO boxDAO = new SqliteBoxDAO();
 		InstrumentDAO instDAO = new SqliteInstrumentDAO();
-		if (conectionHolder != null && !conectionHolder.isError()) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 		try {
 			prepSt = conn.prepareStatement(SELECT_ID_QUERY);
@@ -69,7 +69,7 @@ private boolean sqlError = false;
 		Storage storage = null;
 		BoxDAO boxDAO = new SqliteBoxDAO();
 		InstrumentDAO instDAO = new SqliteInstrumentDAO();
-		if (conectionHolder != null && !conectionHolder.isError()) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 		try {
 			prepSt = conn.prepareStatement(SELECT_INSTR_QUERY);
@@ -110,7 +110,7 @@ private boolean sqlError = false;
 		Storage storage = null;
 		BoxDAO boxDAO = new SqliteBoxDAO();
 		InstrumentDAO instDAO = new SqliteInstrumentDAO();
-		if (conectionHolder != null && !conectionHolder.isError()) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 		try {
 			prepSt = conn.prepareStatement(SELECT_BOX_QUERY);
@@ -146,7 +146,7 @@ private boolean sqlError = false;
 
 	@Override
 	public boolean createStorage(Storage storage) {
-		if (conectionHolder != null && !conectionHolder.isError()) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			PreparedStatement prepSt = null;
 			try {

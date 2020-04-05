@@ -43,7 +43,7 @@ public class SqliteInDocDAO implements InDocDAO{
 	@Override
 	public boolean createInDoc(InDoc inDoc) {
 		sqlError = false;
-		if (conectionHolder != null && !conectionHolder.isError()) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			PreparedStatement prepSt = null;
 			try {
@@ -78,7 +78,7 @@ public class SqliteInDocDAO implements InDocDAO{
 
 	private Object selectQ(Object obj, Object obj2, int type) {
 		sqlError = false;
-		if (conectionHolder != null && !conectionHolder.isError()) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			ResultSet rs = null;
 			PreparedStatement prepSt = null;

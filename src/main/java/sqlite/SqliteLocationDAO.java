@@ -35,7 +35,7 @@ public class SqliteLocationDAO implements LocationDAO {
 	@Override
 	public boolean createLocation(Location location) {
 		sqlError = false;
-		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+		if ( conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			PreparedStatement prepSt = null;
 			try {
@@ -71,7 +71,7 @@ public class SqliteLocationDAO implements LocationDAO {
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
 		Location loc = null;
-		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+		if ( conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			try {
 				prepSt = conn.prepareStatement(SELECT_ID_QUERY);
@@ -110,7 +110,7 @@ public class SqliteLocationDAO implements LocationDAO {
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
 		Location loc = null;
-		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+		if ( conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			try {
 				prepSt = conn.prepareStatement(SELECT_NAME_QUERY);
@@ -148,7 +148,7 @@ public class SqliteLocationDAO implements LocationDAO {
 	public boolean deleteLocation(long id) {
 		sqlError = false;
 		PreparedStatement prepSt = null;
-		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+		if ( conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			try {
 				prepSt = conn.prepareStatement(DELETE_QUERY);
@@ -186,7 +186,7 @@ public class SqliteLocationDAO implements LocationDAO {
 		PreparedStatement prepSt = null;
 		List<Location> locList = new ArrayList<Location>();
 		Location loc = null;
-		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+		if ( conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			try {
 				prepSt = conn.prepareStatement(SELECT_ALL);
@@ -225,7 +225,7 @@ public class SqliteLocationDAO implements LocationDAO {
 		PreparedStatement prepSt = null;
 		List<Location> locList = new ArrayList<Location>();
 		Location loc = null;
-		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+		if ( conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			try {
 				prepSt = conn.prepareStatement(SELECT_ALL_WB);

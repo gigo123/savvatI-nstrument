@@ -49,7 +49,7 @@ public class SqliteBoxDAO implements BoxDAO {
 
 	@Override
 	public boolean createBox(Box box) {
-		if (conectionHolder != null && !conectionHolder.isError()) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			PreparedStatement prepSt = null;
 			try {
@@ -82,7 +82,7 @@ public class SqliteBoxDAO implements BoxDAO {
 	public boolean deleteBox(long id) {
 		sqlError = false;
 		PreparedStatement prepSt = null;
-		if (conectionHolder != null && !conectionHolder.isError()) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			try {
 				prepSt = conn.prepareStatement(DELETE_QUERY);
@@ -122,7 +122,7 @@ public class SqliteBoxDAO implements BoxDAO {
 
 	private Object selectQ(Object obj, Object obj2, int type) {
 		sqlError = false;
-		if (conectionHolder != null && !conectionHolder.isError()) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 			ResultSet rs = null;
 			PreparedStatement prepSt = null;
