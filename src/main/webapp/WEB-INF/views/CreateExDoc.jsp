@@ -61,8 +61,9 @@
 	</div>
 	
 	<div class="btn btn-size-md btn-shape-square btn-fullwidth"
-		id="checkOut" onclick="confirmOrder()">Proceed To Checkout</div>
+		id="checkOut" onclick="confirmCreate()">Proceed To Checkout</div>
 </div>
+	
 </div>
 <!--  close div of SideMenuView -->
 </div>

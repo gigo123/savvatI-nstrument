@@ -28,36 +28,28 @@ public class CreateExDoc {
 	private StringBuilder errorText;
 	private Map<Integer, ExDocWEB> docMap= new HashMap<Integer, ExDocWEB>();
 	private int docCount=0;
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getExDocCF() {
 		docMap.put(docCount, new ExDocWEB());
+		docCount++;
 		ModelAndView model = new ModelAndView("CreateExDoc");
 		model.addObject("docMap", docMap);
 		model.addObject("doc", new ExDocWEB());
 		model = createMaps(model);
 		return model;
-		
 	}
 
 	@SuppressWarnings("resource")
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView postBoxCF(@ModelAttribute("SpringWeb")  Map<Integer, ExDocWEB> rdocMap, ModelMap model) {
-		docMap = rdocMap;
-		error = false;
-		errorText = new StringBuilder("<ul>");
-		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
-
-		return getExDocCF();
+		String message=rdocMap.toString();
+		ModelAndView model1 = new ModelAndView("OperationInfo");
+		model1.addObject("errorText", message);
+		return model1;
 	}
 
-	public ModelAndView showInfoPage() {
-		ModelAndView model = new ModelAndView();
-		if (error) {
-			error = false;
-			model.addObject("errorText", errorText.toString());
-		}
-		return model;
-	}
+
 	
 	private ModelAndView createMaps(ModelAndView model) {
 		
