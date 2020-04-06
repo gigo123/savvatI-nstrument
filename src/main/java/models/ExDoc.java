@@ -1,16 +1,13 @@
 package models;
 
 
-import java.time.LocalDate;
-import java.util.Date;
-
 public class ExDoc {
 	private long id;
 	private Location outLocation;
 	private Location inLocation;
 	private Box outBox;
 	private Box inBox;
-	private LocalDate date;
+	private long catalogId;
 	private Instrument instrument;
 	private float amount;
 	public long getId() {
@@ -43,11 +40,12 @@ public class ExDoc {
 	public void setInBox(Box inBox) {
 		this.inBox = inBox;
 	}
-	public LocalDate getDate() {
-		return date;
+	
+	public long getCatalogId() {
+		return catalogId;
 	}
-	public void setDate(LocalDate date) {
-		this.date = date;
+	public void setCatalogId(long catalogId) {
+		this.catalogId = catalogId;
 	}
 	public Instrument getInstrument() {
 		return instrument;
@@ -61,25 +59,14 @@ public class ExDoc {
 	public void setAmount(float amount) {
 		this.amount = amount;
 	}
-	public ExDoc(Location outLocation, Location inLocation, Box outBox, Box inBox, LocalDate today, Instrument instrument,
+	public ExDoc(Location outLocation, Location inLocation, Box outBox, Box inBox, long catalogId, Instrument instrument,
 			float amount) {
 		super();
 		this.outLocation = outLocation;
 		this.inLocation = inLocation;
 		this.outBox = outBox;
 		this.inBox = inBox;
-		this.date = today;
-		this.instrument = instrument;
-		this.amount = amount;
-	}
-	public ExDoc(Location outLocation, Location inLocation, Box outBox, Box inBox, Instrument instrument,
-			float amount) {
-		super();
-		this.outLocation = outLocation;
-		this.inLocation = inLocation;
-		this.outBox = outBox;
-		this.inBox = inBox;
-		this.date = LocalDate.now();
+		this.catalogId = catalogId;
 		this.instrument = instrument;
 		this.amount = amount;
 	}

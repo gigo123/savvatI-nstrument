@@ -17,9 +17,9 @@ public class SqliteExDocDAO implements ExDocDAO {
 	private final static String SELECT_LOCATION_QUERY = "SELECT * FROM exDoc WHERE (outLocation = ? OR inLocation = ?)"
 			+ " AND (outBox = ? OR inBox = ?)";
 	private final static String SELECT_INST_QUERY = "SELECT * FROM exDoc WHERE instrument = ? ";
-	private final static String SELECT_DATE_QUERY = "SELECT * FROM exDoc WHERE date = ?";
+	private final static String SELECT_CATALOG_QUERY = "SELECT * FROM exDoc WHERE catalogId = ?";
 	private final static String INSERT_QUERY = "INSERT INTO exDoc(outLocation, inLocation, outBox, "
-			+ "inBox, date, instrument, amount)" + " VALUES(?,?,?,?,?,?,?)";
+			+ "inBox, catalogId, instrument, amount)" + " VALUES(?,?,?,?,?,?,?)";
 	private final static String DELETE_QUERY = "DELETE FROM exDoc WHERE id = ?";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
@@ -52,9 +52,8 @@ public class SqliteExDocDAO implements ExDocDAO {
 				prepSt.setLong(1, exDoc.getOutLocation().getId());
 				prepSt.setLong(2, exDoc.getInLocation().getId());
 				prepSt.setInt(3, (int) exDoc.getOutBox().getId());
-				prepSt.setInt(4, (int) exDoc.getInBox().getId());
-				Date exDate = java.sql.Date.valueOf(exDoc.getDate().toString());
-				prepSt.setDate(5, exDate);
+				prepSt.setInt(4, (int) exDoc.getInBox().getId());;
+				prepSt.setLong(5, (long) exDoc.getCatalogId());
 				prepSt.setInt(6, (int) exDoc.getInstrument().getId());
 				prepSt.setFloat(7, exDoc.getAmount());
 				prepSt.execute();
@@ -99,10 +98,8 @@ public class SqliteExDocDAO implements ExDocDAO {
 					break;
 				}
 				case 2: {
-					prepSt = conn.prepareStatement(SELECT_DATE_QUERY);
-					LocalDate locDate= (LocalDate) obj;
-					Date exDate = java.sql.Date.valueOf(locDate.toString());
-					prepSt.setDate(1, exDate);
+					prepSt = conn.prepareStatement(SELECT_CATALOG_QUERY);
+					prepSt.setLong(1, (long) obj);
 					rs = prepSt.executeQuery();
 					break;
 				}
@@ -133,8 +130,7 @@ public class SqliteExDocDAO implements ExDocDAO {
 					exdoc.setInBox(boxDao.getBoxByID(rs.getInt("inBox")));
 					exdoc.setOutBox(boxDao.getBoxByID(rs.getInt("outBox")));
 					exdoc.setInstrument(instDao.getInstrumentByID(rs.getInt("instrument")));
-					Date exDate = rs.getDate("date");
-					exdoc.setDate(exDate.toLocalDate());
+					exdoc.setCatalogId(rs.getLong("catolgId"));
 					exdoc.setAmount(rs.getFloat("amount"));
 					exdoc.setOutLocation(locDao.getLocById(rs.getInt("outLocation")));
 					if (type == 1) {
@@ -174,11 +170,7 @@ public class SqliteExDocDAO implements ExDocDAO {
 
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<ExDoc> getExDocByDate(LocalDate date) {
-		return (List<ExDoc>) selectQ(date, null, 2);
-	}
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -219,6 +211,12 @@ public class SqliteExDocDAO implements ExDocDAO {
 			sqlError = true;
 		}
 		return false;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ExDoc> getExDocByCatolog(long id) {
+		return (List<ExDoc>) selectQ(id, null, 2);
 	}
 
 }
