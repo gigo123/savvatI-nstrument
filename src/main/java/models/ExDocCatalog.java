@@ -37,6 +37,9 @@ public class ExDocCatalog {
 		this.number = number;
 		this.date = date;
 	}
+	public ExDocCatalog() {
+		
+	}
 	@Override
 	public String toString() {
 		return "ExDocCatalog [id=" + id + ", numberString=" + numberString + ", number=" + number + ", date=" + date

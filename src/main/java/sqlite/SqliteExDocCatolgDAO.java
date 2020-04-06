@@ -11,19 +11,15 @@ import java.util.List;
 
 import dao.ExDocCatalogDAO;
 import models.ExDocCatalog;
-import models.InDoc;
 
-public class SqliteExDocCatolgDAO implements ExDocCatalogDAO{
-
-	
+public class SqliteExDocCatolgDAO implements ExDocCatalogDAO {
 
 	private final static String SELECT_ID_QUERY = "SELECT * FROM exdoccatalog WHERE id = ?";
 	private final static String SELECT_DATE_QUERY = "SELECT * FROM exdoccatalog WHERE date =?";
-
 	private final static String SELECT_NUBMER_QUERY = "SELECT * FROM exdoccatalog WHERE number = ? ";
 	private final static String SELECT_SNUBMER_QUERY = "SELECT * FROM exdoccatalog WHERE numberString = ? ";
 	private final static String INSERT_QUERY = "INSERT INTO exdoccatalog(numberString, number, date)"
-		 + " VALUES(?,?,?)";
+			+ " VALUES(?,?,?)";
 	private final static String DELETE_QUERY = "DELETE FROM exdoccatalog WHERE id = ?";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
@@ -48,7 +44,7 @@ public class SqliteExDocCatolgDAO implements ExDocCatalogDAO{
 	@Override
 	public boolean createExDocCatalog(ExDocCatalog exDoc) {
 		sqlError = false;
-		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
+		if (conectionHolder != null && conectionHolder.getConnection() != null) {
 			Connection conn = conectionHolder.getConnection();
 			PreparedStatement prepSt = null;
 			try {
@@ -90,7 +86,6 @@ public class SqliteExDocCatolgDAO implements ExDocCatalogDAO{
 		return (List<ExDocCatalog>) selectQ(date, 2);
 	}
 
-
 	@Override
 	public ExDocCatalog getExDocCatalogBySnumber(String numberString) {
 		return (ExDocCatalog) selectQ(numberString, 3);
@@ -100,7 +95,7 @@ public class SqliteExDocCatolgDAO implements ExDocCatalogDAO{
 	public boolean deleteExDocCatalogDoc(long id) {
 		sqlError = false;
 		PreparedStatement prepSt = null;
-		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+		if (conectionHolder != null && !conectionHolder.isError()) {
 			Connection conn = conectionHolder.getConnection();
 			try {
 				prepSt = conn.prepareStatement(DELETE_QUERY);
@@ -124,18 +119,15 @@ public class SqliteExDocCatolgDAO implements ExDocCatalogDAO{
 		}
 		return false;
 	}
-	
+
 	private Object selectQ(Object obj, int type) {
 		sqlError = false;
-		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
+		if (conectionHolder != null && conectionHolder.getConnection() != null) {
 			Connection conn = conectionHolder.getConnection();
 			ResultSet rs = null;
 			PreparedStatement prepSt = null;
-			SqliteLocationDAO locDao = new SqliteLocationDAO();
-			SqliteInstrumentDAO instDao = new SqliteInstrumentDAO();
-			SqliteBoxDAO boxDao = new SqliteBoxDAO();
-			List<InDoc> docList = new ArrayList<InDoc>();
-			InDoc indoc = null;
+			ExDocCatalog exDoc = null;
+			List<ExDocCatalog> docList = new ArrayList<ExDocCatalog>();
 			try {
 				switch (type) {
 				case 1: {
@@ -146,48 +138,45 @@ public class SqliteExDocCatolgDAO implements ExDocCatalogDAO{
 				}
 				case 2: {
 					prepSt = conn.prepareStatement(SELECT_DATE_QUERY);
-					LocalDate locDate= (LocalDate) obj;
+					LocalDate locDate = (LocalDate) obj;
 					Date exDate = java.sql.Date.valueOf(locDate.toString());
 					prepSt.setDate(1, exDate);
 					rs = prepSt.executeQuery();
 					break;
 				}
 				case 3: {
-					prepSt = conn.prepareStatement(SELECT_NUBMER_QUERY);
-					prepSt.setInt(1, (int) obj);
-					rs = prepSt.executeQuery();
-					break;
-				}
-				case 4: {
 					prepSt = conn.prepareStatement(SELECT_SNUBMER_QUERY);
 					prepSt.setString(1, (String) obj);
 					rs = prepSt.executeQuery();
 					break;
 				}
+				case 4: {
+					prepSt = conn.prepareStatement(SELECT_NUBMER_QUERY);
+					prepSt.setInt(1, (int) obj);
+					rs = prepSt.executeQuery();
+					break;
+				}
 
-				default:
-				{
+				default: {
 					sqlError = true;
 				}
 				}
 				while (rs.next()) {
-					indoc = new InDoc();
-					indoc.setId(rs.getInt("id"));
-					indoc.setInLocation(locDao.getLocById(rs.getInt("inLocation")));
-					indoc.setInBox(boxDao.getBoxByID(rs.getInt("inBox")));
-					indoc.setInstrument(instDao.getInstrumentByID(rs.getInt("instrument")));
+					exDoc = new ExDocCatalog();
+					exDoc.setId(rs.getInt("id"));
+					exDoc.setNumberString(rs.getString("numberString"));
+					exDoc.setNumber(rs.getInt("number"));
 					Date inDate = rs.getDate("date");
-					indoc.setDate(inDate.toLocalDate());
-					indoc.setAmount(rs.getFloat("amount"));
-					if (type == 1) {
+					exDoc.setDate(inDate.toLocalDate());
+					if (type == 1 || type == 3) {
 						break;
 					} else {
-						docList.add(indoc);
+						docList.add(exDoc);
 					}
 				}
 				conectionHolder.closeConnection();
-				if (type == 1) {
-					return indoc;
+				if (type == 1 || type == 3) {
+					return exDoc;
 				} else {
 					return docList;
 				}
