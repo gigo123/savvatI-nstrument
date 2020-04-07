@@ -4,13 +4,13 @@ import java.time.LocalDate;
 import java.util.List;
 import models.InDocCatalog;
 
-interface InDocCatalogDAO {
+public interface InDocCatalogDAO {
 	
-	public boolean createInDocCatolog(InDocCatalog exDoc);
-	public InDocCatalog getInDocCatologById(long id);
-	public List<InDocCatalog> getInDocCatologByDate(LocalDate date);
-	public List<InDocCatalog> getInDocCatologByNumber(int number);
-	public InDocCatalog getInDocCatologBySnumber(String numberString);
-	public boolean deleteInDocCatologDoc(long id);
+	public boolean createInDocCatalog(InDocCatalog exDoc);
+	public InDocCatalog getInDocCatalogById(long id);
+	public List<InDocCatalog> getInDocCatalogByDate(LocalDate date);
+	public List<InDocCatalog> getInDocCatalogByNumber(int number);
+	public InDocCatalog getInDocCatalogBySnumber(String numberString);
+	public boolean deleteInDocCatalogDoc(long id);
 	public boolean hasError();
 }
