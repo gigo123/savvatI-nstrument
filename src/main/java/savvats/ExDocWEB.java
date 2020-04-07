@@ -6,6 +6,22 @@ import java.time.LocalDate;
 
 public class ExDocWEB {
 	private long id;
+	private String outLocationString;
+	
+	public String getOutLocationString() {
+		return outLocationString;
+	}
+	public void setOutLocationString(String outLocationString) {
+		this.outLocationString = outLocationString;
+	}
+	private String inBoxString;
+	
+	public String getInBoxString() {
+		return inBoxString;
+	}
+	public void setInBoxString(String inBoxString) {
+		this.inBoxString = inBoxString;
+	}
 	private long outLocation;
 	private long inLocation;
 	private long outBox;
@@ -13,21 +29,7 @@ public class ExDocWEB {
 	private LocalDate date;
 	private long instrument;
 	private float amount;
-	private String lociationMap;
-	private String instrumentMap;
 	
-	public String getLociationMap() {
-		return lociationMap;
-	}
-	public void setLociationMap(String lociationMap) {
-		this.lociationMap = lociationMap;
-	}
-	public String getInstrumentMap() {
-		return instrumentMap;
-	}
-	public void setInstrumentMap(String instrumentMap) {
-		this.instrumentMap = instrumentMap;
-	}
 	public long getId() {
 		return id;
 	}
@@ -102,4 +104,12 @@ public class ExDocWEB {
 	public ExDocWEB() {
 		
 	}
+	@Override
+	public String toString() {
+		return "ExDocWEB [id=" + id + ", outLocationString=" + outLocationString + ", outLocation=" + outLocation
+				+ ", inLocation=" + inLocation + ", outBox=" + outBox + ", inBox=" + inBox + ", date=" + date
+				+ ", instrument=" + instrument + ", amount=" + amount + "]";
+	}
+	
+	
 }
