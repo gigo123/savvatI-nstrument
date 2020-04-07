@@ -11,6 +11,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import dao.BoxDAO;
@@ -19,6 +20,7 @@ import dao.LocationDAO;
 import models.Box;
 import models.Instrument;
 import models.Location;
+import savvats.BoxListLocation;
 import savvats.ExDocWEB;
 
 @Controller
@@ -33,17 +35,23 @@ public class CreateExDoc {
 	public ModelAndView getExDocCF() {
 		docMap.put(docCount, new ExDocWEB());
 		docCount++;
-		ModelAndView model = new ModelAndView("CreateExDoc");
-		model.addObject("docMap", docMap);
-		model.addObject("doc", new ExDocWEB());
+		//ModelAndView model = new ModelAndView("CreateExDoc");
+		//model.addObject("docMap", docMap);
+		ExDocWEB doc = new ExDocWEB();
+		doc.setId(1);
+		ModelAndView model = new ModelAndView("CreateExDoc", "command", doc);
+		//model.addObject("docMap", docMap);
+		//model.addObject("doc", new ExDocWEB());
+		//ExDocMap docMap = new ExDocMap();
+		//ModelAndView model = new ModelAndView("CreateExDoc", "command", docMap);
 		model = createMaps(model);
 		return model;
 	}
 
 	@SuppressWarnings("resource")
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView postBoxCF(@ModelAttribute("SpringWeb")  Map<Integer, ExDocWEB> rdocMap, ModelMap model) {
-		String message=rdocMap.toString();
+	public ModelAndView postBoxCF(@ModelAttribute("SpringWeb") ExDocWEB doc, ModelMap model) {
+		String message=doc.toString();
 		ModelAndView model1 = new ModelAndView("OperationInfo");
 		model1.addObject("errorText", message);
 		return model1;

@@ -8,6 +8,7 @@
 <div class="col-9">
 	создание нового документа премещения
 	<div class="table-content table-responsive">
+	<form:form action="./createExDoc" method="post">
 		<table class="table text-center">
 			<thead>
 				<tr>
@@ -21,10 +22,9 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="doc" items="${docMap}">
-					<tr id="docRow${doc.key}">
+					<tr id="docRow${doc.getId}">
 						<td class="doc-id">
-								${doc.key}
+								{doc.getId}
 							</td>
 							<td class="doc-out-loc text-left">
 								<form:select path="lociationMap">
@@ -51,18 +51,19 @@
 							</form:select>
 							</td>
 						<td class="doc-amount text-left">
-						<form:input path ="amount" type="text" name="name" id="name"
+						<form:input path ="doc.amount" type="text" name="name" id="name"
 						 class="form__input" required ="true"/>
 						</td>
 					</tr>
-				</c:forEach>
 			</tbody>
 		</table>
 	</div>
-	
-	<div class="btn btn-size-md btn-shape-square btn-fullwidth"
-		id="checkOut" onclick="confirmCreate()">Proceed To Checkout</div>
+		<input type="submit" value="создать ячейку"
+						class="btn btn-size-md" />
+						</form:form>
 </div>
+
+
 	
 </div>
 <!--  close div of SideMenuView -->

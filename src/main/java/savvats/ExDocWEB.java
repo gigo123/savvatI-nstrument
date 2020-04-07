@@ -13,6 +13,21 @@ public class ExDocWEB {
 	private LocalDate date;
 	private long instrument;
 	private float amount;
+	private String lociationMap;
+	private String instrumentMap;
+	
+	public String getLociationMap() {
+		return lociationMap;
+	}
+	public void setLociationMap(String lociationMap) {
+		this.lociationMap = lociationMap;
+	}
+	public String getInstrumentMap() {
+		return instrumentMap;
+	}
+	public void setInstrumentMap(String instrumentMap) {
+		this.instrumentMap = instrumentMap;
+	}
 	public long getId() {
 		return id;
 	}
