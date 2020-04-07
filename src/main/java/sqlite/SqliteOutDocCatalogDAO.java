@@ -12,7 +12,7 @@ import java.util.List;
 import dao.OutDocCatalogDAO;
 import models.OutDocCatalog;
 
-public class SqlliteOutDocCatalog  implements OutDocCatalogDAO{
+public class SqliteOutDocCatalogDAO  implements OutDocCatalogDAO{
 
 	private final static String SELECT_ID_QUERY = "SELECT * FROM exdoccatalog WHERE id = ?";
 	private final static String SELECT_DATE_QUERY = "SELECT * FROM exdoccatalog WHERE date =?";
@@ -27,6 +27,17 @@ public class SqlliteOutDocCatalog  implements OutDocCatalogDAO{
 	@Override
 	public boolean hasError() {
 		return sqlError;
+	}
+	public void setSqlError(boolean sqlError) {
+		this.sqlError = sqlError;
+	}
+
+	public SQLConectionHolder getConectionHolder() {
+		return conectionHolder;
+	}
+
+	public void setConectionHolder(SQLConectionHolder conectionHolder) {
+		this.conectionHolder = conectionHolder;
 	}
 
 	@Override
