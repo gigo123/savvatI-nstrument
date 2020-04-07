@@ -1,5 +1,6 @@
 package servlets;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,43 +24,61 @@ import models.Instrument;
 import models.Location;
 import savvats.BoxListLocation;
 import savvats.ExDocWEB;
+import savvats.ExDocWEBList;
 
 @Controller
 @RequestMapping("/createExDoc")
 public class CreateExDoc {
 	private boolean error = false;
 	private StringBuilder errorText;
-	private Map<Integer, ExDocWEB> docMap= new HashMap<Integer, ExDocWEB>();
-	private int docCount=0;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getExDocCF() {
-		docMap.put(docCount, new ExDocWEB());
-		docCount++;
-		//ModelAndView model = new ModelAndView("CreateExDoc");
-		//model.addObject("docMap", docMap);
+	
+	
 		ExDocWEB doc = new ExDocWEB();
-		doc.setId(1);
-		ModelAndView model = new ModelAndView("CreateExDoc", "command", doc);
-		//model.addObject("docMap", docMap);
-		//model.addObject("doc", new ExDocWEB());
-		//ExDocMap docMap = new ExDocMap();
-		//ModelAndView model = new ModelAndView("CreateExDoc", "command", docMap);
-		model = createMaps(model);
+		ExDocWEBList exDocWEBList = new ExDocWEBList();
+		List<ExDocWEB> docList = new ArrayList<ExDocWEB>();
+		docList.add(doc);
+		exDocWEBList.setDocList(docList);
+		ModelAndView model = new ModelAndView("CreateExDoc");
+		model.addObject("exDocWEBList", exDocWEBList);
+	//	model = createMaps(model);
 		return model;
 	}
 
 	@SuppressWarnings("resource")
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView postBoxCF(@ModelAttribute("SpringWeb") ExDocWEB doc, ModelMap model) {
-		String message=doc.toString();
+	public ModelAndView postBoxCF(@ModelAttribute("SpringWeb")ExDocWEBList exDocWEBList, ModelMap model) {
+		String message=exDocWEBList.toString();
+		System.out.println(exDocWEBList);
 		ModelAndView model1 = new ModelAndView("OperationInfo");
 		model1.addObject("errorText", message);
 		return model1;
 	}
 
-
-	
+	@ModelAttribute("locationList")
+	private  Map<Long, String> getLocationList(){
+		 Map<Long, String> lociationMap= new HashMap<Long, String>();
+		 ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+			LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
+			List<Location> locList = locDAO.getAllLocatin();
+			for (Location location : locList) {
+				lociationMap.put(location.getId(), location.getName());
+			}
+			return lociationMap;
+	}
+	@ModelAttribute("instrumentMap")
+	private Map<Long, String> getInstrumentMap(){
+		Map<Long, String> instrumentMap= new HashMap<Long, String>();
+		 ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+		InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
+		List<Instrument> instList =instDAO.getAllInstrument();
+		for (Instrument instrument : instList) {
+			instrumentMap.put(instrument.getId(), instrument.getName());
+		}
+		return instrumentMap;
+	}
 	private ModelAndView createMaps(ModelAndView model) {
 		
 		 Map<Long, String> lociationMap= new HashMap<Long, String>();
