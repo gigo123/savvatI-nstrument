@@ -51,8 +51,9 @@ public class CreateExDoc {
 
 	@SuppressWarnings("resource")
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView postBoxCF(@ModelAttribute("SpringWeb")@Validated ExDocWEBList exDocWEBList,BindingResult bindingResult, ModelMap model) {
+	public ModelAndView postBoxCF(@ModelAttribute("SpringWeb") @Validated ExDocWEBList exDocWEBList, BindingResult bindingResult, ModelMap model) {
 		if (bindingResult.hasErrors()) {
+			System.out.println("error");
 			ModelAndView model1 = new ModelAndView("CreateExDoc");
 	         return model1;
 	      }

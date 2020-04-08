@@ -38,7 +38,7 @@
 						 class="form__input" required ="true"/>
 						</td>
 						<td class="doc-in-loc" id = "doc-in-loc-${i.index}">
-						<form:select path="docList[${i.index }].outLocation">
+						<form:select path="docList[${i.index }].inLocation">
 								<form:option value="NONE" label="Select" />
 								<form:options items="${locationList}" />
 								</form:select>
@@ -55,8 +55,7 @@
 							</td>
 						<td class="doc-amount text-left">
 						<form:input path ="docList[${i.index }].amount" id="amount-${i.index}"
-						type="number"
-						 class="form__input" required ="true"/>
+						class="form__input" required ="true"/>
 						</td>
 					</tr>
 				</c:forEach>
