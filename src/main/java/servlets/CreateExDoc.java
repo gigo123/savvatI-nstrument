@@ -51,7 +51,7 @@ public class CreateExDoc {
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView postBoxCF(@ModelAttribute("SpringWeb")ExDocWEBList exDocWEBList, ModelMap model) {
 		String message=exDocWEBList.toString();
-		System.out.println(exDocWEBList);
+		
 		ModelAndView model1 = new ModelAndView("OperationInfo");
 		model1.addObject("errorText", message);
 		return model1;
