@@ -156,7 +156,7 @@ public class ControllersCheckWrite {
 			error=true;
 			errorText.append("<li> не заполнено место хранения приема в строке " + number + "</li>");
 		}
-		if(docW.getInBox()==null) {
+	/*	if(docW.getInBox()==null) {
 			error=true;
 			errorText.append("<li> не заполнена ячейка видачи в строке " + number + "</li>");
 		}
@@ -164,6 +164,7 @@ public class ControllersCheckWrite {
 			error=true;
 			errorText.append("<li> не заполнена ячейка приема в строке " + number + "</li>");
 		}
+	*/
 		if(docW.getAmount()==0) {
 			error=true;
 			errorText.append("<li> не заполнено количество в строке " + number + "</li>");
