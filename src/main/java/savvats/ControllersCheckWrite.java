@@ -1,5 +1,7 @@
 package savvats;
 
+import java.util.List;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -132,30 +134,67 @@ public class ControllersCheckWrite {
 		}
 
 	}
+	public static String createExDocUnwrap(ExDocWEBList docListWrap) {
+		List<ExDocWEB> docList = docListWrap.getDocList();
+		String messages = null;
+			for( int i=0;i<docList.size();i++) {
+				
+			messages = messages + checkExDocWeb(docList.get(i),i);
+		}
+		return messages;
+		
+	}
+	public static String  checkExDocWeb(ExDocWEB docW, int number) {
+		number++;
+		StringBuilder errorText = new StringBuilder("<ul>");
+		boolean error = false;
+		if(docW.getInLocation()==null) {
+			error=true;
+			errorText.append("<li> не заполнено место хранения видачи  в строке " + number + " </li>");
+		}
+		if(docW.getOutLocation()==null) {
+			error=true;
+			errorText.append("<li> не заполнено место хранения приема в строке " + number + "</li>");
+		}
+		if(docW.getInBox()==null) {
+			error=true;
+			errorText.append("<li> не заполнена ячейка видачи в строке " + number + "</li>");
+		}
+		if(docW.getOutBox()==null) {
+			error=true;
+			errorText.append("<li> не заполнена ячейка приема в строке " + number + "</li>");
+		}
+		if(docW.getAmount()==0) {
+			error=true;
+			errorText.append("<li> не заполнено количество в строке " + number + "</li>");
+		}
+		if(docW.getInstrument()==null) {
+			error=true;
+			errorText.append("<li> не вибран иструмент в строке " + number + " </li>");
+		}
+		if(error) {
+			errorText.append("</ul>");
+			return errorText.toString();
+		}
+		errorText.append(makeExDoc(docW));
+		return errorText.toString();
+	}
+	
+	public static String makeExDoc(ExDocWEB docW) {
+		ExDoc doc =new ExDoc();
+		//doc.set
+		
+		
+		return null;
+		
+	}
+	
 	@SuppressWarnings("resource")
 	public static String addExDocWork(ExDoc doc) {
 		StringBuilder errorText = new StringBuilder("<ul>");
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		ExDocDAO exDocDAO = (ExDocDAO) context.getBean("ExDocDAO");
-		boolean error = false;
-		if(doc.getInLocation()==null) {
-			error=true;
-		}
-		if(doc.getOutLocation()==null) {
-			error=true;
-		}
-		if(doc.getInBox()==null) {
-			error=true;
-		}
-		if(doc.getOutBox()==null) {
-			error=true;
-		}
-		if(doc.getAmount()==0) {
-			error=true;
-		}
-		if(doc.getInstrument()==null) {
-			error=true;
-		}
+		
 		/*if (box.getNumber() == 0) {
 			error = true;
 			errorText.append("<li> не можеть бить  нуловой номер </li>");
