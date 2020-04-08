@@ -2,7 +2,10 @@ package savvats;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 public class ExDocWEBList {
+	@Valid
 	private List<ExDocWEB> docList;
 	public List<ExDocWEB> getDocList() {
 		return docList;
