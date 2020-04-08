@@ -9,6 +9,7 @@
 	создание нового документа премещения
 	<div class="table-content table-responsive">
 	<form:form action="./createExDoc" method="post" modelAttribute = "exDocWEBList">
+	 <form:errors path = "*" cssClass = "errorblock" element = "div" />
 		<table class="table text-center">
 			<thead>
 				<tr>
@@ -35,7 +36,8 @@
 							</td>
 						<td class="doc-out-box text-left wide-column">
 							<form:input path ="docList[${i.index }].outBox" id="outBox-${i.index}"
-						 class="form__input" required ="true"/>
+						 class="form__input" required ="true"/>       
+						  <form:errors path = "docList[${i.index }].outBox" />
 						</td>
 						<td class="doc-in-loc" id = "doc-in-loc-${i.index}">
 						<form:select path="docList[${i.index }].inLocation">
