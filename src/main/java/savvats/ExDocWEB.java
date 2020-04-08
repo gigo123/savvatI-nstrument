@@ -2,16 +2,24 @@ package savvats;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotEmpty;
 
+import org.hibernate.validator.constraints.Range;
 
 public class ExDocWEB {
 	private long id;
+	 @NotEmpty
 	private String outLocation;
+	 @NotEmpty
 	private String inLocation;
+	 
 	private String outBox;
 	private String inBox;
+	 @NotEmpty
 	private LocalDate date;
+	 @NotEmpty
 	private String instrument;
+	 @Range(min = 0, max = 200)
 	private float amount;
 	
 	public long getId() {

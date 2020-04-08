@@ -27,32 +27,35 @@
 						<td class="doc-id">
 								${i.index}
 							</td>
-							<td class="doc-out-loc text-left">
-								<form:select path="docList[${i.index }].outLocationString">
+							<td class="doc-out-loc text-left" id = "doc-out-loc-${i.index}">
+								<form:select path="docList[${i.index }].outLocation">
 								<form:option value="NONE" label="Select" />
 								<form:options items="${locationList}" />
 								</form:select>
 							</td>
 						<td class="doc-out-box text-left wide-column">
-							
+							<form:input path ="docList[${i.index }].outBox" id="outBox-${i.index}"
+						 class="form__input" required ="true"/>
 						</td>
-						<td class="doc-in-loc">
-						<form:select path="docList[${i.index }].outLocationString">
+						<td class="doc-in-loc" id = "doc-in-loc-${i.index}">
+						<form:select path="docList[${i.index }].outLocation">
 								<form:option value="NONE" label="Select" />
 								<form:options items="${locationList}" />
 								</form:select>
 						</td>
 						<td class="doc-in-box">
-						ячейка вход
+						<form:input path ="docList[${i.index }].inBox" id="inBox-${i.index}"
+						 class="form__input" required ="true"/>
 						</td>
-						<td class="doc-instrum">
-							<form:select path="docList[${i.index }].inBoxString">
+						<td class="doc-instrum" id = "doc-instrum-${i.index}">
+							<form:select path="docList[${i.index }].instrument">
 							<form:option value="NONE" label="Select" />
 							<form:options items="${instrumentMap}" />
 							</form:select>
 							</td>
 						<td class="doc-amount text-left">
-						<form:input path ="docList[${i.index }].amount" id="amount"
+						<form:input path ="docList[${i.index }].amount" id="amount-${i.index}"
+						type="number"
 						 class="form__input" required ="true"/>
 						</td>
 					</tr>
@@ -60,12 +63,11 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="btn btn-size-md btn-shape-square btn-fullwidth"
-		id="checkOut" onclick="confirmCreate()">Proceed To Checkout
-		<input type="submit" value="создать ячейку"
+	
+		<input type="submit" value="создать документ"
 						class="btn btn-size-md" />
-						</div>
-						</form:form>
+						
+							</form:form>
 </div>
 
 <script>
