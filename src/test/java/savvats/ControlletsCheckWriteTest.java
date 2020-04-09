@@ -47,50 +47,25 @@ class ControlletsCheckWriteTest {
 		message = ControllersCheckWrite.addInstrumentWork(inst);
 		assertTrue(message.equals("Инструмет успешно создан"), "sucsecfuly created");
 	}
-	@SuppressWarnings("resource")
 	@Test
 	void addBoxWork() {
 		BoxListLocation  box = new BoxListLocation();
-		 box.setLocationWB("1");
+		 box.setLocationWB("2");
 		 box.setNumber(8);
 		String message = ControllersCheckWrite.addBoxWork(box);
-		assertTrue(message.equals("<ul><li> не вибрано место хранения </li></ul>"), "must be short name");
-		
-		Location location = new Location();
-		location.setName("test");
-		location.setBoxes(true);
-		location.setId(1);
-		box.setLocation(location);
-		box.setNumber(3);
-		message = ControllersCheckWrite.addBoxWork(box);
 		assertTrue(message.equals("<ul><li> неправильное место хранения </li></ul>"), "wrong place");
-		
-		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
-		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
-		List<Location> locationList= locDAO.getAllLocatin();
-		locationList.get(0);
-		box.setLocation(locationList.get(0));
+		 box.setLocationWB("1");
 		message = ControllersCheckWrite.addBoxWork(box);
 		assertTrue(message.equals("<ul><li> место хранения не может содержать ячейки </li></ul>"), "place is not contein boxes");
-		
-		locationList= locDAO.getAllLocatinWB();
-		locationList.get(0);
-		box.setNumber(0);
-		box.setLocation(locationList.get(0));
-		message = ControllersCheckWrite.addBoxWork(box);
-		assertTrue(message.equals("<ul><li> не можеть бить  нуловой номер </li></ul>"), "box created");
-		
-		locationList= locDAO.getAllLocatinWB();
-		locationList.get(0);
+		//put number that  exist
 		box.setNumber(5);
-		box.setLocation(locationList.get(0));
+		box.setLocationWB("7");
+		message = ControllersCheckWrite.addBoxWork(box);
+		assertTrue(message.equals("<ul><li> ячейка с таким номером уже существует </li></ul>"), "box with that number exist");
+		//put number that not exist
+		box.setNumber(10);
 		message = ControllersCheckWrite.addBoxWork(box);
 		assertTrue(message.equals("Ячейка успесно создана"), "box created");
-		
-		
-		
-		
-		
 	}
 
 }
