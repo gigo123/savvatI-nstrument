@@ -88,17 +88,13 @@ public class ControllersCheckWrite {
 	}
 
 	@SuppressWarnings("resource")
-	public static String addBoxWork(Box box) {
+	public static String addBoxWork(BoxListLocation box) {
 		StringBuilder errorText = new StringBuilder("<ul>");
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
 		boolean error = false;
-		if (box.getNumber() == 0) {
-			error = true;
-			errorText.append("<li> не можеть бить  нуловой номер </li>");
-		}
 
-		if (box.getLocation() == null) {
+	/*	if (box.getLocationWB() == null) {
 			error = true;
 			errorText.append("<li> не вибрано место хранения </li>");
 		} else {
@@ -118,7 +114,7 @@ public class ControllersCheckWrite {
 				errorText.append("<li> место хранения не может содержать ячейки </li>");
 			}
 		}
-
+*/
 		if (!error) {
 			if (!boxDAO.createBox(box)) {
 				error = true;

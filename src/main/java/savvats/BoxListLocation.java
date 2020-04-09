@@ -1,15 +1,18 @@
 package savvats;
 
+import javax.validation.constraints.PositiveOrZero;
+
 import models.Box;
 
 public class BoxListLocation extends Box{
-	private String locationWB;
+	@PositiveOrZero
+	private long locationWB;
 
-	public String getLocationWB() {
+	public long getLocationWB() {
 		return locationWB;
 	}
 
-	public void setLocationWB(String locationWB) {
+	public void setLocationWB(long locationWB) {
 		this.locationWB = locationWB;
 	}
 	

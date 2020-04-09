@@ -1,7 +1,10 @@
 package models;
 
+import javax.validation.constraints.NotEmpty;
+
 public class Location {
 	private long id;
+	@NotEmpty
 	private String name;
 	private boolean boxes;
 	public long getId() {

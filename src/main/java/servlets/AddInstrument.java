@@ -1,7 +1,9 @@
 package servlets;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,16 +22,20 @@ public class AddInstrument {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView postInstrumentCF(@ModelAttribute("SpringWeb") Instrument instrument, ModelMap model) {
-		String message = ControllersCheckWrite.addInstrumentWork(instrument);
-		return showInfoPage(message);
+	public String postInstrumentCF(@ModelAttribute("instrument") @Validated Instrument instrument, 
+			BindingResult bindingResult, Model model) {
+
+		if (bindingResult.hasErrors()) {
+			return "AddInstrument";
+		}
+		model.addAttribute("errorText", ControllersCheckWrite.addInstrumentWork(instrument));
+		return "OperationInfo";
+	}
+	
+	@ModelAttribute("instrument")
+	public Instrument createInstrumentModel() {
+		return new Instrument();
 	}
 
-	public ModelAndView showInfoPage(String message) {
-		ModelAndView model = new ModelAndView("OperationInfo");
-		model.addObject("errorText", message);
-		model.addObject("page", "addinstument");
-		return model;
-	}
 
 }

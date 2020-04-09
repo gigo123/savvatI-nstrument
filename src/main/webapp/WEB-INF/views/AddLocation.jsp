@@ -9,6 +9,7 @@
 	создание нового места хранения
 	${errorText}
 	<form:form  action="./addlocation" method="post" class="form form--account">
+	<form:errors path = "*" cssClass = "errorblock" element = "div" />
 		<div class="row mb--20">
 			<div class="col-12">
 				<div class="form__group">
@@ -18,6 +19,7 @@
 					</form:label>
 					<form:input path ="name" type="text" name="name" id="name" class="form__input" 
 					required="true"  />
+					<form:errors path = "name" />
 				</div>
 			</div>
 		</div>

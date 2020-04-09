@@ -1,9 +1,13 @@
 package models;
 
+import javax.validation.constraints.NotEmpty;
+
 public class Instrument {
 	private long id;
+	@NotEmpty
 	private String name;
 	private String comment;
+	@NotEmpty
 	private String measure;
 	
 	public long getId() {

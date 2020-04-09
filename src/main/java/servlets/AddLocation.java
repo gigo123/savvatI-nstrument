@@ -2,7 +2,9 @@ package servlets;
 
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,15 +24,18 @@ public class AddLocation {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView postLocationCF(@ModelAttribute("SpringWeb") Location location, ModelMap model) {
-		String message = ControllersCheckWrite.addLocationWork(location);
-		return showInfoPage(message);
-	}
+	public String postLocationCF(@ModelAttribute("location") @Validated Location location, 
+			BindingResult bindingResult, Model model) {
 
-	public ModelAndView showInfoPage(String message) {
-		ModelAndView model = new ModelAndView("OperationInfo");
-		model.addObject("errorText", message);
-		return model;
+		if (bindingResult.hasErrors()) {
+			return "AddLocation";
+		}
+		model.addAttribute("errorText",ControllersCheckWrite.addLocationWork(location));
+		return "OperationInfo";
+	}
+	@ModelAttribute("location")
+	public Location createLocationModel() {
+		return new Location();
 	}
 
 }

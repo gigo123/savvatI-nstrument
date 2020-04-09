@@ -7,8 +7,8 @@
 <%@ include file="/WEB-INF/include/SideMenuView.jsp"%>
 <div class="col-6">
 	создание нового инструмента
-	${errorText}
 	<form:form  action="./addinstument" method="post" class="form form--account">
+	<form:errors path = "*" cssClass = "errorblock" element = "div" />
 		<div class="row mb--20">
 			<div class="col-12">
 				<div class="form__group">
@@ -18,6 +18,7 @@
 					</form:label>
 					<form:input path ="name" type="text" name="name" id="name" class="form__input" 
 					required="true"  />
+					 <form:errors path = "name" />
 				</div>
 			</div>
 		</div>
@@ -41,6 +42,7 @@
 					</form:label>
 					<form:input path ="measure" type="text" name="measure" id="measure" class="form__input" 
 					required="true" />
+					<form:errors path = "measure" />
 				</div>
 			</div>
 		</div>

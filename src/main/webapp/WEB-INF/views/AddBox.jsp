@@ -6,9 +6,10 @@
 <%@ include file="/WEB-INF/include/HeaderView.jsp"%>
 <%@ include file="/WEB-INF/include/SideMenuView.jsp"%>
 <div class="col-6">
-	создание новой ячейки ${errorText}
-	<form:form action="./addinstument" method="post"
+	создание новой ячейки
+	<form:form action="./addbox" method="post"
 		class="form form--account">
+		 <form:errors path = "*" cssClass = "errorblock" element = "div" />
 		<div class="row mb--20">
 			<div class="col-12">
 				<div class="form__group">
@@ -18,18 +19,20 @@
 					</form:label>
 					<form:input path="number" type="text" name="name" id="name"
 						class="form__input" required="true" />
+						 <form:errors path = "number" />
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-3">
-				<form:label path="locationWB">место хранения</form:label>
+				<form:label path="location">место хранения</form:label>
 			</div>
 			<div class="col-3">
-				<form:select path="locationWB">
-					<form:option value="NONE" label="Select" />
+				<form:select path="location">
+					<form:option value="1" label="Select" />
 					<form:options items="${locationWB}" />
 				</form:select>
+				<form:errors path = "locationWB" />
 			</div>
 		</div>
 

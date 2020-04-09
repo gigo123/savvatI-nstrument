@@ -1,8 +1,10 @@
 package models;
 
+import javax.validation.constraints.Positive;
 
 public class Box {
 	private long id;
+	@Positive
 	private int number;
 	private Location location;
 	
