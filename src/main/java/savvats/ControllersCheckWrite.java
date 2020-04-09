@@ -37,9 +37,17 @@ public class ControllersCheckWrite {
 			}
 		}
 		if (!error) {
+			
 			if (!locDAO.createLocation(location)) {
 				error = true;
 				errorText.append("<li>ошыбка бази данних </li>");
+			}
+			else {
+				if(location.isBoxes()==false) {
+					Box box = new Box(0, locDAO.getLocByName(location.getName()));
+					BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
+					boxDAO.createBox(box);
+				}
 			}
 		}
 		errorText.append("</ul>");
