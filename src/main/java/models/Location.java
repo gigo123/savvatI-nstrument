@@ -1,10 +1,10 @@
 package models;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 public class Location {
 	private long id;
-	@NotEmpty
+	@Size(min = 4, max = 20, message = "имя должно бить от 4 до 20 символов")
 	private String name;
 	private boolean boxes;
 	public long getId() {

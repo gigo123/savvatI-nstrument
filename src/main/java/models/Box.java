@@ -1,10 +1,11 @@
 package models;
 
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+
 
 public class Box {
 	private long id;
-	@Positive
+	@PositiveOrZero (message = "ячейка должна бить положительным числом")
 	private int number;
 	private Location location;
 	
