@@ -50,7 +50,9 @@ class ControlletsCheckWriteTest {
 	@SuppressWarnings("resource")
 	@Test
 	void addBoxWork() {
-		Box  box = new Box(1, null);
+		BoxListLocation  box = new BoxListLocation();
+		 box.setLocationWB("1");
+		 box.setNumber(8);
 		String message = ControllersCheckWrite.addBoxWork(box);
 		assertTrue(message.equals("<ul><li> не вибрано место хранения </li></ul>"), "must be short name");
 		
