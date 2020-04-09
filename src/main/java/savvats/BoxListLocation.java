@@ -5,15 +5,19 @@ import javax.validation.constraints.PositiveOrZero;
 import models.Box;
 
 public class BoxListLocation extends Box{
-	@PositiveOrZero
-	private long locationWB;
+	private String locationWB;
 
-	public long getLocationWB() {
+	public String getLocationWB() {
 		return locationWB;
 	}
 
-	public void setLocationWB(long locationWB) {
+	public void setLocationWB(String locationWB) {
 		this.locationWB = locationWB;
+	}
+
+	@Override
+	public String toString() {
+		return "BoxListLocation [locationWB=" + locationWB + "]";
 	}
 	
 

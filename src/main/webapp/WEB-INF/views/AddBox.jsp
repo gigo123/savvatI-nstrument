@@ -7,7 +7,7 @@
 <%@ include file="/WEB-INF/include/SideMenuView.jsp"%>
 <div class="col-6">
 	создание новой ячейки
-	<form:form action="./addbox" method="post"
+	<form:form action="./addbox" method="post" modelAttribute = "boxListLocation"
 		class="form form--account">
 		 <form:errors path = "*" cssClass = "errorblock" element = "div" />
 		<div class="row mb--20">
@@ -25,11 +25,11 @@
 		</div>
 		<div class="row">
 			<div class="col-3">
-				<form:label path="location">место хранения</form:label>
+				<form:label path="locationWB">место хранения</form:label>
 			</div>
 			<div class="col-3">
-				<form:select path="location">
-					<form:option value="1" label="Select" />
+				<form:select path="locationWB">
+					<form:option value="none" label="вибрать место" />
 					<form:options items="${locationWB}" />
 				</form:select>
 				<form:errors path = "locationWB" />

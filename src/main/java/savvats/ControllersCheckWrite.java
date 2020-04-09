@@ -94,27 +94,30 @@ public class ControllersCheckWrite {
 		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
 		boolean error = false;
 
-	/*	if (box.getLocationWB() == null) {
-			error = true;
-			errorText.append("<li> не вибрано место хранения </li>");
-		} else {
-			LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
-			Location loc = locDAO.getLocByName(box.getLocation().getName());
+		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
+		try {
+			long locId = Long.parseLong(box.getLocationWB());
+			Location loc = locDAO.getLocById(locId);
 			if (loc == null) {
 				error = true;
 				errorText.append("<li> неправильное место хранения </li>");
+			} else {
+				box.setLocation(loc);
+				Box tempBox = boxDAO.getBoxByNumber(box.getNumber(), box.getLocation().getId());
+				if (tempBox != null) {
+					error = true;
+					errorText.append("<li> ячейка с таким номером уже существует </li>");
+				}
+				if (!box.getLocation().isBoxes()) {
+					error = true;
+					errorText.append("<li> место хранения не может содержать ячейки </li>");
+				}
 			}
-			Box tempBox = boxDAO.getBoxByNumber(box.getNumber(), box.getLocation().getId());
-			if (tempBox != null) {
-				error = true;
-				errorText.append("<li> ячейка с таким номером уже существует </li>");
-			}
-			if (!box.getLocation().isBoxes()) {
-				error = true;
-				errorText.append("<li> место хранения не может содержать ячейки </li>");
-			}
+		} catch (Exception e) {
+			error = true;
+			errorText.append("<li>неправильное место хранения</li>");
 		}
-*/
+
 		if (!error) {
 			if (!boxDAO.createBox(box)) {
 				error = true;
@@ -130,101 +133,85 @@ public class ControllersCheckWrite {
 		}
 
 	}
+
 	public static String createExDocUnwrap(ExDocWEBList docListWrap) {
 		List<ExDocWEB> docList = docListWrap.getDocList();
 		String messages = null;
-			for( int i=0;i<docList.size();i++) {
-				
-			messages = messages + checkExDocWeb(docList.get(i),i);
+		for (int i = 0; i < docList.size(); i++) {
+
+			messages = messages + checkExDocWeb(docList.get(i), i);
 		}
 		return messages;
-		
+
 	}
-	public static String  checkExDocWeb(ExDocWEB docW, int number) {
+
+	public static String checkExDocWeb(ExDocWEB docW, int number) {
 		number++;
 		StringBuilder errorText = new StringBuilder("<ul>");
 		boolean error = false;
-		if(docW.getInLocation()==null) {
-			error=true;
+		if (docW.getInLocation() == null) {
+			error = true;
 			errorText.append("<li> не заполнено место хранения видачи  в строке " + number + " </li>");
 		}
-		if(docW.getOutLocation()==null) {
-			error=true;
+		if (docW.getOutLocation() == null) {
+			error = true;
 			errorText.append("<li> не заполнено место хранения приема в строке " + number + "</li>");
 		}
-	/*	if(docW.getInBox()==null) {
-			error=true;
-			errorText.append("<li> не заполнена ячейка видачи в строке " + number + "</li>");
-		}
-		if(docW.getOutBox()==null) {
-			error=true;
-			errorText.append("<li> не заполнена ячейка приема в строке " + number + "</li>");
-		}
-	*/
-		if(docW.getAmount()==0) {
-			error=true;
+		/*
+		 * if(docW.getInBox()==null) { error=true;
+		 * errorText.append("<li> не заполнена ячейка видачи в строке " + number +
+		 * "</li>"); } if(docW.getOutBox()==null) { error=true;
+		 * errorText.append("<li> не заполнена ячейка приема в строке " + number +
+		 * "</li>"); }
+		 */
+		if (docW.getAmount() == 0) {
+			error = true;
 			errorText.append("<li> не заполнено количество в строке " + number + "</li>");
 		}
-		if(docW.getInstrument()==null) {
-			error=true;
+		if (docW.getInstrument() == null) {
+			error = true;
 			errorText.append("<li> не вибран иструмент в строке " + number + " </li>");
 		}
-		if(error) {
+		if (error) {
 			errorText.append("</ul>");
 			return errorText.toString();
 		}
 		errorText.append(makeExDoc(docW));
 		return errorText.toString();
 	}
-	
+
 	public static String makeExDoc(ExDocWEB docW) {
-		ExDoc doc =new ExDoc();
-		//doc.set
-		
-		
+		ExDoc doc = new ExDoc();
+		// doc.set
+
 		return null;
-		
+
 	}
-	
+
 	@SuppressWarnings("resource")
 	public static String addExDocWork(ExDoc doc) {
 		StringBuilder errorText = new StringBuilder("<ul>");
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		ExDocDAO exDocDAO = (ExDocDAO) context.getBean("ExDocDAO");
-		
-		/*if (box.getNumber() == 0) {
-			error = true;
-			errorText.append("<li> не можеть бить  нуловой номер </li>");
-		}
 
-		if (box.getLocation() == null) {
-			error = true;
-			errorText.append("<li> не вибрано место хранения </li>");
-		} else {
-			LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
-			Location loc = locDAO.getLocByName(box.getLocation().getName());
-			if (loc == null) {
-				error = true;
-				errorText.append("<li> неправильное место хранения </li>");
-			}
-			Box tempBox = boxDAO.getBoxByNumber(box.getNumber(), box.getLocation().getId());
-			if (tempBox != null) {
-				error = true;
-				errorText.append("<li> ячейка с таким номером уже существует </li>");
-			}
-			if (!box.getLocation().isBoxes()) {
-				error = true;
-				errorText.append("<li> место хранения не может содержать ячейки </li>");
-			}
-		}
-
-		if (!error) {
-			if (!boxDAO.createBox(box)) {
-				error = true;
-				errorText.append("<li>ошыбка бази данних </li>");
-			}
-		}
-		*/
+		/*
+		 * if (box.getNumber() == 0) { error = true;
+		 * errorText.append("<li> не можеть бить  нуловой номер </li>"); }
+		 * 
+		 * if (box.getLocation() == null) { error = true;
+		 * errorText.append("<li> не вибрано место хранения </li>"); } else {
+		 * LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO"); Location
+		 * loc = locDAO.getLocByName(box.getLocation().getName()); if (loc == null) {
+		 * error = true; errorText.append("<li> неправильное место хранения </li>"); }
+		 * Box tempBox = boxDAO.getBoxByNumber(box.getNumber(),
+		 * box.getLocation().getId()); if (tempBox != null) { error = true;
+		 * errorText.append("<li> ячейка с таким номером уже существует </li>"); } if
+		 * (!box.getLocation().isBoxes()) { error = true;
+		 * errorText.append("<li> место хранения не может содержать ячейки </li>"); } }
+		 * 
+		 * if (!error) { if (!boxDAO.createBox(box)) { error = true;
+		 * errorText.append("<li>ошыбка бази данних </li>"); } }
+		 */
 		errorText.append("</ul>");
 		String errString = errorText.toString();
 		if (errString.equals("<ul></ul>")) {
