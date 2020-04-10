@@ -1,17 +1,23 @@
 package savvats;
 
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import dao.BoxDAO;
+import dao.ExDocCatalogDAO;
 import dao.ExDocDAO;
 import dao.InstrumentDAO;
 import dao.LocationDAO;
 import dao.StorageDAO;
 import models.Box;
 import models.ExDoc;
+import models.ExDocCatalog;
 import models.Instrument;
 import models.Location;
 import models.Storage;
@@ -205,10 +211,26 @@ public class ControllersCheckWrite {
 	}
 
 	public static String writeExDoc(ExDoc doc) {
-		StringBuilder errorText = new StringBuilder("<ul>");
-		ExDocDAO exDocDAO = (ExDocDAO) context.getBean("ExDocDAO");
+		return null;
 
-		
+	}
+
+	public static String writeExDocCatolog() {
+		StringBuilder errorText = new StringBuilder("<ul>");
+		ExDocCatalogDAO exDocCatalogDAO = (ExDocCatalogDAO) context.getBean("ExDocCatalogDAO");
+		LocalDate date = LocalDate.now();
+		int year = date.getYear();
+		List<Integer> numberList = exDocCatalogDAO.getExDocCatalogByYearN(year);
+		Collections.sort(numberList);
+		int lastNumber = numberList.get(numberList.size() - 1);
+		lastNumber++;
+		String numberString = "" + year + "-" + lastNumber;
+		System.out.println(numberString);
+		ExDocCatalog exCat = new ExDocCatalog(year, lastNumber, numberString, date);
+		if (!exDocCatalogDAO.createExDocCatalog(exCat)) {
+			errorText.append("<li>ошыбка бази данних </li>");
+		}
+
 		errorText.append("</ul>");
 		String errString = errorText.toString();
 		if (errString.equals("<ul></ul>")) {

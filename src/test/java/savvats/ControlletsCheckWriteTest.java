@@ -67,5 +67,11 @@ class ControlletsCheckWriteTest {
 		message = ControllersCheckWrite.addBoxWork(box);
 		assertTrue(message.equals("Ячейка успесно создана"), "box created");
 	}
+	@Test
+	void writeExDocCatolog() {
+		String message = ControllersCheckWrite.writeExDocCatolog();
+		assertTrue(message.equals("документ успешно создан"),"box created");
+		
+	}
 
 }
