@@ -32,7 +32,7 @@ SqliteOutDocCatalogDAO exDoccDAO;
 	@Test
 	void createOutDocCatalog() {
 		LocalDate today = LocalDate.now();
-		OutDocCatalog docc =new OutDocCatalog("1", 1,  today);
+		OutDocCatalog docc =new OutDocCatalog(1, 1,"1",  today);
 		initConnection();
 		exDoccDAO.createOutDocCatalog(docc);
 		boolean error = exDoccDAO.hasError();
