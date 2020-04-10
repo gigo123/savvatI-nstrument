@@ -9,10 +9,12 @@ import dao.BoxDAO;
 import dao.ExDocDAO;
 import dao.InstrumentDAO;
 import dao.LocationDAO;
+import dao.StorageDAO;
 import models.Box;
 import models.ExDoc;
 import models.Instrument;
 import models.Location;
+import models.Storage;
 
 public class ControllersCheckWrite {
 	static ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
@@ -32,13 +34,12 @@ public class ControllersCheckWrite {
 			}
 		}
 		if (!error) {
-			
+
 			if (!locDAO.createLocation(location)) {
 				error = true;
 				errorText.append("<li>ошыбка бази данних </li>");
-			}
-			else {
-				if(location.isBoxes()==false) {
+			} else {
+				if (location.isBoxes() == false) {
 					Box box = new Box(0, locDAO.getLocByName(location.getName()));
 					BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
 					boxDAO.createBox(box);
@@ -59,7 +60,7 @@ public class ControllersCheckWrite {
 		StringBuilder errorText = new StringBuilder("<ul>");
 		InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
 		boolean error = false;
-		
+
 		Instrument instrum = instDAO.getInstrumentByName(ininstr.getName());
 		if (instDAO.hasError()) {
 			error = true;
@@ -84,7 +85,7 @@ public class ControllersCheckWrite {
 			return errString;
 		}
 	}
-	
+
 	public static String addBoxWork(BoxListLocation box) {
 		StringBuilder errorText = new StringBuilder("<ul>");
 		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
@@ -141,75 +142,77 @@ public class ControllersCheckWrite {
 
 	}
 
-	
-
-	public static String makeExDoc(ExDocWEB docW,int number ) {
+	public static String makeExDoc(ExDocWEB docW, int number) {
 		boolean error = false;
 		StringBuilder errorText = new StringBuilder("<ul>");
 		ExDoc doc = new ExDoc();
 		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
 		InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
 		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
-		
+		StorageDAO storageDAO = (StorageDAO) context.getBean("StorageDAO");
+
 		Location location = locDAO.getLocById(Long.parseLong(docW.getInLocation()));
 		doc.setInLocation(location);
 		Box box = boxDAO.getBoxByNumber(docW.getInBox(), location.getId());
-		if(box==null) {
-			error=true;
+		if (box == null) {
+			error = true;
 			errorText.append("<li>неправильная принимающая ячейка </li>");
-		}
-		else {
+		} else {
 			doc.setInBox(box);
 		}
-				
+
 		location = locDAO.getLocById(Long.parseLong(docW.getOutLocation()));
 		doc.setOutLocation(location);
 		box = boxDAO.getBoxByID(docW.getOutBox());
-		if(box==null) {
-			error=true;
+		if (box == null) {
+			error = true;
 			errorText.append("<li>неправильная видающая ячейка </li>");
-		}
-		else {
+		} else {
 			doc.setOutBox(box);
 		}
-		
+
 		Instrument instrument = instDAO.getInstrumentByID(Long.parseLong(docW.getInstrument()));
-		doc.setInstrument(instrument);
-		
+		if (instrument == null) {
+			error = true;
+			errorText.append("<li>не правильний инструмент  </li>");
+		} else {
+			List<Storage> storeList = storageDAO.getStorageByBox(box);
+			boolean hasInstrument = false;
+			for (int i = 0; i < storeList.size(); i++) {
+				Instrument tempInst = storeList.get(i).getInstrument();
+				if (tempInst.getId() == instrument.getId()) {
+					hasInstrument = true;
+				}
+			}
+			if (hasInstrument) {
+				doc.setInstrument(instrument);
+			} else {
+				error = true;
+				errorText.append("<li>нет инструмента в ячеке видачи  </li>");
+			}
+		}
+
 		doc.setAmount(docW.getAmount());
-		
-		errorText.append("</ul>");
 
-		return null;
-
-	}
-
-	public static String addExDocWork(ExDoc doc) {
-		StringBuilder errorText = new StringBuilder("<ul>");
-		ExDocDAO exDocDAO = (ExDocDAO) context.getBean("ExDocDAO");
-
-		/*
-		 * if (box.getNumber() == 0) { error = true;
-		 * errorText.append("<li> не можеть бить  нуловой номер </li>"); }
-		 * 
-		 * if (box.getLocation() == null) { error = true;
-		 * errorText.append("<li> не вибрано место хранения </li>"); } else {
-		 * LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO"); Location
-		 * loc = locDAO.getLocByName(box.getLocation().getName()); if (loc == null) {
-		 * error = true; errorText.append("<li> неправильное место хранения </li>"); }
-		 * Box tempBox = boxDAO.getBoxByNumber(box.getNumber(),
-		 * box.getLocation().getId()); if (tempBox != null) { error = true;
-		 * errorText.append("<li> ячейка с таким номером уже существует </li>"); } if
-		 * (!box.getLocation().isBoxes()) { error = true;
-		 * errorText.append("<li> место хранения не может содержать ячейки </li>"); } }
-		 * 
-		 * if (!error) { if (!boxDAO.createBox(box)) { error = true;
-		 * errorText.append("<li>ошыбка бази данних </li>"); } }
-		 */
 		errorText.append("</ul>");
 		String errString = errorText.toString();
 		if (errString.equals("<ul></ul>")) {
-			return "Ячейка успесно создана";
+			return writeExDoc(doc);
+		} else {
+			return errString;
+		}
+
+	}
+
+	public static String writeExDoc(ExDoc doc) {
+		StringBuilder errorText = new StringBuilder("<ul>");
+		ExDocDAO exDocDAO = (ExDocDAO) context.getBean("ExDocDAO");
+
+		
+		errorText.append("</ul>");
+		String errString = errorText.toString();
+		if (errString.equals("<ul></ul>")) {
+			return "документ успешно создан";
 		} else {
 			return errString;
 		}
