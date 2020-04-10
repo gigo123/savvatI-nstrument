@@ -32,7 +32,7 @@ class SQLExDocCatalog {
 	@Test
 	void createExDocCatalog() {
 		LocalDate today = LocalDate.now();
-		ExDocCatalog docc =new ExDocCatalog("1", 1,  today);
+		ExDocCatalog docc =new ExDocCatalog(2020, 1,"2020-1",  today);
 		initConnection();
 		exDoccDAO.createExDocCatalog(docc);
 		boolean error = exDoccDAO.hasError();
@@ -41,7 +41,7 @@ class SQLExDocCatalog {
 	@Test
 	void getExDocCatalogById() {
 		initConnection();
-		ExDocCatalog exdoc =exDoccDAO.getExDocCatalogById(1);
+		ExDocCatalog exdoc =exDoccDAO.getExDocCatalogById(3);
 		boolean error = exDoccDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exdoc!=null,"must not be null");
@@ -57,7 +57,7 @@ class SQLExDocCatalog {
 	@Test
 	void getExDocCatalogBySname() {
 		initConnection();
-		ExDocCatalog exdoc =exDoccDAO.getExDocCatalogBySnumber("1");
+		ExDocCatalog exdoc =exDoccDAO.getExDocCatalogBySnumber("2020-1");
 		boolean error = exDoccDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exdoc!=null,"must not be null");
@@ -72,7 +72,7 @@ class SQLExDocCatalog {
 	}
 	
 	@Test
-	void deleteInDoc() {
+	void deleteExDocCatalo() {
 		initConnection();
 		List<ExDocCatalog> exDocList  = exDoccDAO.getExDocCatalogByDate(LocalDate.now());
 		boolean error = exDoccDAO.hasError();
@@ -82,4 +82,23 @@ class SQLExDocCatalog {
 		ExDocCatalog exdoc =exDoccDAO.getExDocCatalogById(id);
 		assertTrue(exdoc==null,"doc must be null(deletet)");
 	}
+	@Test
+	void getExDocCatalogByYear(){
+		initConnection();
+		List<ExDocCatalog> exDocList  = exDoccDAO.getExDocCatalogByYear(2020);
+		boolean error = exDoccDAO.hasError();
+		assertTrue(!error,"must be ok");
+		assertTrue(exDocList.size()!=0,"must not be 0");
+		
+	}
+	@Test
+	void getExDocCatalogByYearNumber(){
+		initConnection();
+		List<Integer> exDocList  = exDoccDAO.getExDocCatalogByYearN(2020);
+		boolean error = exDoccDAO.hasError();
+		assertTrue(!error,"must be ok");
+		assertTrue(exDocList.size()!=0,"must not be 0");
+		
+	}
+
 }
