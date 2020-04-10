@@ -1,6 +1,7 @@
 package savvats;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -140,17 +141,26 @@ public class ControllersCheckWrite {
 	public static String createExDocUnwrap(ExDocWEBList docListWrap) {
 		List<ExDocWEB> docList = docListWrap.getDocList();
 		String messages = null;
+		List<ExDocTempStore> docTempList = new ArrayList<ExDocTempStore>();
 		for (int i = 0; i < docList.size(); i++) {
-
-			messages = messages + makeExDoc(docList.get(i), i);
+			ExDocTempStore tempDoc = makeExDoc(docList.get(i), i);
+			messages += tempDoc.getErrorString();
+			docTempList.add(makeExDoc(docList.get(i), i));
 		}
-		return messages;
+		if (messages.equals("")) {
+			for (ExDocTempStore exDocTempStore : docTempList) {
+				writeExDoc(exDocTempStore.getDoc());
+			}
+
+			return writeExDocCatolog();
+		} else {
+			return messages;
+		}
 
 	}
 
-	public static String makeExDoc(ExDocWEB docW, int number) {
-		boolean error = false;
-		StringBuilder errorText = new StringBuilder("<ul>");
+	public static ExDocTempStore makeExDoc(ExDocWEB docW, int number) {
+		StringBuilder errorText = new StringBuilder("");
 		ExDoc doc = new ExDoc();
 		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
 		InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
@@ -161,7 +171,6 @@ public class ControllersCheckWrite {
 		doc.setInLocation(location);
 		Box box = boxDAO.getBoxByNumber(docW.getInBox(), location.getId());
 		if (box == null) {
-			error = true;
 			errorText.append("<li>неправильная принимающая ячейка </li>");
 		} else {
 			doc.setInBox(box);
@@ -171,7 +180,6 @@ public class ControllersCheckWrite {
 		doc.setOutLocation(location);
 		box = boxDAO.getBoxByID(docW.getOutBox());
 		if (box == null) {
-			error = true;
 			errorText.append("<li>неправильная видающая ячейка </li>");
 		} else {
 			doc.setOutBox(box);
@@ -179,7 +187,6 @@ public class ControllersCheckWrite {
 
 		Instrument instrument = instDAO.getInstrumentByID(Long.parseLong(docW.getInstrument()));
 		if (instrument == null) {
-			error = true;
 			errorText.append("<li>не правильний инструмент  </li>");
 		} else {
 			List<Storage> storeList = storageDAO.getStorageByBox(box);
@@ -193,20 +200,13 @@ public class ControllersCheckWrite {
 			if (hasInstrument) {
 				doc.setInstrument(instrument);
 			} else {
-				error = true;
 				errorText.append("<li>нет инструмента в ячеке видачи  </li>");
 			}
 		}
-
 		doc.setAmount(docW.getAmount());
 
-		errorText.append("</ul>");
 		String errString = errorText.toString();
-		if (errString.equals("<ul></ul>")) {
-			return writeExDoc(doc);
-		} else {
-			return errString;
-		}
+		return new ExDocTempStore(errString, doc);
 
 	}
 
