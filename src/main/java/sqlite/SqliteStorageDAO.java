@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import dao.BoxDAO;
 import dao.InstrumentDAO;
@@ -63,12 +65,13 @@ private boolean sqlError = false;
 	}
 
 	@Override
-	public Storage getStorageByinstrument(Instrument instrument) {
+	public List<Storage> getStorageByinstrument(Instrument instrument) {
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
 		Storage storage = null;
 		BoxDAO boxDAO = new SqliteBoxDAO();
 		InstrumentDAO instDAO = new SqliteInstrumentDAO();
+		List<Storage> storeList = new ArrayList<Storage>();
 		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 		try {
@@ -82,6 +85,7 @@ private boolean sqlError = false;
 				storage.setBox(boxDAO.getBoxByID(rs.getLong("box")));
 				storage.setInstrument(instDAO.getInstrumentByID(rs.getLong("instrument")));
 				storage.setAmount(rs.getFloat("amount"));
+				storeList.add(storage);
 			}
 			conectionHolder.closeConnection();
 		} catch (SQLException e) {
@@ -100,16 +104,17 @@ private boolean sqlError = false;
 		else {
 			sqlError=true;
 		}
-		return storage;
+		return storeList;
 	}
 
 	@Override
-	public Storage getStorageByBox(Box box) {
+	public List<Storage> getStorageByBox(Box box) {
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
 		Storage storage = null;
 		BoxDAO boxDAO = new SqliteBoxDAO();
 		InstrumentDAO instDAO = new SqliteInstrumentDAO();
+		List<Storage> storeList = new ArrayList<Storage>();
 		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 		try {
@@ -123,6 +128,7 @@ private boolean sqlError = false;
 				storage.setBox(boxDAO.getBoxByID(rs.getLong("box")));
 				storage.setInstrument(instDAO.getInstrumentByID(rs.getLong("instrument")));
 				storage.setAmount(rs.getFloat("amount"));
+				storeList.add(storage);
 			}
 			conectionHolder.closeConnection();
 		} catch (SQLException e) {
@@ -141,7 +147,7 @@ private boolean sqlError = false;
 		else {
 			sqlError=true;
 		}
-		return storage;
+		return storeList;
 	}
 
 	@Override
