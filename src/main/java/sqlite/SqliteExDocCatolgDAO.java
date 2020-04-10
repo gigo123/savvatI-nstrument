@@ -18,9 +18,11 @@ public class SqliteExDocCatolgDAO implements ExDocCatalogDAO {
 	private final static String SELECT_DATE_QUERY = "SELECT * FROM exdoccatalog WHERE date =?";
 	private final static String SELECT_NUBMER_QUERY = "SELECT * FROM exdoccatalog WHERE number = ? ";
 	private final static String SELECT_SNUBMER_QUERY = "SELECT * FROM exdoccatalog WHERE numberString = ? ";
-	private final static String INSERT_QUERY = "INSERT INTO exdoccatalog(numberString, number, date)"
-			+ " VALUES(?,?,?)";
+	private final static String INSERT_QUERY = "INSERT INTO exdoccatalog(numberString, number,year, date)"
+			+ " VALUES(?,?,?,?)";
 	private final static String DELETE_QUERY = "DELETE FROM exdoccatalog WHERE id = ?";
+	private final static String SELECT_YEAR_QUERY = "SELECT * FROM exdoccatalog WHERE year = ? ";
+	private final static String SELECT_YEAR_N_QUERY = "SELECT number FROM exdoccatalog WHERE year = ? ";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
 
@@ -51,8 +53,9 @@ public class SqliteExDocCatolgDAO implements ExDocCatalogDAO {
 				prepSt = conn.prepareStatement(INSERT_QUERY);
 				prepSt.setString(1, exDoc.getNumberString());
 				prepSt.setInt(2, exDoc.getNumber());
+				prepSt.setInt(3, exDoc.getYear());
 				Date exDate = java.sql.Date.valueOf(exDoc.getDate().toString());
-				prepSt.setDate(3, exDate);
+				prepSt.setDate(4, exDate);
 				prepSt.execute();
 				conectionHolder.closeConnection();
 			} catch (SQLException e) {
@@ -128,6 +131,7 @@ public class SqliteExDocCatolgDAO implements ExDocCatalogDAO {
 			PreparedStatement prepSt = null;
 			ExDocCatalog exDoc = null;
 			List<ExDocCatalog> docList = new ArrayList<ExDocCatalog>();
+			List<Integer> numberList = new ArrayList<Integer>();
 			try {
 				switch (type) {
 				case 1: {
@@ -156,30 +160,49 @@ public class SqliteExDocCatolgDAO implements ExDocCatalogDAO {
 					rs = prepSt.executeQuery();
 					break;
 				}
+				case 5: {
+					prepSt = conn.prepareStatement(SELECT_YEAR_QUERY);
+					prepSt.setInt(1, (int) obj);
+					rs = prepSt.executeQuery();
+					break;
+				}
+				case 6: {
+					prepSt = conn.prepareStatement(SELECT_YEAR_N_QUERY);
+					prepSt.setInt(1, (int) obj);
+					rs = prepSt.executeQuery();
+					break;
+				}
 
 				default: {
 					sqlError = true;
 				}
 				}
 				while (rs.next()) {
-					exDoc = new ExDocCatalog();
-					exDoc.setId(rs.getInt("id"));
-					exDoc.setNumberString(rs.getString("numberString"));
-					exDoc.setNumber(rs.getInt("number"));
-					Date inDate = rs.getDate("date");
-					exDoc.setDate(inDate.toLocalDate());
-					if (type == 1 || type == 3) {
-						break;
+					if (type == 6) {
+						numberList.add(rs.getInt("number"));
 					} else {
-						docList.add(exDoc);
+
+						exDoc = new ExDocCatalog();
+						exDoc.setId(rs.getInt("id"));
+						exDoc.setNumberString(rs.getString("numberString"));
+						exDoc.setNumber(rs.getInt("number"));
+						Date inDate = rs.getDate("date");
+						exDoc.setDate(inDate.toLocalDate());
+						if (type == 1 || type == 3) {
+							break;
+						} else {
+							docList.add(exDoc);
+						}
 					}
 				}
 				conectionHolder.closeConnection();
 				if (type == 1 || type == 3) {
 					return exDoc;
-				} else {
-					return docList;
 				}
+				if (type == 6) {
+					return numberList;
+				}
+				return docList;
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();
@@ -202,6 +225,18 @@ public class SqliteExDocCatolgDAO implements ExDocCatalogDAO {
 	@Override
 	public List<ExDocCatalog> getExDocCatalogByNumber(int number) {
 		return (List<ExDocCatalog>) selectQ(number, 4);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ExDocCatalog> getExDocCatalogByYear(int year) {
+		return (List<ExDocCatalog>) selectQ(year, 5);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Integer> getExDocCatalogByYearN(int year) {
+		return (List<Integer>) selectQ(year, 6);
 	}
 
 }

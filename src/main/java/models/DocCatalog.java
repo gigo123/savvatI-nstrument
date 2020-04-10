@@ -4,20 +4,29 @@ import java.time.LocalDate;
 
 public class DocCatalog {
 	private long id;
-	private String numberString;
+	private int year;
 	private int number;
+	private String numberString;
 	private LocalDate date;
+	
+	public String getNumberString() {
+		return numberString;
+	}
+	public void setNumberString(String numberString) {
+		this.numberString = numberString;
+	}
 	public long getId() {
 		return id;
 	}
 	public void setId(long id) {
 		this.id = id;
 	}
-	public String getNumberString() {
-		return numberString;
+	
+	public int getYear() {
+		return year;
 	}
-	public void setNumberString(String numberString) {
-		this.numberString = numberString;
+	public void setYear(int year) {
+		this.year = year;
 	}
 	public int getNumber() {
 		return number;
@@ -31,16 +40,20 @@ public class DocCatalog {
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-	public DocCatalog(String numberString, int number, LocalDate date) {
+	
+	
+	public DocCatalog(int year, int number, String numberString, LocalDate date) {
 		super();
-		this.numberString = numberString;
+		this.year = year;
 		this.number = number;
+		this.numberString = numberString;
 		this.date = date;
 	}
+	
 	@Override
 	public String toString() {
-		return "DocCatalog [id=" + id + ", numberString=" + numberString + ", number=" + number + ", date=" + date
-				+ "]";
+		return "DocCatalog [id=" + id + ", year=" + year + ", number=" + number + ", numberString=" + numberString
+				+ ", date=" + date + "]";
 	}
 	public DocCatalog() {
 		

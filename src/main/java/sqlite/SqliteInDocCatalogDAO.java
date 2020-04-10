@@ -19,8 +19,8 @@ public class SqliteInDocCatalogDAO implements InDocCatalogDAO{
 	private final static String SELECT_DATE_QUERY = "SELECT * FROM exdoccatalog WHERE date =?";
 	private final static String SELECT_NUBMER_QUERY = "SELECT * FROM exdoccatalog WHERE number = ? ";
 	private final static String SELECT_SNUBMER_QUERY = "SELECT * FROM exdoccatalog WHERE numberString = ? ";
-	private final static String INSERT_QUERY = "INSERT INTO exdoccatalog(numberString, number, date)"
-			+ " VALUES(?,?,?)";
+	private final static String INSERT_QUERY = "INSERT INTO exdoccatalog(numberString, number,year, date)"  
+						+ "VALUES(?,?,?,?)";
 	private final static String DELETE_QUERY = "DELETE FROM exdoccatalog WHERE id = ?";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
@@ -52,8 +52,9 @@ public class SqliteInDocCatalogDAO implements InDocCatalogDAO{
 				prepSt = conn.prepareStatement(INSERT_QUERY);
 				prepSt.setString(1, exDoc.getNumberString());
 				prepSt.setInt(2, exDoc.getNumber());
+				prepSt.setInt(3, exDoc.getYear());
 				Date exDate = java.sql.Date.valueOf(exDoc.getDate().toString());
-				prepSt.setDate(3, exDate);
+				prepSt.setDate(4, exDate);
 				prepSt.execute();
 				conectionHolder.closeConnection();
 			} catch (SQLException e) {

@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 public class ExDocCatalog  extends DocCatalog{
 	
-	public ExDocCatalog(String numberString, int number, LocalDate date) {
-		super(numberString,number, date);
+	public ExDocCatalog(int year, int number,String numberString, LocalDate date) {
+		super(year,number, numberString,date);
 		
 	}
 	public ExDocCatalog() {
@@ -13,9 +13,12 @@ public class ExDocCatalog  extends DocCatalog{
 	}
 	@Override
 	public String toString() {
-		return "ExDocCatalog [id=" + getId() + ", numberString=" + getNumberString() 
-				+ ", number=" + getNumber() + ", date=" + getDate() +"]";
+		return "ExDocCatalog [getNumberString()=" + getNumberString() + ", getId()=" + getId() + ", getYear()="
+				+ getYear() + ", getNumber()=" + getNumber() + ", getDate()=" + getDate() + "]";
 	}
+	
+	
+	
 	
 	
 }
