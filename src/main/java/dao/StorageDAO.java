@@ -13,4 +13,5 @@ public interface StorageDAO {
 	public boolean createStorage(Storage storage);
 	public boolean deleteStorage(long id);
 	public boolean hasError();
+	public void closeConection();
 }

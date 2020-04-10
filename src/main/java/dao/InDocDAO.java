@@ -13,5 +13,6 @@ public interface InDocDAO {
 	public List<InDoc> getInDocByBox(long idB,long idL);
 	public boolean deleteInDoc(long id);
 	public boolean hasError();
+	public void closeConection();
 
 }

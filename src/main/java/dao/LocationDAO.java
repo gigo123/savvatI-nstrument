@@ -12,4 +12,5 @@ public interface LocationDAO {
 	public List<Location> getAllLocatinWB();
 	public boolean deleteLocation(long id);
 	public boolean hasError();
+	public void closeConection();
 }

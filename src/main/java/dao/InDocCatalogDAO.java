@@ -13,4 +13,5 @@ public interface InDocCatalogDAO {
 	public InDocCatalog getInDocCatalogBySnumber(String numberString);
 	public boolean deleteInDocCatalogDoc(long id);
 	public boolean hasError();
+	public void closeConection();
 }

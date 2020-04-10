@@ -16,4 +16,5 @@ public interface InstrumentDAO {
 	public boolean createInstrument(Instrument instrument);
 	public boolean deleteInstrument(long id);
 	public boolean hasError();
+	public void closeConection();
 }

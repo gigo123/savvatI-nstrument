@@ -16,5 +16,6 @@ public interface ExDocCatalogDAO {
 	public ExDocCatalog getExDocCatalogBySnumber(String numberString);
 	public boolean deleteExDocCatalogDoc(long id);
 	public boolean hasError();
+	public void closeConection();
 
 }

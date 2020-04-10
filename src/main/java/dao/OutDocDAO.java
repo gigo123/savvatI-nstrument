@@ -13,4 +13,5 @@ public interface OutDocDAO {
 	public List<OutDoc> getOutDocByBox(long idB,long idL);
 	public boolean deleteOutDoc(long id);
 	public boolean hasError();
+	public void closeConection();
 }

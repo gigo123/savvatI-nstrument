@@ -14,4 +14,5 @@ public interface OutDocCatalogDAO {
 	public OutDocCatalog getOutDocCatalogBySnumber(String numberString);
 	public boolean deleteOutDocCatalogDoc(long id);
 	public boolean hasError();
+	public void closeConection();
 }

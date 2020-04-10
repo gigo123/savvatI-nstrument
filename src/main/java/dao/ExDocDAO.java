@@ -14,5 +14,6 @@ public interface ExDocDAO {
 	public List<ExDoc> getExDocByBox(long idB, long idL);
 	public boolean deleteExDoc(long id);
 	public boolean hasError();
+	public void closeConection();
 
 }

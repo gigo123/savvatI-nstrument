@@ -12,4 +12,5 @@ public interface BoxDAO {
 	public boolean hasError();
 	public List<Box> getAllBox();
 	public List<Box> getAllBoxByLocation(long idLocation);
+	public void closeConection();
 }
