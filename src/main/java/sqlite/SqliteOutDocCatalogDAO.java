@@ -203,5 +203,10 @@ public class SqliteOutDocCatalogDAO  implements OutDocCatalogDAO{
 	public List<OutDocCatalog> getOutDocCatalogByNumber(int number) {
 		return (List<OutDocCatalog>) selectQ(number, 4);
 	}
+	@Override
+	public void closeConection() {
+		conectionHolder.closeConnection();
+		
+	}
 
 }

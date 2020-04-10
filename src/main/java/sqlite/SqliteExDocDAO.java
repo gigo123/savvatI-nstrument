@@ -218,5 +218,9 @@ public class SqliteExDocDAO implements ExDocDAO {
 	public List<ExDoc> getExDocByCatolog(long id) {
 		return (List<ExDoc>) selectQ(id, null, 2);
 	}
-
+	@Override
+	public void closeConection() {
+		conectionHolder.closeConnection();
+		
+	}
 }

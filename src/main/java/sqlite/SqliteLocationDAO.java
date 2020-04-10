@@ -250,5 +250,9 @@ public class SqliteLocationDAO implements LocationDAO {
 		}
 		return locList;
 	}
-
+	@Override
+	public void closeConection() {
+		conectionHolder.closeConnection();
+		
+	}
 }

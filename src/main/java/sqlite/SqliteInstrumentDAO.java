@@ -243,5 +243,10 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 		}
 		return false;
 	}
+	@Override
+	public void closeConection() {
+		conectionHolder.closeConnection();
+		
+	}
 
 }

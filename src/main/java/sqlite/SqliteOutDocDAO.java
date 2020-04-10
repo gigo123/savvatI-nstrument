@@ -215,5 +215,10 @@ public class SqliteOutDocDAO implements OutDocDAO {
 		}
 		return false;
 	}
+	@Override
+	public void closeConection() {
+		conectionHolder.closeConnection();
+		
+	}
 
 }

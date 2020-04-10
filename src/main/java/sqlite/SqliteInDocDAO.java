@@ -212,5 +212,9 @@ public class SqliteInDocDAO implements InDocDAO{
 		return false;
 	}
 
-	
+	@Override
+	public void closeConection() {
+		conectionHolder.closeConnection();
+		
+	}
 }

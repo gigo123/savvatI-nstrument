@@ -205,5 +205,10 @@ public class SqliteInDocCatalogDAO implements InDocCatalogDAO{
 	public List<InDocCatalog> getInDocCatalogByNumber(int number) {
 		return (List<InDocCatalog>) selectQ(number, 4);
 	}
+	@Override
+	public void closeConection() {
+		conectionHolder.closeConnection();
+		
+	}
 
 }

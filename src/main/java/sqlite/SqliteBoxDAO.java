@@ -196,4 +196,10 @@ public class SqliteBoxDAO implements BoxDAO {
 		return null;
 
 	}
+
+	@Override
+	public void closeConection() {
+		conectionHolder.closeConnection();
+		
+	}
 }

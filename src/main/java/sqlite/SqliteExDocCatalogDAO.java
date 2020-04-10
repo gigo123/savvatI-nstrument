@@ -238,5 +238,10 @@ public class SqliteExDocCatalogDAO implements ExDocCatalogDAO {
 	public List<Integer> getExDocCatalogByYearN(int year) {
 		return (List<Integer>) selectQ(year, 6);
 	}
+	@Override
+	public void closeConection() {
+		conectionHolder.closeConnection();
+		
+	}
 
 }

@@ -234,5 +234,11 @@ private boolean sqlError = false;
 	public void setConectionHolder(SQLConectionHolder conectionHolder) {
 		this.conectionHolder = conectionHolder;
 	}
+	
+	@Override
+	public void closeConection() {
+		conectionHolder.closeConnection();
+		
+	}
 
 }
