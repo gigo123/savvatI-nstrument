@@ -22,10 +22,6 @@ public class ControllersCheckWrite {
 		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
 		Location loc = locDAO.getLocByName(location.getName());
 		boolean error = false;
-		if (location.getName().length() < 4) {
-			error = true;
-			errorText.append("<li> короткое имя </li>");
-		}
 		if (locDAO.hasError()) {
 			error = true;
 			errorText.append("<li> ошыбка бази данних </li>");
@@ -63,10 +59,7 @@ public class ControllersCheckWrite {
 		StringBuilder errorText = new StringBuilder("<ul>");
 		InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
 		boolean error = false;
-		if (ininstr.getName().length() < 4) {
-			error = true;
-			errorText.append("<li> короткое имя </li>");
-		}
+		
 		Instrument instrum = instDAO.getInstrumentByName(ininstr.getName());
 		if (instDAO.hasError()) {
 			error = true;
@@ -86,7 +79,7 @@ public class ControllersCheckWrite {
 		errorText.append("</ul>");
 		String errString = errorText.toString();
 		if (errString.equals("<ul></ul>")) {
-			return "Инструмет успешно создан";
+			return "Инструмент успешно создан";
 		} else {
 			return errString;
 		}

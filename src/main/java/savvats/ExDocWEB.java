@@ -10,13 +10,13 @@ public class ExDocWEB {
 	private String outLocation;
 	 @NotEmpty
 	private String inLocation;
-	@PositiveOrZero
+	@PositiveOrZero (message = "ячейка должна быть положительним числом")
 	private int outBox;
-	@PositiveOrZero
+	@PositiveOrZero(message = "ячейка должна быть положительним числом")
 	private int inBox;
 	 @NotEmpty
 	private String instrument;
-	 @Positive
+	 @Positive (message = "количество должно быть положительним числом")
 	private float amount;
 	
 	public long getId() {
