@@ -3,6 +3,7 @@ package Sqlite;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Connection;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +27,7 @@ class SQLStorage {
 		instrumentDAO = new SqliteInstrumentDAO();
 		instrumentDAO.setConectionHolder(conectHolder);
 		storageDAO = new SqliteStorageDAO();
-		storageDAO .setConectionHolder(conectHolder);
+		storageDAO.setConectionHolder(conectHolder);
 	}
 
 	@Test
@@ -52,6 +53,7 @@ class SQLStorage {
 	}
 	@Test
 	void getStorageById() {
+		initConnection();
 		SqliteStorageDAO  storageDAOc = new SqliteStorageDAO();
 		storageDAOc.getStorageByID(1);
 		boolean error = storageDAOc.hasError();
@@ -61,20 +63,18 @@ class SQLStorage {
 		error = storageDAO.hasError();
 		assertTrue(!error,"must be ok");
 	}
-/*	@Test
+	@Test
 	void getStorageByBox() {
-		SqliteStorageDAO  storageDAOc = new SqliteStorageDAO();
-		storageDAOc.getStorageByBox(boxDAO.getBoxByID(1));
-		boolean error = storageDAOc.hasError();
-		assertTrue(error,"must be error");
+		
 		initConnection();
-		Storage store  = storageDAO.getStorageByBox(boxDAO.getBoxByID(1));
-		error = storageDAO.hasError();
+		List<Storage> storeList  = storageDAO.getStorageByBox(boxDAO.getBoxByID(9));
+		boolean error = storageDAO.hasError();
 		assertTrue(!error,"must be ok");
-		assertTrue(store.getNumber()==1,"must be test1");
+		assertTrue(storeList.size()>0,"must be test1");
+		assertTrue((storeList.get(0).getBox().getId())!=0,"must be test1");
 	}
 	
-	@Test
+/*	@Test
 	void deleteBox() {
 		initConnection();
 		Box box  = storageDAO.getBoxByNumber(1, 1);

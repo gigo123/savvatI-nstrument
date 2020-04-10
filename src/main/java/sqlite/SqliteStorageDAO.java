@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.BoxDAO;
-import dao.InstrumentDAO;
 import dao.StorageDAO;
 import models.Box;
 import models.Instrument;
@@ -23,13 +21,16 @@ private final static String DELETE_QUERY = "DELETE FROM storage WHERE id = ?";
 private SQLConectionHolder conectionHolder;
 private boolean sqlError = false;
 
-	@Override
+@Override
 	public Storage getStorageByID(long id) {
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
 		Storage storage = null;
-		BoxDAO boxDAO = new SqliteBoxDAO();
-		InstrumentDAO instDAO = new SqliteInstrumentDAO();
+		
+		SqliteBoxDAO boxDAO = new SqliteBoxDAO();
+		boxDAO.setConectionHolder(conectionHolder);
+		SqliteInstrumentDAO instDAO = new SqliteInstrumentDAO();
+		instDAO.setConectionHolder(conectionHolder);
 		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
 		try {
@@ -69,8 +70,12 @@ private boolean sqlError = false;
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
 		Storage storage = null;
-		BoxDAO boxDAO = new SqliteBoxDAO();
-		InstrumentDAO instDAO = new SqliteInstrumentDAO();
+		
+		SqliteBoxDAO boxDAO = new SqliteBoxDAO();
+		boxDAO.setConectionHolder(conectionHolder);
+		SqliteInstrumentDAO instDAO = new SqliteInstrumentDAO();
+		instDAO.setConectionHolder(conectionHolder);
+		
 		List<Storage> storeList = new ArrayList<Storage>();
 		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
@@ -112,8 +117,10 @@ private boolean sqlError = false;
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
 		Storage storage = null;
-		BoxDAO boxDAO = new SqliteBoxDAO();
-		InstrumentDAO instDAO = new SqliteInstrumentDAO();
+		SqliteBoxDAO boxDAO = new SqliteBoxDAO();
+		boxDAO.setConectionHolder(conectionHolder);
+		SqliteInstrumentDAO instDAO = new SqliteInstrumentDAO();
+		instDAO.setConectionHolder(conectionHolder);
 		List<Storage> storeList = new ArrayList<Storage>();
 		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
@@ -128,9 +135,9 @@ private boolean sqlError = false;
 				storage.setBox(boxDAO.getBoxByID(rs.getLong("box")));
 				storage.setInstrument(instDAO.getInstrumentByID(rs.getLong("instrument")));
 				storage.setAmount(rs.getFloat("amount"));
+				
 				storeList.add(storage);
 			}
-			conectionHolder.closeConnection();
 		} catch (SQLException e) {
 			sqlError=true;
 			e.printStackTrace();

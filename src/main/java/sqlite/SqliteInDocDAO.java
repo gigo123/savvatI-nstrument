@@ -55,7 +55,6 @@ public class SqliteInDocDAO implements InDocDAO{
 				prepSt.setInt(4, (int) inDoc.getInstrument().getId());
 				prepSt.setFloat(5, inDoc.getAmount());
 				prepSt.execute();
-				conectionHolder.closeConnection();
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();
@@ -83,8 +82,11 @@ public class SqliteInDocDAO implements InDocDAO{
 			ResultSet rs = null;
 			PreparedStatement prepSt = null;
 			SqliteLocationDAO locDao = new SqliteLocationDAO();
+			locDao.setConectionHolder(conectionHolder);
 			SqliteInstrumentDAO instDao = new SqliteInstrumentDAO();
+			instDao.setConectionHolder(conectionHolder);
 			SqliteBoxDAO boxDao = new SqliteBoxDAO();
+			boxDao.setConectionHolder(conectionHolder);
 			List<InDoc> docList = new ArrayList<InDoc>();
 			InDoc indoc = null;
 			try {
@@ -137,7 +139,6 @@ public class SqliteInDocDAO implements InDocDAO{
 						docList.add(indoc);
 					}
 				}
-				conectionHolder.closeConnection();
 				if (type == 1) {
 					return indoc;
 				} else {
@@ -193,7 +194,6 @@ public class SqliteInDocDAO implements InDocDAO{
 				prepSt = conn.prepareStatement(DELETE_QUERY);
 				prepSt.setLong(1, id);
 				prepSt.execute();
-				conectionHolder.closeConnection();
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();

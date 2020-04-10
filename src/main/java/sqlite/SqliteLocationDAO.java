@@ -84,7 +84,6 @@ public class SqliteLocationDAO implements LocationDAO {
 					loc.setName(rs.getString("name"));
 					loc.setBoxes(rs.getBoolean("boxes"));
 				}
-				conectionHolder.closeConnection();
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();
@@ -103,7 +102,6 @@ public class SqliteLocationDAO implements LocationDAO {
 		return loc;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public Location getLocByName(String name) {
 		sqlError = false;
@@ -124,7 +122,6 @@ public class SqliteLocationDAO implements LocationDAO {
 					loc.setBoxes(rs.getBoolean("boxes"));
 					break;
 				}
-				conectionHolder.closeConnection();
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();
@@ -154,7 +151,6 @@ public class SqliteLocationDAO implements LocationDAO {
 				prepSt = conn.prepareStatement(DELETE_QUERY);
 				prepSt.setLong(1, id);
 				prepSt.execute();
-				conectionHolder.closeConnection();
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();
@@ -199,7 +195,6 @@ public class SqliteLocationDAO implements LocationDAO {
 					loc.setBoxes(rs.getBoolean("boxes"));
 					locList.add(loc);
 				}
-				conectionHolder.closeConnection();
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();
@@ -238,7 +233,6 @@ public class SqliteLocationDAO implements LocationDAO {
 					loc.setBoxes(rs.getBoolean("boxes"));
 					locList.add(loc);
 				}
-				conectionHolder.closeConnection();
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();

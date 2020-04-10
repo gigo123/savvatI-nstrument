@@ -127,6 +127,7 @@ public class SqliteBoxDAO implements BoxDAO {
 			ResultSet rs = null;
 			PreparedStatement prepSt = null;
 			SqliteLocationDAO locDao = new SqliteLocationDAO();
+			locDao.setConectionHolder(conectionHolder);
 			List<Box> boxList = new ArrayList<Box>();
 			Box box = null;
 			try {
@@ -171,7 +172,6 @@ public class SqliteBoxDAO implements BoxDAO {
 						boxList.add(box);
 					}
 				}
-				conectionHolder.closeConnection();
 				if (type == 1||type ==2) {
 					return box;
 				} else {

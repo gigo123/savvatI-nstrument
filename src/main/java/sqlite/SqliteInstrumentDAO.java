@@ -120,7 +120,7 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 					
 				}
 				
-				conectionHolder.closeConnection();
+			//conectionHolder.closeConnection();
 				if(type == 1||type == 2){
 					return inst;
 				}

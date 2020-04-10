@@ -73,5 +73,13 @@ class ControlletsCheckWriteTest {
 		assertTrue(message.equals("документ успешно создан"),"box created");
 		
 	}
+	@Test
+	void makeExDoc() {
+		ExDocWEB docW = new ExDocWEB("1", "1", 1, 1, "2", 1);
+		ExDocTempStore exDocTempStore = ControllersCheckWrite.makeExDoc(docW, 1);
+		String message = exDocTempStore.getErrorString();
+		System.out.println(message);
+		assertTrue(message.equals("документ успешно создан"),"box created");
+	}
 
 }

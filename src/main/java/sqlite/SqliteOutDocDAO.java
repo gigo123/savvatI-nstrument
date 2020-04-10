@@ -56,7 +56,6 @@ public class SqliteOutDocDAO implements OutDocDAO {
 				prepSt.setInt(4, (int) outDoc.getInstrument().getId());
 				prepSt.setFloat(5, outDoc.getAmount());
 				prepSt.execute();
-				conectionHolder.closeConnection();
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();
@@ -86,8 +85,11 @@ public class SqliteOutDocDAO implements OutDocDAO {
 			Connection conn = conectionHolder.getConnection();
 			PreparedStatement prepSt = null;
 			SqliteLocationDAO locDao = new SqliteLocationDAO();
+			locDao.setConectionHolder(conectionHolder);
 			SqliteInstrumentDAO instDao = new SqliteInstrumentDAO();
+			instDao.setConectionHolder(conectionHolder);
 			SqliteBoxDAO boxDao = new SqliteBoxDAO();
+			boxDao.setConectionHolder(conectionHolder);
 			List<OutDoc> docList = new ArrayList<OutDoc>();
 			OutDoc outdoc = null;
 			try {
@@ -139,7 +141,6 @@ public class SqliteOutDocDAO implements OutDocDAO {
 						docList.add(outdoc);
 					}
 				}
-				conectionHolder.closeConnection();
 				if (type == 1) {
 					return outdoc;
 				}
@@ -197,7 +198,6 @@ public class SqliteOutDocDAO implements OutDocDAO {
 				prepSt = conn.prepareStatement(DELETE_QUERY);
 				prepSt.setLong(1, id);
 				prepSt.execute();
-				conectionHolder.closeConnection();
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();
