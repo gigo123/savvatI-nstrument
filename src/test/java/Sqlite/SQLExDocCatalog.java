@@ -9,17 +9,17 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import models.ExDocCatalog;
 import sqlite.SQLConectionHolder;
-import sqlite.SqliteExDocCatolgDAO;
+import sqlite.SqliteExDocCatalogDAO;
 
 
 class SQLExDocCatalog {
-	SqliteExDocCatolgDAO exDoccDAO;
+	SqliteExDocCatalogDAO exDoccDAO;
 	
 	
 	void initConnection() {
 		SQLConectionHolder conectionHolder = new SQLConectionHolder();
 		conectionHolder.setConnString("jdbc:mysql://localhost/instrument1?user=root&password=");
-		exDoccDAO = new SqliteExDocCatolgDAO();
+		exDoccDAO = new SqliteExDocCatalogDAO();
 		exDoccDAO.setConectionHolder(conectionHolder);
 	}
 	@Test

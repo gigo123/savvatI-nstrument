@@ -12,7 +12,7 @@ import java.util.List;
 import dao.ExDocCatalogDAO;
 import models.ExDocCatalog;
 
-public class SqliteExDocCatolgDAO implements ExDocCatalogDAO {
+public class SqliteExDocCatalogDAO implements ExDocCatalogDAO {
 
 	private final static String SELECT_ID_QUERY = "SELECT * FROM exdoccatalog WHERE id = ?";
 	private final static String SELECT_DATE_QUERY = "SELECT * FROM exdoccatalog WHERE date =?";
