@@ -55,6 +55,7 @@ public class ControllersCheckWrite {
 		}
 		errorText.append("</ul>");
 		String errString = errorText.toString();
+		locDAO.closeConection();
 		if (errString.equals("<ul></ul>")) {
 			return "место хранения успешно создано";
 		} else {
@@ -86,6 +87,7 @@ public class ControllersCheckWrite {
 		}
 		errorText.append("</ul>");
 		String errString = errorText.toString();
+		instDAO.closeConection();
 		if (errString.equals("<ul></ul>")) {
 			return "Инструмент успешно создан";
 		} else {
@@ -96,9 +98,8 @@ public class ControllersCheckWrite {
 	public static String addBoxWork(BoxListLocation box) {
 		StringBuilder errorText = new StringBuilder("<ul>");
 		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
-		boolean error = false;
-
 		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
+		boolean error = false;
 		try {
 			long locId = Long.parseLong(box.getLocationWB());
 			Location loc = locDAO.getLocById(locId);
@@ -129,6 +130,8 @@ public class ControllersCheckWrite {
 			}
 		}
 		errorText.append("</ul>");
+		boxDAO.closeConection();
+		locDAO.closeConection();
 		String errString = errorText.toString();
 		if (errString.equals("<ul></ul>")) {
 			return "Ячейка успесно создана";
@@ -141,31 +144,40 @@ public class ControllersCheckWrite {
 	public static String createExDocUnwrap(ExDocWEBList docListWrap) {
 		List<ExDocWEB> docList = docListWrap.getDocList();
 		String messages = null;
+		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
+		InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
+		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
+		StorageDAO storageDAO = (StorageDAO) context.getBean("StorageDAO");
+		
 		List<ExDocTempStore> docTempList = new ArrayList<ExDocTempStore>();
 		for (int i = 0; i < docList.size(); i++) {
-			ExDocTempStore tempDoc = makeExDoc(docList.get(i), i);
+			ExDocTempStore tempDoc = makeExDoc(docList.get(i), i,locDAO,instDAO,boxDAO,storageDAO);
 			messages += tempDoc.getErrorString();
-			docTempList.add(makeExDoc(docList.get(i), i));
+			docTempList.add(makeExDoc(docList.get(i), i,locDAO,instDAO,boxDAO,storageDAO));
 		}
 		if (messages.equals("")) {
 			for (ExDocTempStore exDocTempStore : docTempList) {
 				writeExDoc(exDocTempStore.getDoc());
 			}
-
+			boxDAO.closeConection();
+			locDAO.closeConection();
+			instDAO.closeConection();
+			storageDAO.closeConection();
 			return writeExDocCatolog();
 		} else {
+			boxDAO.closeConection();
+			locDAO.closeConection();
+			instDAO.closeConection();
+			storageDAO.closeConection();
 			return messages;
 		}
 
 	}
 
-	public static ExDocTempStore makeExDoc(ExDocWEB docW, int number) {
+	public static ExDocTempStore makeExDoc(ExDocWEB docW, int number,LocationDAO locDAO,InstrumentDAO instDAO, 
+			BoxDAO boxDAO,StorageDAO storageDAO) {
 		StringBuilder errorText = new StringBuilder("");
 		ExDoc doc = new ExDoc();
-		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
-		InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
-		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
-		StorageDAO storageDAO = (StorageDAO) context.getBean("StorageDAO");
 
 		Location location = locDAO.getLocById(Long.parseLong(docW.getInLocation()));
 		doc.setInLocation(location);
@@ -208,6 +220,8 @@ public class ControllersCheckWrite {
 		doc.setAmount(docW.getAmount());
 
 		String errString = errorText.toString();
+		boxDAO.closeConection();
+		locDAO.closeConection();
 		return new ExDocTempStore(errString, doc);
 
 	}
@@ -235,6 +249,7 @@ public class ControllersCheckWrite {
 
 		errorText.append("</ul>");
 		String errString = errorText.toString();
+		exDocCatalogDAO.closeConection();
 		if (errString.equals("<ul></ul>")) {
 			return "документ успешно создан";
 		} else {
