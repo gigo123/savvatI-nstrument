@@ -29,6 +29,10 @@
 	<bean id="StorageDAO" class="sqlite.SqliteStorageDAO">
 		<property name="conectionHolder" ref="connectrionHolder" />
 	</bean>
+	
+	<bean id="ExDocCatalogDAO" class="sqlite.SqliteExDocCatalogDAO">
+		<property name="conectionHolder" ref="connectrionHolder" />
+	</bean>
 	<bean id="connectrionHolder" class="sqlite.SQLConectionHolder">
 		<property name="connString" value="${jdbc.url}" />
 	</bean>
