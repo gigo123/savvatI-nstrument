@@ -171,26 +171,28 @@ public class ControllersCheckWrite {
 		doc.setInLocation(location);
 		Box box = boxDAO.getBoxByNumber(docW.getInBox(), location.getId());
 		if (box == null) {
-			errorText.append("<li>неправильная принимающая ячейка </li>");
+			errorText.append("<li>неправильная принимающая ячейка в строке " + number  +"</li>");
 		} else {
 			doc.setInBox(box);
 		}
 
 		location = locDAO.getLocById(Long.parseLong(docW.getOutLocation()));
 		doc.setOutLocation(location);
-		box = boxDAO.getBoxByID(docW.getOutBox());
+		box = boxDAO.getBoxByNumber(docW.getInBox(), location.getId());
 		if (box == null) {
-			errorText.append("<li>неправильная видающая ячейка </li>");
+			errorText.append("<li>неправильная видающая ячейка в строке " + number  +"</li>");
 		} else {
 			doc.setOutBox(box);
 		}
 
 		Instrument instrument = instDAO.getInstrumentByID(Long.parseLong(docW.getInstrument()));
 		if (instrument == null) {
-			errorText.append("<li>не правильний инструмент  </li>");
+			errorText.append("<li>не правильний инструмент в строке " + number  +" </li>");
 		} else {
 			List<Storage> storeList = storageDAO.getStorageByBox(box);
 			boolean hasInstrument = false;
+			System.out.println(instrument);
+			System.out.println(storeList);
 			for (int i = 0; i < storeList.size(); i++) {
 				Instrument tempInst = storeList.get(i).getInstrument();
 				if (tempInst.getId() == instrument.getId()) {
@@ -200,7 +202,7 @@ public class ControllersCheckWrite {
 			if (hasInstrument) {
 				doc.setInstrument(instrument);
 			} else {
-				errorText.append("<li>нет инструмента в ячеке видачи  </li>");
+				errorText.append("<li>нет инструмента в ячеке видачи  в строке " + number  +"</li>");
 			}
 		}
 		doc.setAmount(docW.getAmount());
