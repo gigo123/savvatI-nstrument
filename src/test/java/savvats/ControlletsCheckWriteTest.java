@@ -45,7 +45,7 @@ class ControlletsCheckWriteTest {
 		// check that name is not exist in db
 		inst.setName("testInst1");
 		message = ControllersCheckWrite.addInstrumentWork(inst);
-		assertTrue(message.equals("Инструмет успешно создан"), "sucsecfuly created");
+		assertTrue(message.equals("Инструмент успешно создан"), "sucsecfuly created");
 	}
 	@Test
 	void addBoxWork() {
