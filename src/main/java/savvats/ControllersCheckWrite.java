@@ -148,6 +148,7 @@ public class ControllersCheckWrite {
 		InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
 		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
 		StorageDAO storageDAO = (StorageDAO) context.getBean("StorageDAO");
+		ExDocDAO exDocDAO = (ExDocDAO) context.getBean("ExDocDAO");
 
 		List<ExDocTempStore> docTempList = new ArrayList<ExDocTempStore>();
 		for (int i = 0; i < docList.size(); i++) {
@@ -159,12 +160,14 @@ public class ControllersCheckWrite {
 		String errString = errorText.toString();
 		if (errString.equals("<ul></ul>")) {
 			for (ExDocTempStore exDocTempStore : docTempList) {
-				writeExDoc(exDocTempStore.getDoc());
+				writeExDoc(exDocTempStore.getDoc(),storageDAO, exDocDAO,exDocTempStore.getOutStorageId());
 			}
+			writeExDocCatolog();
 			boxDAO.closeConection();
 			locDAO.closeConection();
 			instDAO.closeConection();
 			storageDAO.closeConection();
+			exDocDAO.closeConection();
 			return "ok";
 			//return writeExDocCatolog();
 		} else {
@@ -172,6 +175,7 @@ public class ControllersCheckWrite {
 			locDAO.closeConection();
 			instDAO.closeConection();
 			storageDAO.closeConection();
+			exDocDAO.closeConection();
 			return errString;
 		}
 
@@ -184,6 +188,7 @@ public class ControllersCheckWrite {
 		ExDoc doc = new ExDoc();
 		Box box = null;
 		boolean error = false;
+		long storageId = 0;
 		Location location = locDAO.getLocById(Long.parseLong(docW.getInLocation()));
 		if (location != null) {
 			doc.setInLocation(location);
@@ -217,7 +222,7 @@ public class ControllersCheckWrite {
 			if (instrument == null) {
 				errorText.append("<li>не правильний инструмент в строке " + number + " </li>");
 			} else {
-				long storageId = 0;
+				
 				List<Storage> storeList = storageDAO.getStorageByBox(box);
 				boolean hasInstrument = false;
 				for (int i = 0; i < storeList.size(); i++) {
@@ -250,11 +255,16 @@ public class ControllersCheckWrite {
 		if(errString==null) {
 			errString="";
 		}
-		return new ExDocTempStore(errString, doc);
+		return new ExDocTempStore(errString, doc,storageId);
 
 	}
 
-	public static String writeExDoc(ExDoc doc) {
+	public static String writeExDoc(ExDoc doc,StorageDAO storageDAO,ExDocDAO exDocDAO,long outStorageId) {
+		boolean error = exDocDAO.createExDoc(doc);
+		Storage store= new Storage();
+		
+		
+		
 		return null;
 
 	}
