@@ -14,8 +14,8 @@ import models.ExDoc;
 public class SqliteExDocDAO implements ExDocDAO {
 
 	private final static String SELECT_ID_QUERY = "SELECT * FROM exDoc WHERE id = ?";
-	private final static String SELECT_LOCATION_QUERY = "SELECT * FROM exDoc WHERE (outLocation = ? OR inLocation = ?)"
-			+ " AND (outBox = ? OR inBox = ?)";
+	private final static String SELECT_LOCATION_QUERY = "SELECT * FROM exDoc WHERE outLocation = ? OR inLocation = ?";
+	private final static String SELECT_BOX_QUERY = "SELECT * FROM exDoc WHERE outBox = ? OR inBox = ?";
 	private final static String SELECT_INST_QUERY = "SELECT * FROM exDoc WHERE instrument = ? ";
 	private final static String SELECT_CATALOG_QUERY = "SELECT * FROM exDoc WHERE catalogId = ?";
 	private final static String INSERT_QUERY = "INSERT INTO exDoc(outLocation, inLocation, outBox, "
@@ -77,7 +77,7 @@ public class SqliteExDocDAO implements ExDocDAO {
 		}
 	}
 
-	private Object selectQ(Object obj, Object obj2, int type) {
+	private Object selectQ(Object obj, int type) {
 		sqlError = false;
 		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
 			Connection conn = conectionHolder.getConnection();
@@ -114,9 +114,14 @@ public class SqliteExDocDAO implements ExDocDAO {
 				case 4: {
 					prepSt = conn.prepareStatement(SELECT_LOCATION_QUERY);
 					prepSt.setLong(1, (long) obj);
-					prepSt.setLong(2, (long) obj);
-					prepSt.setLong(3, (long) obj2);
-					prepSt.setLong(4, (long) obj2);
+					prepSt.setLong(2, (long) obj);;
+					rs = prepSt.executeQuery();
+					break;
+				}
+				case 5: {
+					prepSt = conn.prepareStatement(SELECT_BOX_QUERY);
+					prepSt.setLong(1, (long) obj);
+					prepSt.setLong(2, (long) obj);;
 					rs = prepSt.executeQuery();
 					break;
 				}
@@ -132,7 +137,7 @@ public class SqliteExDocDAO implements ExDocDAO {
 					exdoc.setInBox(boxDao.getBoxByID(rs.getInt("inBox")));
 					exdoc.setOutBox(boxDao.getBoxByID(rs.getInt("outBox")));
 					exdoc.setInstrument(instDao.getInstrumentByID(rs.getInt("instrument")));
-					exdoc.setCatalogId(rs.getLong("catolgId"));
+					exdoc.setCatalogId(rs.getLong("catalogId"));
 					exdoc.setAmount(rs.getFloat("amount"));
 					exdoc.setOutLocation(locDao.getLocById(rs.getInt("outLocation")));
 					if (type == 1) {
@@ -167,7 +172,7 @@ public class SqliteExDocDAO implements ExDocDAO {
 
 	@Override
 	public ExDoc getExDocById(long id) {
-		return (ExDoc) selectQ(id, null, 1);
+		return (ExDoc) selectQ(id, 1);
 
 	}
 
@@ -176,13 +181,13 @@ public class SqliteExDocDAO implements ExDocDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ExDoc> getExDocByInstrum(long id) {
-		return (List<ExDoc>) selectQ(id, null, 3);
+		return (List<ExDoc>) selectQ(id,  3);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ExDoc> getExDocByBox(long idB, long idL) {
-		return (List<ExDoc>) selectQ(idB, idL, 4);
+	public List<ExDoc> getExDocByBox(long id) {
+		return (List<ExDoc>) selectQ(id, 5);
 	}
 
 	@Override
@@ -216,11 +221,17 @@ public class SqliteExDocDAO implements ExDocDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ExDoc> getExDocByCatolog(long id) {
-		return (List<ExDoc>) selectQ(id, null, 2);
+		return (List<ExDoc>) selectQ(id, 2);
 	}
 	@Override
 	public void closeConection() {
 		conectionHolder.closeConnection();
 		
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ExDoc> getExDocByLocation(long id) {
+		return (List<ExDoc>) selectQ(id, 4);
 	}
 }

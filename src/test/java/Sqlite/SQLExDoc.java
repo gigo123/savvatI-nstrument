@@ -3,12 +3,10 @@ package Sqlite;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Connection;
-import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import models.Box;
 import models.ExDoc;
-import models.InDoc;
 import models.Instrument;
 import models.Location;
 import sqlite.SQLConectionHolder;
@@ -48,9 +46,9 @@ class SQLExDoc {
 	void createExDoc() {
 		initConnection();
 		SqliteExDocDAO  exDocDAOc = new SqliteExDocDAO();
-		Instrument inst = instrumentDAO.getInstrumentByID(1);
+		Instrument inst = instrumentDAO.getInstrumentByID(4);
 		Location location =  locationDAO.getLocById(1);
-		Box box = boxDAO.getBoxByID(1);
+		Box box = boxDAO.getBoxByID(11);
 		ExDoc exDoc = new ExDoc(location, location, box, box, 1, inst, 1);
 		exDocDAOc.createExDoc(exDoc);
 		boolean error = exDocDAOc.hasError();
@@ -74,32 +72,29 @@ class SQLExDoc {
 	}
 	@Test
 	void getExDocByBox() {
-		SqliteExDocDAO  exDocDAOc = new SqliteExDocDAO();
-		exDocDAOc.getExDocByBox(1, 1);
-		boolean error = exDocDAOc.hasError();
-		assertTrue(error,"must be error");
 		initConnection();
-		List<ExDoc> exDocList  = exDocDAO.getExDocByBox(1, 1);
-		error = exDocDAO.hasError();
+		List<ExDoc> exDocList  = exDocDAO.getExDocByBox(9);
+		boolean error = exDocDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exDocList.size()!=0,"must not be 0");
 	}
 	@Test
 	void getExDocByInstrument() {
 		initConnection();
-		List<ExDoc> exDocList  = exDocDAO.getExDocByInstrum(instrumentDAO.getInstrumentByID(1).getId());
+		List<ExDoc> exDocList  = exDocDAO.getExDocByInstrum(instrumentDAO.getInstrumentByID(2).getId());
 		boolean error = exDocDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exDocList.size()!=0,"must not be 0");
 	}
-/*	@Test
-	void getExDocByDate() {
+	@Test
+	void getExDocByLocation() {
 		initConnection();
-		List<ExDoc> exDocList  = exDocDAO.getExDocByDate(LocalDate.now());
+		List<ExDoc> exDocList  = exDocDAO.getExDocByLocation(1);
 		boolean error = exDocDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exDocList.size()!=0,"must not be 0");
 	}
+/*	
 	@Test
 	void deleteExDoc() {
 		initConnection();
