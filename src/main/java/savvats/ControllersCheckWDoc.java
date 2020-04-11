@@ -23,56 +23,63 @@ import models.Storage;
 
 public class ControllersCheckWDoc {
 	static ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+	static LocationDAO locDAO;
+	static InstrumentDAO instDAO;
+	static BoxDAO boxDAO;
+	static StorageDAO storageDAO;
+	static ExDocDAO exDocDAO;
+	static ExDocCatalogDAO exDocCatalogDAO;
+
+	
+	public static void initDAO() {
+		locDAO = (LocationDAO) context.getBean("LocationDAO");
+		instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
+		boxDAO = (BoxDAO) context.getBean("BoxDAO");
+		storageDAO = (StorageDAO) context.getBean("StorageDAO");
+		exDocDAO = (ExDocDAO) context.getBean("ExDocDAO");
+		exDocCatalogDAO = (ExDocCatalogDAO) context.getBean("ExDocCatalogDAO");
+
+	}
+
+	public static void closeDAOConnection() {
+		boxDAO.closeConection();
+		locDAO.closeConection();
+		instDAO.closeConection();
+		storageDAO.closeConection();
+		exDocDAO.closeConection();
+		exDocCatalogDAO.closeConection();
+	}
 
 	public static String createExDocUnwrap(ExDocWEBList docListWrap) {
 		List<ExDocWEB> docList = docListWrap.getDocList();
 		StringBuilder errorText = new StringBuilder("<ul>");
-		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
-		InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
-		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
-		StorageDAO storageDAO = (StorageDAO) context.getBean("StorageDAO");
-		ExDocDAO exDocDAO = (ExDocDAO) context.getBean("ExDocDAO");
-		ExDocCatalogDAO exDocCatalogDAO = (ExDocCatalogDAO) context.getBean("ExDocCatalogDAO");
-
+		initDAO();
 		List<ExDocTempStore> docTempList = new ArrayList<ExDocTempStore>();
 		for (int i = 0; i < docList.size(); i++) {
-			ExDocTempStore tempDoc = makeExDoc(docList.get(i), i, locDAO, instDAO, boxDAO, storageDAO);
+			ExDocTempStore tempDoc = makeExDoc(docList.get(i), i);
 			errorText.append(tempDoc.getErrorString());
-			docTempList.add(makeExDoc(docList.get(i), i, locDAO, instDAO, boxDAO, storageDAO));
+			docTempList.add(makeExDoc(docList.get(i), i));
 		}
 		errorText.append("</ul>");
 		String errString = errorText.toString();
 		if (errString.equals("<ul></ul>")) {
-			String error = writeExDocCatolog(exDocCatalogDAO);
+			String error = writeExDocCatolog();
 			if (!error.equals("<li>ошыбка бази данних </li>")) {
 				long catalogId = exDocCatalogDAO.getExDocCatalogBySnumber(error).getId();
 				for (ExDocTempStore exDocTempStore : docTempList) {
-					error += writeExDoc(exDocTempStore.getDoc(), catalogId, storageDAO, exDocDAO,
-							exDocTempStore.getOutStorageId());
+					error += writeExDoc(exDocTempStore.getDoc(), catalogId, exDocTempStore.getOutStorageId());
 				}
 			}
-
-			boxDAO.closeConection();
-			locDAO.closeConection();
-			instDAO.closeConection();
-			storageDAO.closeConection();
-			exDocDAO.closeConection();
-			exDocCatalogDAO.closeConection();
+			closeDAOConnection();
 			return error;
 		} else {
-			boxDAO.closeConection();
-			locDAO.closeConection();
-			instDAO.closeConection();
-			storageDAO.closeConection();
-			exDocDAO.closeConection();
-			exDocCatalogDAO.closeConection();
+			closeDAOConnection();
 			return errString;
 		}
 
 	}
 
-	public static ExDocTempStore makeExDoc(ExDocWEB docW, int number, LocationDAO locDAO, InstrumentDAO instDAO,
-			BoxDAO boxDAO, StorageDAO storageDAO) {
+	public static ExDocTempStore makeExDoc(ExDocWEB docW, int number) {
 		StringBuilder errorText = new StringBuilder("");
 		number++;
 		ExDoc doc = new ExDoc();
@@ -148,8 +155,7 @@ public class ControllersCheckWDoc {
 
 	}
 
-	public static String writeExDoc(ExDoc doc, long catId, StorageDAO storageDAO, ExDocDAO exDocDAO,
-			long outStorageId) {
+	public static String writeExDoc(ExDoc doc, long catId,long outStorageId) {
 		try {
 			exDocDAO.createExDoc(doc);
 			long inStorageId = 0;
@@ -186,7 +192,7 @@ public class ControllersCheckWDoc {
 
 	}
 
-	public static String writeExDocCatolog(ExDocCatalogDAO exDocCatalogDAO) {
+	public static String writeExDocCatolog() {
 		StringBuilder errorText = new StringBuilder("");
 		LocalDate date = LocalDate.now();
 		int year = date.getYear();
