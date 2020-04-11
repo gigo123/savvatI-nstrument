@@ -18,6 +18,7 @@ private final static String SELECT_BOX_QUERY = "SELECT * FROM storage WHERE box 
 private final static String SELECT_INSTR_QUERY = "SELECT * FROM storage WHERE instrument = ?";
 private final static String INSERT_QUERY = "INSERT INTO storage(box, instrument, amount)" + " VALUES(?, ?, ?)";
 private final static String DELETE_QUERY = "DELETE FROM storage WHERE id = ?";
+private final static String UPDATE_QUERY ="UPDATE storage SET box =? , instrument =?, amount =?";
 private SQLConectionHolder conectionHolder;
 private boolean sqlError = false;
 
@@ -239,6 +240,38 @@ private boolean sqlError = false;
 	public void closeConection() {
 		conectionHolder.closeConnection();
 		
+	}
+
+	@Override
+	public boolean updateStorage(long id, Storage storage) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
+			Connection conn = conectionHolder.getConnection();
+			PreparedStatement prepSt = null;
+			try {
+				prepSt = conn.prepareStatement(UPDATE_QUERY);
+				prepSt.setLong(1, storage.getBox().getId());
+				prepSt.setLong(2, storage.getInstrument().getId());
+				prepSt.setFloat(3, storage.getAmount());
+				prepSt.execute();
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+				return false;
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
+			}
+			return true;
+		} else {
+			sqlError = true;
+			return false;
+		}
 	}
 
 }
