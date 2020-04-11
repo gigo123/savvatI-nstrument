@@ -143,7 +143,7 @@ public class ControllersCheckWrite {
 
 	public static String createExDocUnwrap(ExDocWEBList docListWrap) {
 		List<ExDocWEB> docList = docListWrap.getDocList();
-		String messages = null;
+		StringBuilder errorText = new StringBuilder("<ul>");
 		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
 		InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
 		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
@@ -152,10 +152,12 @@ public class ControllersCheckWrite {
 		List<ExDocTempStore> docTempList = new ArrayList<ExDocTempStore>();
 		for (int i = 0; i < docList.size(); i++) {
 			ExDocTempStore tempDoc = makeExDoc(docList.get(i), i, locDAO, instDAO, boxDAO, storageDAO);
-			messages += tempDoc.getErrorString();
+			errorText.append( tempDoc.getErrorString());
 			docTempList.add(makeExDoc(docList.get(i), i, locDAO, instDAO, boxDAO, storageDAO));
 		}
-		if (messages.equals("")) {
+		errorText.append("</ul>");
+		String errString = errorText.toString();
+		if (errString.equals("<ul></ul>")) {
 			for (ExDocTempStore exDocTempStore : docTempList) {
 				writeExDoc(exDocTempStore.getDoc());
 			}
@@ -163,13 +165,14 @@ public class ControllersCheckWrite {
 			locDAO.closeConection();
 			instDAO.closeConection();
 			storageDAO.closeConection();
-			return writeExDocCatolog();
+			return "ok";
+			//return writeExDocCatolog();
 		} else {
 			boxDAO.closeConection();
 			locDAO.closeConection();
 			instDAO.closeConection();
 			storageDAO.closeConection();
-			return messages;
+			return errString;
 		}
 
 	}
@@ -177,6 +180,7 @@ public class ControllersCheckWrite {
 	public static ExDocTempStore makeExDoc(ExDocWEB docW, int number, LocationDAO locDAO, InstrumentDAO instDAO,
 			BoxDAO boxDAO, StorageDAO storageDAO) {
 		StringBuilder errorText = new StringBuilder("");
+		number++;
 		ExDoc doc = new ExDoc();
 		Box box = null;
 		boolean error = false;
@@ -243,6 +247,9 @@ public class ControllersCheckWrite {
 		doc.setAmount(docW.getAmount());
 
 		String errString = errorText.toString();
+		if(errString==null) {
+			errString="";
+		}
 		return new ExDocTempStore(errString, doc);
 
 	}

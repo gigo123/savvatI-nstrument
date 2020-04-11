@@ -2,6 +2,7 @@ package savvats;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,6 @@ import dao.BoxDAO;
 import dao.InstrumentDAO;
 import dao.LocationDAO;
 import dao.StorageDAO;
-import models.Box;
 import models.Instrument;
 import models.Location;
 
@@ -133,6 +133,27 @@ class ControlletsCheckWriteTest {
 		locDAO.closeConection();
 		instDAO.closeConection();
 		storageDAO.closeConection();
+	}
+	@Test
+	void createExDocUnwrap() {
+		ExDocWEBList docListWrap = new ExDocWEBList();
+		List<ExDocWEB> docList = new ArrayList<ExDocWEB>();
+		docList.add(new ExDocWEB("1", "1", 1, 1, "2", 1));
+		docList.add(new ExDocWEB("50", "1", 1, 1, "2", 1));
+		docList.add(new ExDocWEB("1", "50", 1, 1, "2", 1));
+		docList.add(new ExDocWEB("1", "1", 50, 1, "2", 1));
+		docList.add(new ExDocWEB("1", "1", 1, 50, "2", 1));
+		docList.add(new ExDocWEB("1", "1", 1, 1, "1", 1));
+		docList.add(new ExDocWEB("1", "1", 1, 1, "2", 11));
+		docListWrap.setDocList(docList);
+		String message =ControllersCheckWrite.createExDocUnwrap(docListWrap);
+		assertTrue(message.equals("<ul><li>неправильное место  видачи в стоке 2</li>"
+				+ "<li>неправильное место приема в стоке 3</li>"
+				+ "<li>неправильная видающая ячейка в строке 4</li>"
+				+ "<li>неправильная принимающая ячейка в строке 5</li>"
+				+ "<li>не правильний инструмент в строке 6 </li>"
+				+ "<li>недостачно инструмента для видачи  в строке 7</li></ul>"),"six errors");
+		
 	}
 
 }
