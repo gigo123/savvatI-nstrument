@@ -153,23 +153,21 @@ public class ControllersCheckWrite {
 		List<ExDocTempStore> docTempList = new ArrayList<ExDocTempStore>();
 		for (int i = 0; i < docList.size(); i++) {
 			ExDocTempStore tempDoc = makeExDoc(docList.get(i), i, locDAO, instDAO, boxDAO, storageDAO);
-			errorText.append( tempDoc.getErrorString());
+			errorText.append(tempDoc.getErrorString());
 			docTempList.add(makeExDoc(docList.get(i), i, locDAO, instDAO, boxDAO, storageDAO));
 		}
 		errorText.append("</ul>");
 		String errString = errorText.toString();
 		if (errString.equals("<ul></ul>")) {
 			for (ExDocTempStore exDocTempStore : docTempList) {
-				writeExDoc(exDocTempStore.getDoc(),storageDAO, exDocDAO,exDocTempStore.getOutStorageId());
+				writeExDoc(exDocTempStore.getDoc(), storageDAO, exDocDAO, exDocTempStore.getOutStorageId());
 			}
-			writeExDocCatolog();
 			boxDAO.closeConection();
 			locDAO.closeConection();
 			instDAO.closeConection();
 			storageDAO.closeConection();
 			exDocDAO.closeConection();
-			return "ok";
-			//return writeExDocCatolog();
+			return writeExDocCatolog();
 		} else {
 			boxDAO.closeConection();
 			locDAO.closeConection();
@@ -222,7 +220,7 @@ public class ControllersCheckWrite {
 			if (instrument == null) {
 				errorText.append("<li>не правильний инструмент в строке " + number + " </li>");
 			} else {
-				
+
 				List<Storage> storeList = storageDAO.getStorageByBox(box);
 				boolean hasInstrument = false;
 				for (int i = 0; i < storeList.size(); i++) {
@@ -230,20 +228,19 @@ public class ControllersCheckWrite {
 					if (tempInst != null) {
 						if (tempInst.getId() == instrument.getId()) {
 							hasInstrument = true;
-							storageId=storeList.get(i).getId();
+							storageId = storeList.get(i).getId();
 						}
 					}
 				}
 				if (hasInstrument) {
-					
+
 					Storage storage = storageDAO.getStorageByID(storageId);
-					if(storage.getAmount()>=docW.getAmount()) {
+					if (storage.getAmount() >= docW.getAmount()) {
 						doc.setInstrument(instrument);
-					}
-					else {
+					} else {
 						errorText.append("<li>недостачно инструмента для видачи  в строке " + number + "</li>");
 					}
-					
+
 				} else {
 					errorText.append("<li>нет инструмента в ячеке видачи  в строке " + number + "</li>");
 				}
@@ -252,20 +249,47 @@ public class ControllersCheckWrite {
 		doc.setAmount(docW.getAmount());
 
 		String errString = errorText.toString();
-		if(errString==null) {
-			errString="";
+		if (errString == null) {
+			errString = "";
 		}
-		return new ExDocTempStore(errString, doc,storageId);
+		return new ExDocTempStore(errString, doc, storageId);
 
 	}
 
-	public static String writeExDoc(ExDoc doc,StorageDAO storageDAO,ExDocDAO exDocDAO,long outStorageId) {
-		boolean error = exDocDAO.createExDoc(doc);
-		Storage store= new Storage();
-		
-		
-		
-		return null;
+	public static String writeExDoc(ExDoc doc, StorageDAO storageDAO, ExDocDAO exDocDAO, long outStorageId) {
+		try {
+			exDocDAO.createExDoc(doc);
+			long inStorageId = 0;
+			Storage storage = storageDAO.getStorageByID(outStorageId);
+			float amount = storage.getAmount() - doc.getAmount();
+			storage.setAmount(amount);
+			storageDAO.updateStorage(outStorageId, storage);
+
+			List<Storage> storeList = storageDAO.getStorageByBox(doc.getInBox());
+			Instrument instrument = doc.getInstrument();
+			boolean hasInstrument = false;
+			for (int i = 0; i < storeList.size(); i++) {
+				Instrument tempInst = storeList.get(i).getInstrument();
+				if (tempInst != null) {
+					if (tempInst.getId() == instrument.getId()) {
+						hasInstrument = true;
+						inStorageId = storeList.get(i).getId();
+					}
+				}
+			}
+			if (hasInstrument) {
+				storage = storageDAO.getStorageByID(inStorageId);
+				amount = storage.getAmount() + doc.getAmount();
+				storage.setAmount(amount);
+				storageDAO.updateStorage(inStorageId, storage);
+			} else {
+				Storage newInStorage = new Storage(doc.getInBox(), instrument, doc.getAmount());
+				storageDAO.createStorage(newInStorage);
+			}
+		} catch (Exception e) {
+			return "<li>ошыбка бази данних </li>";
+		}
+		return "";
 
 	}
 
