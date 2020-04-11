@@ -17,7 +17,7 @@ public class SqliteExDocCatalogDAO implements ExDocCatalogDAO {
 	private final static String SELECT_ID_QUERY = "SELECT * FROM exdoccatalog WHERE id = ?";
 	private final static String SELECT_DATE_QUERY = "SELECT * FROM exdoccatalog WHERE date =?";
 	private final static String SELECT_NUBMER_QUERY = "SELECT * FROM exdoccatalog WHERE number = ? ";
-	private final static String SELECT_SNUBMER_QUERY = "SELECT * FROM exdoccatalog WHERE numberString = ? ";
+	private final static String SELECT_SNUBMER_QUERY = "SELECT * FROM exdoccatalog WHERE numberString = ?";
 	private final static String INSERT_QUERY = "INSERT INTO exdoccatalog(numberString, number,year, date)"
 			+ " VALUES(?,?,?,?)";
 	private final static String DELETE_QUERY = "DELETE FROM exdoccatalog WHERE id = ?";
@@ -57,7 +57,6 @@ public class SqliteExDocCatalogDAO implements ExDocCatalogDAO {
 				Date exDate = java.sql.Date.valueOf(exDoc.getDate().toString());
 				prepSt.setDate(4, exDate);
 				prepSt.execute();
-				conectionHolder.closeConnection();
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();
@@ -104,7 +103,6 @@ public class SqliteExDocCatalogDAO implements ExDocCatalogDAO {
 				prepSt = conn.prepareStatement(DELETE_QUERY);
 				prepSt.setLong(1, id);
 				prepSt.execute();
-				conectionHolder.closeConnection();
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();
@@ -195,7 +193,6 @@ public class SqliteExDocCatalogDAO implements ExDocCatalogDAO {
 						}
 					}
 				}
-				conectionHolder.closeConnection();
 				if (type == 1 || type == 3) {
 					return exDoc;
 				}
@@ -206,6 +203,7 @@ public class SqliteExDocCatalogDAO implements ExDocCatalogDAO {
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();
+				System.out.println(e);
 			} finally {
 				if (prepSt != null) {
 					try {

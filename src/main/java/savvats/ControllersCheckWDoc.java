@@ -23,7 +23,7 @@ import models.Storage;
 
 public class ControllersCheckWDoc {
 	static ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
-	
+
 	public static String createExDocUnwrap(ExDocWEBList docListWrap) {
 		List<ExDocWEB> docList = docListWrap.getDocList();
 		StringBuilder errorText = new StringBuilder("<ul>");
@@ -32,6 +32,7 @@ public class ControllersCheckWDoc {
 		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
 		StorageDAO storageDAO = (StorageDAO) context.getBean("StorageDAO");
 		ExDocDAO exDocDAO = (ExDocDAO) context.getBean("ExDocDAO");
+		ExDocCatalogDAO exDocCatalogDAO = (ExDocCatalogDAO) context.getBean("ExDocCatalogDAO");
 
 		List<ExDocTempStore> docTempList = new ArrayList<ExDocTempStore>();
 		for (int i = 0; i < docList.size(); i++) {
@@ -42,21 +43,29 @@ public class ControllersCheckWDoc {
 		errorText.append("</ul>");
 		String errString = errorText.toString();
 		if (errString.equals("<ul></ul>")) {
-			for (ExDocTempStore exDocTempStore : docTempList) {
-				writeExDoc(exDocTempStore.getDoc(), storageDAO, exDocDAO, exDocTempStore.getOutStorageId());
+			String error = writeExDocCatolog(exDocCatalogDAO);
+			if (!error.equals("<li>ошыбка бази данних </li>")) {
+				long catalogId = exDocCatalogDAO.getExDocCatalogBySnumber(error).getId();
+				for (ExDocTempStore exDocTempStore : docTempList) {
+					error += writeExDoc(exDocTempStore.getDoc(), catalogId, storageDAO, exDocDAO,
+							exDocTempStore.getOutStorageId());
+				}
 			}
+
 			boxDAO.closeConection();
 			locDAO.closeConection();
 			instDAO.closeConection();
 			storageDAO.closeConection();
 			exDocDAO.closeConection();
-			return writeExDocCatolog();
+			exDocCatalogDAO.closeConection();
+			return error;
 		} else {
 			boxDAO.closeConection();
 			locDAO.closeConection();
 			instDAO.closeConection();
 			storageDAO.closeConection();
 			exDocDAO.closeConection();
+			exDocCatalogDAO.closeConection();
 			return errString;
 		}
 
@@ -139,7 +148,8 @@ public class ControllersCheckWDoc {
 
 	}
 
-	public static String writeExDoc(ExDoc doc, StorageDAO storageDAO, ExDocDAO exDocDAO, long outStorageId) {
+	public static String writeExDoc(ExDoc doc, long catId, StorageDAO storageDAO, ExDocDAO exDocDAO,
+			long outStorageId) {
 		try {
 			exDocDAO.createExDoc(doc);
 			long inStorageId = 0;
@@ -176,9 +186,8 @@ public class ControllersCheckWDoc {
 
 	}
 
-	public static String writeExDocCatolog() {
-		StringBuilder errorText = new StringBuilder("<ul>");
-		ExDocCatalogDAO exDocCatalogDAO = (ExDocCatalogDAO) context.getBean("ExDocCatalogDAO");
+	public static String writeExDocCatolog(ExDocCatalogDAO exDocCatalogDAO) {
+		StringBuilder errorText = new StringBuilder("");
 		LocalDate date = LocalDate.now();
 		int year = date.getYear();
 		List<Integer> numberList = exDocCatalogDAO.getExDocCatalogByYearN(year);
@@ -186,17 +195,14 @@ public class ControllersCheckWDoc {
 		int lastNumber = numberList.get(numberList.size() - 1);
 		lastNumber++;
 		String numberString = "" + year + "-" + lastNumber;
-		System.out.println(numberString);
+
 		ExDocCatalog exCat = new ExDocCatalog(year, lastNumber, numberString, date);
 		if (!exDocCatalogDAO.createExDocCatalog(exCat)) {
 			errorText.append("<li>ошыбка бази данних </li>");
 		}
-
-		errorText.append("</ul>");
 		String errString = errorText.toString();
-		exDocCatalogDAO.closeConection();
-		if (errString.equals("<ul></ul>")) {
-			return "документ успешно создан";
+		if (errString.equals("")) {
+			return numberString;
 		} else {
 			return errString;
 		}

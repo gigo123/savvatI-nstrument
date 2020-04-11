@@ -57,7 +57,7 @@ class SQLExDocCatalog {
 	@Test
 	void getExDocCatalogBySname() {
 		initConnection();
-		ExDocCatalog exdoc =exDoccDAO.getExDocCatalogBySnumber("2020-1");
+		ExDocCatalog exdoc =exDoccDAO.getExDocCatalogBySnumber("2020-4");
 		boolean error = exDoccDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exdoc!=null,"must not be null");
