@@ -35,4 +35,9 @@ public class Box {
 	}
 	public Box() {
 	}
+	@Override
+	public String toString() {
+		return "Box [id=" + id + ", number=" + number + ", location=" + location + "]";
+	}
+	
 }
