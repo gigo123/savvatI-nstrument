@@ -15,6 +15,7 @@ import dao.InstrumentDAO;
 import dao.LocationDAO;
 import dao.StorageDAO;
 import models.Box;
+import models.DocModel;
 import models.ExDoc;
 import models.ExDocCatalog;
 import models.Instrument;
@@ -49,24 +50,24 @@ public class ControllersCheckWDoc {
 		exDocCatalogDAO.closeConection();
 	}
 
-	public static String createExDocUnwrap(ExDocWEBList docListWrap) {
+	public static String createExDocUnwrap(ExDocWEBList docListWrap, DocType docType) {
 		List<ExDocWEB> docList = docListWrap.getDocList();
 		StringBuilder errorText = new StringBuilder("<ul>");
 		initDAO();
 		List<ExDocTempStore> docTempList = new ArrayList<ExDocTempStore>();
 		for (int i = 0; i < docList.size(); i++) {
-			ExDocTempStore tempDoc = makeExDoc(docList.get(i), i);
+			ExDocTempStore tempDoc = makeExDoc(docList.get(i), i, docType);
 			errorText.append(tempDoc.getErrorString());
-			docTempList.add(makeExDoc(docList.get(i), i));
+			docTempList.add(makeExDoc(docList.get(i), i, docType));
 		}
 		errorText.append("</ul>");
 		String errString = errorText.toString();
 		if (errString.equals("<ul></ul>")) {
-			String error = writeExDocCatolog();
+			String error = writeExDocCatolog(docType);
 			if (!error.equals("<li>ошыбка бази данних </li>")) {
 				long catalogId = exDocCatalogDAO.getExDocCatalogBySnumber(error).getId();
 				for (ExDocTempStore exDocTempStore : docTempList) {
-					error += writeExDoc(exDocTempStore.getDoc(), catalogId, exDocTempStore.getOutStorageId());
+					error += writeExDoc(exDocTempStore.getDoc(), catalogId, exDocTempStore.getOutStorageId(), docType);
 				}
 			}
 			closeDAOConnection();
@@ -78,7 +79,7 @@ public class ControllersCheckWDoc {
 
 	}
 
-	public static ExDocTempStore makeExDoc(ExDocWEB docW, int number) {
+	public static ExDocTempStore makeExDoc(ExDocWEB docW, int number, DocType docType) {
 		String errorText = "";
 		number++;
 		ExDoc doc = new ExDoc();
@@ -88,28 +89,30 @@ public class ControllersCheckWDoc {
 		errorText = tempDoc.getErrorString();
 		tempDoc = checkOutParam(docW, number, tempDoc.getDoc());
 		errorText += tempDoc.getErrorString();
-		
+
 		if (errorText.equals("")) {
 			tempDoc = checkInstrument(docW, number, doc);
 			tempDoc.getDoc().setAmount(docW.getAmount());
-			errorText= tempDoc.getErrorString();
-			errorText +=checkBox(tempDoc.getDoc());
+			errorText = tempDoc.getErrorString();
+			errorText += checkBox((ExDoc) tempDoc.getDoc());
 			tempDoc.setErrorString(errorText);
 			return tempDoc;
 		} else {
 			return new ExDocTempStore(errorText, doc, 0);
 		}
 	}
+
 	private static String checkBox(ExDoc doc) {
 		long inID = doc.getInBox().getId();
 		long outId = doc.getOutBox().getId();
-		if(inID==outId) {
+		if (inID == outId) {
 			return "<li>одинаковие  ячейки приема и видачи</li>";
 		}
 		return "";
-		
+
 	}
-	private static ExDocTempStore checkInstrument(ExDocWEB docW, int number, ExDoc doc) {
+
+	private static ExDocTempStore checkInstrument(ExDocWEB docW, int number, DocModel doc) {
 		StringBuilder errorText = new StringBuilder("");
 		Box box = doc.getOutBox();
 		long storageId = 0;
@@ -164,11 +167,11 @@ public class ControllersCheckWDoc {
 		return tempDoc;
 	}
 
-	private static ExDocTempStore checkOutParam(ExDocWEB docW, int number, ExDoc doc) {
+	private static ExDocTempStore checkOutParam(ExDocWEB docW, int number, DocModel doc) {
 		String errorText = "";
 		Location location = locDAO.getLocById(Long.parseLong(docW.getOutLocation()));
 		if (location != null) {
-			doc.setInLocation(location);
+			doc.setOutLocation(location);
 			Box box = boxDAO.getBoxByNumber(docW.getOutBox(), location.getId());
 			if (box == null) {
 				errorText = "<li>неправильная видающая ячейка в строке " + number + "</li>";
@@ -183,35 +186,37 @@ public class ControllersCheckWDoc {
 		return tempDoc;
 	}
 
-	public static String writeExDoc(ExDoc doc, long catId, long outStorageId) {
+	public static String writeExDoc(DocModel doc, long catId, long outStorageId, DocType docType) {
 		try {
-			exDocDAO.createExDoc(doc,DocType.EXDOC);
+			exDocDAO.createExDoc(doc, DocType.EXDOC);
 			long inStorageId = 0;
 			Storage storage = storageDAO.getStorageByID(outStorageId);
 			float amount = storage.getAmount() - doc.getAmount();
 			storage.setAmount(amount);
 			storageDAO.updateStorage(outStorageId, storage);
-
-			List<Storage> storeList = storageDAO.getStorageByBox(doc.getInBox());
-			Instrument instrument = doc.getInstrument();
-			boolean hasInstrument = false;
-			for (int i = 0; i < storeList.size(); i++) {
-				Instrument tempInst = storeList.get(i).getInstrument();
-				if (tempInst != null) {
-					if (tempInst.getId() == instrument.getId()) {
-						hasInstrument = true;
-						inStorageId = storeList.get(i).getId();
+			if (docType == DocType.EXDOC) {
+				ExDoc exDoc = (ExDoc) doc;
+				List<Storage> storeList = storageDAO.getStorageByBox(exDoc.getInBox());
+				Instrument instrument = exDoc.getInstrument();
+				boolean hasInstrument = false;
+				for (int i = 0; i < storeList.size(); i++) {
+					Instrument tempInst = storeList.get(i).getInstrument();
+					if (tempInst != null) {
+						if (tempInst.getId() == instrument.getId()) {
+							hasInstrument = true;
+							inStorageId = storeList.get(i).getId();
+						}
 					}
 				}
-			}
-			if (hasInstrument) {
-				storage = storageDAO.getStorageByID(inStorageId);
-				amount = storage.getAmount() + doc.getAmount();
-				storage.setAmount(amount);
-				storageDAO.updateStorage(inStorageId, storage);
-			} else {
-				Storage newInStorage = new Storage(doc.getInBox(), instrument, doc.getAmount());
-				storageDAO.createStorage(newInStorage);
+				if (hasInstrument) {
+					storage = storageDAO.getStorageByID(inStorageId);
+					amount = storage.getAmount() + exDoc.getAmount();
+					storage.setAmount(amount);
+					storageDAO.updateStorage(inStorageId, storage);
+				} else {
+					Storage newInStorage = new Storage(exDoc.getInBox(), instrument, exDoc.getAmount());
+					storageDAO.createStorage(newInStorage);
+				}
 			}
 		} catch (Exception e) {
 			return "<li>ошыбка бази данних </li>";
@@ -220,7 +225,7 @@ public class ControllersCheckWDoc {
 
 	}
 
-	public static String writeExDocCatolog() {
+	public static String writeExDocCatolog(DocType docType) {
 		StringBuilder errorText = new StringBuilder("");
 		LocalDate date = LocalDate.now();
 		int year = date.getYear();

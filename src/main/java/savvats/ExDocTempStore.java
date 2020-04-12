@@ -1,10 +1,11 @@
 package savvats;
 
+import models.DocModel;
 import models.ExDoc;
 
 public class ExDocTempStore {
 	private String errorString;
-	private ExDoc doc;
+	private DocModel doc;
 	private long outStorageId;
 	
 	public long getOutStorageId() {
@@ -19,10 +20,10 @@ public class ExDocTempStore {
 	public void setErrorString(String errorString) {
 		this.errorString = errorString;
 	}
-	public ExDoc getDoc() {
+	public DocModel getDoc() {
 		return doc;
 	}
-	public void setDoc(ExDoc doc) {
+	public void setDoc(DocModel doc) {
 		this.doc = doc;
 	}
 	
@@ -31,7 +32,7 @@ public class ExDocTempStore {
 		return "ExDocTempStore [errorString=" + errorString + ", doc=" + doc + ", outStorageId=" + outStorageId + "]";
 	}
 	
-	public ExDocTempStore(String errorString, ExDoc doc, long outStorageId) {
+	public ExDocTempStore(String errorString, DocModel doc, long outStorageId) {
 		super();
 		this.errorString = errorString;
 		this.doc = doc;
