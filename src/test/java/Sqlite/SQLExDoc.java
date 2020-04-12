@@ -6,11 +6,15 @@ import java.sql.Connection;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import models.Box;
+import models.DocModel;
 import models.ExDoc;
+import models.ExDocCatalog;
 import models.Instrument;
 import models.Location;
+import savvats.DocType;
 import sqlite.SQLConectionHolder;
 import sqlite.SqliteBoxDAO;
+import sqlite.SqliteExDocCatalogDAO;
 import sqlite.SqliteExDocDAO;
 import sqlite.SqliteInstrumentDAO;
 import sqlite.SqliteLocationDAO;
@@ -21,6 +25,7 @@ class SQLExDoc {
 	SqliteLocationDAO locationDAO;
 	SqliteInstrumentDAO instrumentDAO;
 	SqliteExDocDAO exDocDAO;
+	SqliteExDocCatalogDAO exDocCatalogDao;
 	
 	void initConnection() {
 		SQLConectionHolder conectionHolder = new SQLConectionHolder();
@@ -33,6 +38,8 @@ class SQLExDoc {
 		instrumentDAO.setConectionHolder(conectionHolder);
 		exDocDAO = new SqliteExDocDAO();
 		exDocDAO.setConectionHolder(conectionHolder);
+		exDocCatalogDao = new SqliteExDocCatalogDAO();
+		exDocCatalogDao.setConectionHolder(conectionHolder);
 	}
 
 	@Test
@@ -49,23 +56,24 @@ class SQLExDoc {
 		Instrument inst = instrumentDAO.getInstrumentByID(4);
 		Location location =  locationDAO.getLocById(1);
 		Box box = boxDAO.getBoxByID(11);
-		ExDoc exDoc = new ExDoc(location, location, box, box, 1, inst, 1);
-		exDocDAOc.createExDoc(exDoc);
+		ExDocCatalog docCat= exDocCatalogDao.getExDocCatalogById(3);
+		ExDoc exDoc = new ExDoc(location, box, location,box, docCat, inst, 1);
+		exDocDAOc.createExDoc(exDoc,DocType.EXDOC);
 		boolean error = exDocDAOc.hasError();
 		assertTrue(error,"must be error");
 		initConnection();
-		exDocDAO.createExDoc(exDoc);
+		exDocDAO.createExDoc(exDoc,DocType.EXDOC);
 		error = exDocDAO.hasError();
 		assertTrue(!error,"must be ok");
 	}
 	@Test
 	void getExDocById() {
 		SqliteExDocDAO  exDocDAOc = new SqliteExDocDAO();
-		exDocDAOc.getExDocById(1);
+		exDocDAOc.getExDocById(1,DocType.EXDOC);
 		boolean error = exDocDAOc.hasError();
 		assertTrue(error,"must be error");
 		initConnection();
-		ExDoc exdoc =exDocDAO.getExDocById(1);
+		ExDoc exdoc =exDocDAO.getExDocById(1,DocType.EXDOC);
 		error = exDocDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exdoc!=null,"must not be null");
@@ -73,7 +81,7 @@ class SQLExDoc {
 	@Test
 	void getExDocByBox() {
 		initConnection();
-		List<ExDoc> exDocList  = exDocDAO.getExDocByBox(9);
+		List<DocModel> exDocList  = exDocDAO.getExDocByBox(9,DocType.EXDOC);
 		boolean error = exDocDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exDocList.size()!=0,"must not be 0");
@@ -81,7 +89,7 @@ class SQLExDoc {
 	@Test
 	void getExDocByInstrument() {
 		initConnection();
-		List<ExDoc> exDocList  = exDocDAO.getExDocByInstrum(instrumentDAO.getInstrumentByID(2).getId());
+		List<DocModel> exDocList  = exDocDAO.getExDocByInstrum(instrumentDAO.getInstrumentByID(2).getId(),DocType.EXDOC);
 		boolean error = exDocDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exDocList.size()!=0,"must not be 0");
@@ -89,7 +97,7 @@ class SQLExDoc {
 	@Test
 	void getExDocByLocation() {
 		initConnection();
-		List<ExDoc> exDocList  = exDocDAO.getExDocByLocation(1);
+		List<DocModel> exDocList  = exDocDAO.getExDocByLocation(1,DocType.EXDOC);
 		boolean error = exDocDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exDocList.size()!=0,"must not be 0");

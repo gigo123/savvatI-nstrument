@@ -8,7 +8,7 @@ import savvats.DocType;
 
 
 public interface DocDAO {
-	public boolean createExDoc(DocModel Doc);
+	public boolean createExDoc(DocModel Doc, DocType docType);
 	public ExDoc getExDocById(long id,DocType docType);
 	public List<DocModel> getExDocByCatolog(long id, DocType docType);
 	public List<DocModel> getExDocByInstrum(long id,DocType docType);

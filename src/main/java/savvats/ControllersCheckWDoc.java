@@ -10,7 +10,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import dao.BoxDAO;
 import dao.ExDocCatalogDAO;
-import dao.ExDocDAO;
+import dao.DocDAO;
 import dao.InstrumentDAO;
 import dao.LocationDAO;
 import dao.StorageDAO;
@@ -27,7 +27,7 @@ public class ControllersCheckWDoc {
 	static InstrumentDAO instDAO;
 	static BoxDAO boxDAO;
 	static StorageDAO storageDAO;
-	static ExDocDAO exDocDAO;
+	static DocDAO exDocDAO;
 	static ExDocCatalogDAO exDocCatalogDAO;
 
 	public static void initDAO() {
@@ -35,7 +35,7 @@ public class ControllersCheckWDoc {
 		instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
 		boxDAO = (BoxDAO) context.getBean("BoxDAO");
 		storageDAO = (StorageDAO) context.getBean("StorageDAO");
-		exDocDAO = (ExDocDAO) context.getBean("ExDocDAO");
+		exDocDAO = (DocDAO) context.getBean("ExDocDAO");
 		exDocCatalogDAO = (ExDocCatalogDAO) context.getBean("ExDocCatalogDAO");
 
 	}
@@ -185,7 +185,7 @@ public class ControllersCheckWDoc {
 
 	public static String writeExDoc(ExDoc doc, long catId, long outStorageId) {
 		try {
-			exDocDAO.createExDoc(doc);
+			exDocDAO.createExDoc(doc,DocType.EXDOC);
 			long inStorageId = 0;
 			Storage storage = storageDAO.getStorageByID(outStorageId);
 			float amount = storage.getAmount() - doc.getAmount();
