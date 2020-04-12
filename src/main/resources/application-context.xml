@@ -20,12 +20,6 @@
 	<bean id="ExDocDAO" class="sqlite.SqliteExDocDAO">
 		<property name="conectionHolder" ref="connectrionHolder" />
 	</bean>
-	<bean id="InDocDAO" class="sqlite.SqliteInDocDAO">
-		<property name="conectionHolder" ref="connectrionHolder" />
-	</bean>
-	<bean id="OutDOcDAO" class="sqlite.SqliteOutDocDAO">
-		<property name="conectionHolder" ref="connectrionHolder" />
-	</bean>
 	<bean id="StorageDAO" class="sqlite.SqliteStorageDAO">
 		<property name="conectionHolder" ref="connectrionHolder" />
 	</bean>
