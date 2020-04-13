@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.InDocCatalogDAO;
-import dao.InDocDAO;
 import models.InDocCatalog;
 
 public class SqliteInDocCatalogDAO implements InDocCatalogDAO{
