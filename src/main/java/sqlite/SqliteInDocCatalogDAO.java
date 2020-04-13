@@ -168,7 +168,7 @@ public class SqliteInDocCatalogDAO implements DocCatalogDAO{
 						numberList.add(rs.getInt("number"));
 					} else {
 
-						exDoc = new ExDocCatalog();
+						exDoc = new InDocCatalog();
 						exDoc.setId(rs.getInt("id"));
 						exDoc.setNumberString(rs.getString("numberString"));
 						exDoc.setNumber(rs.getInt("number"));
@@ -208,8 +208,8 @@ public class SqliteInDocCatalogDAO implements DocCatalogDAO{
 	}
 
 	@Override
-	public ExDocCatalog getExDocCatalogById(long id) {
-		return (ExDocCatalog) selectQ(id, 1);
+	public DocCatalog getExDocCatalogById(long id) {
+		return (DocCatalog) selectQ(id, 1);
 	}
 
 	@SuppressWarnings("unchecked")

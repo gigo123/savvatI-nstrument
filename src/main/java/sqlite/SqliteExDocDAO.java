@@ -67,8 +67,6 @@ public class SqliteExDocDAO implements DocDAO {
 	@SuppressWarnings("resource")
 	@Override
 	public boolean createExDoc(DocModel doc, DocType docType) {
-		System.out.println(doc.getClass());
-		System.out.println(doc.getClass().getName());
 		sqlError = false;
 		if (conectionHolder != null && conectionHolder.getConnection() != null) {
 			Connection conn = conectionHolder.getConnection();

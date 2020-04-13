@@ -6,7 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
+
+
 import models.ExDoc;
+
 
 public class ControllresCheckWExDocTest {
 
@@ -110,7 +113,7 @@ public class ControllresCheckWExDocTest {
 		ExDocTempStore exDocTempStore = ControllersCheckWDoc.makeExDoc(docW, 1,DocType.EXDOC);
 
 		ExDoc doc = (ExDoc) exDocTempStore.getDoc();
-		String message = ControllersCheckWDoc.writeExDoc(doc, 3, exDocTempStore.getOutStorageId(),DocType.EXDOC);
+		String message = ControllersCheckWDoc.writeExDoc(doc, 28, exDocTempStore.getOutStorageId(),DocType.EXDOC);
 		assertTrue(message.equals(""), "no errors");
 	}
 }

@@ -19,6 +19,7 @@ import models.DocModel;
 import models.ExDoc;
 import models.ExDocCatalog;
 import models.InDoc;
+import models.InDocCatalog;
 import models.Instrument;
 import models.Location;
 import models.OutDoc;
@@ -91,7 +92,7 @@ public class ControllersCheckWDoc {
 		String errorText = "";
 		number++;
 		DocModel doc = null;
-		ExDocTempStore tempDoc;
+		ExDocTempStore tempDoc = null;
 		if (docType == DocType.EXDOC) {
 			doc = new ExDoc();
 			tempDoc = checkInParam(docW, number, (ExDoc) doc);
@@ -110,14 +111,19 @@ public class ControllersCheckWDoc {
 			errorText += tempDoc.getErrorString();
 		}
 		if (errorText.equals("")) {
-			tempDoc = checkInstrument(docW, number, doc, docType);
-			tempDoc.getDoc().setAmount(docW.getAmount());
-			errorText = tempDoc.getErrorString();
-			if (docType == DocType.EXDOC) {
-				errorText += checkBox((ExDoc) tempDoc.getDoc());
+			tempDoc = checkInstrument(docW, number, tempDoc.getDoc(), docType);
+			errorText += tempDoc.getErrorString();
+			if (errorText.equals("")) {
+				tempDoc.getDoc().setAmount(docW.getAmount());
+				errorText = tempDoc.getErrorString();
+				if (docType == DocType.EXDOC) {
+					errorText += checkBox((ExDoc) tempDoc.getDoc());
+				}
+				tempDoc.setErrorString(errorText);
+				return tempDoc;
+			} else {
+				return new ExDocTempStore(errorText, doc, 0);
 			}
-			tempDoc.setErrorString(errorText);
-			return tempDoc;
 		} else {
 			return new ExDocTempStore(errorText, doc, 0);
 		}
@@ -164,9 +170,10 @@ public class ControllersCheckWDoc {
 				} else {
 					errorText.append("<li>нет инструмента в ячеке видачи  в строке " + number + "</li>");
 				}
-				if (docType == DocType.INDOC) {
-					doc.setInstrument(instrument);
-				}
+				
+			}
+			if (docType == DocType.INDOC) {
+				doc.setInstrument(instrument);
 			}
 		}
 		ExDocTempStore tempDoc = new ExDocTempStore(errorText.toString(), doc, storageId);
@@ -213,22 +220,25 @@ public class ControllersCheckWDoc {
 
 	public static String writeExDoc(DocModel doc, long catId, long outStorageId, DocType docType) {
 		try {
-
-			exDocDAO.createExDoc(doc, docType);
+			
+		
 			long inStorageId = 0;
 			Storage storage = null;
 			List<Storage> storeList = null;
 			float amount;
-			ExDoc exDoc = (ExDoc) doc;
+			ExDoc exDoc = null;
 			if (docType == DocType.EXDOC) {
+				 exDoc = (ExDoc) doc;
 				storage = storageDAO.getStorageByID(outStorageId);
 				amount = storage.getAmount() - doc.getAmount();
 				storage.setAmount(amount);
 				storageDAO.updateStorage(outStorageId, storage);
 				storeList = storageDAO.getStorageByBox(exDoc.getInBox());
+				doc.setCatalogId(exDocCatalogDAO.getExDocCatalogById(catId));
 			}
 			if (docType == DocType.INDOC) {
 				storeList = storageDAO.getStorageByBox(doc.getOutBox());
+				doc.setCatalogId(inDocCatalogDAO.getExDocCatalogById(catId));
 			}
 			Instrument instrument = doc.getInstrument();
 			boolean hasInstrument = false;
@@ -259,12 +269,14 @@ public class ControllersCheckWDoc {
 			}
 
 			if (docType == DocType.OUTDOC) {
+				doc.setCatalogId(outDocCatalogDAO.getExDocCatalogById(catId));
 				storage = storageDAO.getStorageByID(outStorageId);
 				amount = storage.getAmount() - doc.getAmount();
 				storage.setAmount(amount);
 				storageDAO.updateStorage(outStorageId, storage);
 
 			}
+			exDocDAO.createExDoc(doc, docType);
 		} catch (Exception e) {
 			return "<li>ошыбка бази данних </li>";
 		}
@@ -284,7 +296,7 @@ public class ControllersCheckWDoc {
 			if (numberList.size() == 0) {
 				lastNumber = 1;
 			} else {
-				lastNumber = numberList.get(numberList.size()-1);
+				lastNumber = numberList.get(numberList.size() - 1);
 				lastNumber++;
 			}
 			numberString = "" + year + "-" + lastNumber;
@@ -296,20 +308,20 @@ public class ControllersCheckWDoc {
 			}
 		}
 		if (docType == DocType.INDOC) {
-			List<Integer> numberList = exDocCatalogDAO.getExDocCatalogByYearN(year);
+			List<Integer> numberList = inDocCatalogDAO.getExDocCatalogByYearN(year);
 			Collections.sort(numberList);
 			int lastNumber;
 			if (numberList.size() == 0) {
 				lastNumber = 1;
 			} else {
-				lastNumber = numberList.get(numberList.size());
+				lastNumber = numberList.get(numberList.size() - 1);
 				lastNumber++;
 			}
 			numberString = "" + year + "-" + lastNumber;
 
-			ExDocCatalog exCat = new ExDocCatalog(year, lastNumber, numberString, date);
+			InDocCatalog inCat = new InDocCatalog(year, lastNumber, numberString, date);
 
-			if (!exDocCatalogDAO.createExDocCatalog(exCat)) {
+			if (!inDocCatalogDAO.createExDocCatalog(inCat)) {
 				errorText.append("<li>ошыбка бази данних </li>");
 			}
 		}
