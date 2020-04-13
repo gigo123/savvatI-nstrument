@@ -3,28 +3,34 @@ package Sqlite;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Connection;
-import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 import models.Box;
+import models.DocModel;
+import models.ExDoc;
+import models.ExDocCatalog;
 import models.OutDoc;
+import savvats.DocType;
 import models.Instrument;
 import models.Location;
 import sqlite.SQLConectionHolder;
 import sqlite.SqliteBoxDAO;
-import sqlite.SqliteOutDocDAO;
+import sqlite.SqliteExDocCatalogDAO;
+import sqlite.SqliteExDocDAO;
 import sqlite.SqliteInstrumentDAO;
 import sqlite.SqliteLocationDAO;
 
 class SQLoutDoc {
 
+	
+	
 	SqliteBoxDAO boxDAO;
 	SqliteLocationDAO locationDAO;
 	SqliteInstrumentDAO instrumentDAO;
-	SqliteOutDocDAO outDocDAO;
-	
+	SqliteExDocDAO exDocDAO;
+	SqliteExDocCatalogDAO exDocCatalogDao;
 	
 	void initConnection() {
 		SQLConectionHolder conectionHolder = new SQLConectionHolder();
@@ -35,82 +41,83 @@ class SQLoutDoc {
 		locationDAO.setConectionHolder(conectionHolder);
 		instrumentDAO = new SqliteInstrumentDAO();
 		instrumentDAO.setConectionHolder(conectionHolder);
-		outDocDAO = new SqliteOutDocDAO();
-		outDocDAO.setConectionHolder(conectionHolder);
+		exDocDAO = new SqliteExDocDAO();
+		exDocDAO.setConectionHolder(conectionHolder);
+		exDocCatalogDao = new SqliteExDocCatalogDAO();
+		exDocCatalogDao.setConectionHolder(conectionHolder);
 	}
+
 	@Test
 	void setConnection() {
 		initConnection();
-		SQLConectionHolder conectHolder2  = outDocDAO.getConectionHolder();
+		SQLConectionHolder conectHolder2  = exDocDAO.getConectionHolder();
 		Connection conn =conectHolder2.getConnection();
 		assertTrue(conn!=null,"connetion must not be null");
 	}
 	@Test
-	void createOutDoc() {
+	void createExDoc() {
 		initConnection();
-		SqliteOutDocDAO  outDocDAOc = new SqliteOutDocDAO();
-		Instrument inst = instrumentDAO.getInstrumentByID(1);
+		SqliteExDocDAO  exDocDAOc = new SqliteExDocDAO();
+		Instrument inst = instrumentDAO.getInstrumentByID(4);
 		Location location =  locationDAO.getLocById(1);
-		Box box = boxDAO.getBoxByID(1);
-		LocalDate today = LocalDate.now();
-		OutDoc outDoc = new OutDoc(location,  box, today, inst, 1);
-		outDocDAOc.createOutDoc(outDoc);
-		boolean error = outDocDAOc.hasError();
+		Box box = boxDAO.getBoxByID(11);
+		ExDocCatalog docCat= exDocCatalogDao.getExDocCatalogById(3);
+		ExDoc exDoc = new ExDoc(location, box, location,box, docCat, inst, 1);
+		exDocDAOc.createExDoc(exDoc,DocType.OUTDOC);
+		boolean error = exDocDAOc.hasError();
 		assertTrue(error,"must be error");
 		initConnection();
-		outDocDAO.createOutDoc(outDoc);
-		error = outDocDAO.hasError();
+		exDocDAO.createExDoc(exDoc,DocType.OUTDOC);
+		error = exDocDAO.hasError();
 		assertTrue(!error,"must be ok");
 	}
 	@Test
-	void getOutDocById() {
-		SqliteOutDocDAO  outDocDAOc = new SqliteOutDocDAO();
-		outDocDAOc.getOutDocById(1);
-		boolean error = outDocDAOc.hasError();
+	void getExDocById() {
+		SqliteExDocDAO  exDocDAOc = new SqliteExDocDAO();
+		exDocDAOc.getExDocById(1,DocType.OUTDOC);
+		boolean error = exDocDAOc.hasError();
 		assertTrue(error,"must be error");
 		initConnection();
-		OutDoc exdoc =outDocDAO.getOutDocById(1);
-		error = outDocDAO.hasError();
+		ExDoc exdoc =exDocDAO.getExDocById(1,DocType.OUTDOC);
+		error = exDocDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exdoc!=null,"must not be null");
 	}
 	@Test
-	void getOutDocByBox() {
-		SqliteOutDocDAO  outDocDAOc = new SqliteOutDocDAO();
-		outDocDAOc.getOutDocByBox(1, 1);
-		boolean error = outDocDAOc.hasError();
-		assertTrue(error,"must be error");
+	void getExDocByBox() {
 		initConnection();
-		List<OutDoc> exDocList  = outDocDAO.getOutDocByBox(1, 1);
-		error = outDocDAO.hasError();
+		List<DocModel> exDocList  = exDocDAO.getExDocByBox(9,DocType.OUTDOC);
+		boolean error = exDocDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exDocList.size()!=0,"must not be 0");
 	}
 	@Test
-	void getOutDocByInstrument() {
+	void getExDocByInstrument() {
 		initConnection();
-		List<OutDoc> exDocList  = outDocDAO.getOutDocByInstrum(instrumentDAO.getInstrumentByID(1).getId());
-		boolean error = outDocDAO.hasError();
+		List<DocModel> exDocList  = exDocDAO.getExDocByInstrum(instrumentDAO.getInstrumentByID(2).getId(),DocType.OUTDOC);
+		boolean error = exDocDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exDocList.size()!=0,"must not be 0");
 	}
 	@Test
-	void getOutDocByDate() {
+	void getExDocByLocation() {
 		initConnection();
-		List<OutDoc> exDocList  = outDocDAO.getOutDocByDate(LocalDate.now());
-		boolean error = outDocDAO.hasError();
+		List<DocModel> exDocList  = exDocDAO.getExDocByLocation(1,DocType.OUTDOC);
+		boolean error = exDocDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exDocList.size()!=0,"must not be 0");
 	}
+/*	
 	@Test
-	void deleteOutDoc() {
+	void deleteExDoc() {
 		initConnection();
-		List<OutDoc> exDocList  = outDocDAO.getOutDocByDate(LocalDate.now());
-		boolean error = outDocDAO.hasError();
+		List<ExDoc> exDocList  = exDocDAO.getExDocByDate(LocalDate.now());
+		boolean error = exDocDAO.hasError();
 		assertTrue(!error,"must be ok");
 		long id= exDocList.get(exDocList.size()-1).getId();
-		outDocDAO.deleteOutDoc(id);
-		OutDoc exdoc =outDocDAO.getOutDocById(id);
+		exDocDAO.deleteExDoc(id);
+		ExDoc exdoc =exDocDAO.getExDocById(id);
 		assertTrue(exdoc==null,"doc must be null(deletet)");
 	}
+	*/
 }
