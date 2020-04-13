@@ -284,7 +284,7 @@ public class ControllersCheckWDoc {
 			if (numberList.size() == 0) {
 				lastNumber = 1;
 			} else {
-				lastNumber = numberList.get(numberList.size());
+				lastNumber = numberList.get(numberList.size()-1);
 				lastNumber++;
 			}
 			numberString = "" + year + "-" + lastNumber;

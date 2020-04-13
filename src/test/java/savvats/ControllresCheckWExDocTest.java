@@ -111,7 +111,6 @@ public class ControllresCheckWExDocTest {
 
 		ExDoc doc = (ExDoc) exDocTempStore.getDoc();
 		String message = ControllersCheckWDoc.writeExDoc(doc, 3, exDocTempStore.getOutStorageId(),DocType.EXDOC);
-		System.out.println(message);
 		assertTrue(message.equals(""), "no errors");
 	}
 }

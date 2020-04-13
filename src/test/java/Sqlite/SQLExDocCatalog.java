@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+
+import models.DocCatalog;
 import models.ExDocCatalog;
 import sqlite.SQLConectionHolder;
 import sqlite.SqliteExDocCatalogDAO;
@@ -49,7 +51,7 @@ class SQLExDocCatalog {
 	@Test
 	void getExDocCatalogByDate() {
 		initConnection();
-		List<ExDocCatalog> exDocList  = exDoccDAO.getExDocCatalogByDate(LocalDate.now());
+		List<DocCatalog> exDocList  = exDoccDAO.getExDocCatalogByDate(LocalDate.now());
 		boolean error = exDoccDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exDocList.size()!=0,"must not be 0");
@@ -57,7 +59,7 @@ class SQLExDocCatalog {
 	@Test
 	void getExDocCatalogBySname() {
 		initConnection();
-		ExDocCatalog exdoc =exDoccDAO.getExDocCatalogBySnumber("2020-4");
+		DocCatalog exdoc =exDoccDAO.getExDocCatalogBySnumber("2020-4");
 		boolean error = exDoccDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exdoc!=null,"must not be null");
@@ -65,7 +67,7 @@ class SQLExDocCatalog {
 	@Test
 	void getExDocCataloByNumber() {
 		initConnection();
-		List<ExDocCatalog> exDocList  = exDoccDAO.getExDocCatalogByNumber(1);
+		List<DocCatalog> exDocList  = exDoccDAO.getExDocCatalogByNumber(1);
 		boolean error = exDoccDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exDocList.size()!=0,"must not be 0");
@@ -74,7 +76,7 @@ class SQLExDocCatalog {
 	@Test
 	void deleteExDocCatalo() {
 		initConnection();
-		List<ExDocCatalog> exDocList  = exDoccDAO.getExDocCatalogByDate(LocalDate.now());
+		List<DocCatalog> exDocList  = exDoccDAO.getExDocCatalogByDate(LocalDate.now());
 		boolean error = exDoccDAO.hasError();
 		assertTrue(!error,"must be ok");
 		long id= exDocList.get(exDocList.size()-1).getId();
@@ -85,7 +87,7 @@ class SQLExDocCatalog {
 	@Test
 	void getExDocCatalogByYear(){
 		initConnection();
-		List<ExDocCatalog> exDocList  = exDoccDAO.getExDocCatalogByYear(2020);
+		List<DocCatalog> exDocList  = exDoccDAO.getExDocCatalogByYear(2020);
 		boolean error = exDoccDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(exDocList.size()!=0,"must not be 0");
