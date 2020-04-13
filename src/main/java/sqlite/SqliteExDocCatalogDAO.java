@@ -9,10 +9,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.ExDocCatalogDAO;
+import dao.DocCatalogDAO;
+import models.DocCatalog;
 import models.ExDocCatalog;
 
-public class SqliteExDocCatalogDAO implements ExDocCatalogDAO {
+public class SqliteExDocCatalogDAO implements DocCatalogDAO {
 
 	private final static String SELECT_ID_QUERY = "SELECT * FROM exdoccatalog WHERE id = ?";
 	private final static String SELECT_DATE_QUERY = "SELECT * FROM exdoccatalog WHERE date =?";
@@ -44,7 +45,7 @@ public class SqliteExDocCatalogDAO implements ExDocCatalogDAO {
 	}
 
 	@Override
-	public boolean createExDocCatalog(ExDocCatalog exDoc) {
+	public boolean createExDocCatalog(DocCatalog exDoc) {
 		sqlError = false;
 		if (conectionHolder != null && conectionHolder.getConnection() != null) {
 			Connection conn = conectionHolder.getConnection();
@@ -84,13 +85,13 @@ public class SqliteExDocCatalogDAO implements ExDocCatalogDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ExDocCatalog> getExDocCatalogByDate(LocalDate date) {
-		return (List<ExDocCatalog>) selectQ(date, 2);
+	public List<DocCatalog> getExDocCatalogByDate(LocalDate date) {
+		return (List<DocCatalog>) selectQ(date, 2);
 	}
 
 	@Override
-	public ExDocCatalog getExDocCatalogBySnumber(String numberString) {
-		return (ExDocCatalog) selectQ(numberString, 3);
+	public DocCatalog getExDocCatalogBySnumber(String numberString) {
+		return (DocCatalog) selectQ(numberString, 3);
 	}
 
 	@Override
@@ -127,8 +128,8 @@ public class SqliteExDocCatalogDAO implements ExDocCatalogDAO {
 			Connection conn = conectionHolder.getConnection();
 			ResultSet rs = null;
 			PreparedStatement prepSt = null;
-			ExDocCatalog exDoc = null;
-			List<ExDocCatalog> docList = new ArrayList<ExDocCatalog>();
+			DocCatalog exDoc = null;
+			List<DocCatalog> docList = new ArrayList<DocCatalog>();
 			List<Integer> numberList = new ArrayList<Integer>();
 			try {
 				switch (type) {
@@ -221,14 +222,14 @@ public class SqliteExDocCatalogDAO implements ExDocCatalogDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ExDocCatalog> getExDocCatalogByNumber(int number) {
-		return (List<ExDocCatalog>) selectQ(number, 4);
+	public List<DocCatalog> getExDocCatalogByNumber(int number) {
+		return (List<DocCatalog>) selectQ(number, 4);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ExDocCatalog> getExDocCatalogByYear(int year) {
-		return (List<ExDocCatalog>) selectQ(year, 5);
+	public List<DocCatalog> getExDocCatalogByYear(int year) {
+		return (List<DocCatalog>) selectQ(year, 5);
 	}
 
 	@SuppressWarnings("unchecked")
