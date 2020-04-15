@@ -70,8 +70,10 @@ public class CreateExDoc {
 		if (exDocWEBList != null) {
 		exDocWEBList.getDocList().add(new ExDocWEB());
 		}
+		ModelAndView model = new ModelAndView("CreateExDoc");
+		model.addObject("exDocWEBList", exDocWEBList);
+		return model;
 	
-		return getExDocCF();
 	}
 
 	@ModelAttribute("exDocWEBList")

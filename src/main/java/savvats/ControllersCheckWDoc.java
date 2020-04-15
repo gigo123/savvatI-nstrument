@@ -32,7 +32,7 @@ public class ControllersCheckWDoc {
 	static InstrumentDAO instDAO;
 	static BoxDAO boxDAO;
 	static StorageDAO storageDAO;
-	static DocDAO exDocDAO;
+	static DocDAO docDAO;
 	static DocCatalogDAO exDocCatalogDAO;
 	static DocCatalogDAO inDocCatalogDAO;
 	static DocCatalogDAO outDocCatalogDAO;
@@ -42,7 +42,7 @@ public class ControllersCheckWDoc {
 		instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
 		boxDAO = (BoxDAO) context.getBean("BoxDAO");
 		storageDAO = (StorageDAO) context.getBean("StorageDAO");
-		exDocDAO = (DocDAO) context.getBean("ExDocDAO");
+		docDAO = (DocDAO) context.getBean("ExDocDAO");
 		exDocCatalogDAO = (DocCatalogDAO) context.getBean("ExDocCatalogDAO");
 		inDocCatalogDAO = (DocCatalogDAO) context.getBean("InDocCatalogDAO");
 		outDocCatalogDAO = (DocCatalogDAO) context.getBean("OutDocCatalogDAO");
@@ -54,7 +54,7 @@ public class ControllersCheckWDoc {
 		locDAO.closeConection();
 		instDAO.closeConection();
 		storageDAO.closeConection();
-		exDocDAO.closeConection();
+		docDAO.closeConection();
 		exDocCatalogDAO.closeConection();
 		inDocCatalogDAO.closeConection();
 		outDocCatalogDAO.closeConection();
@@ -295,6 +295,7 @@ public class ControllersCheckWDoc {
 				storageDAO.updateStorage(outStorageId, storage);
 
 			}
+			docDAO.createExDoc(doc, docType);
 		} catch (
 
 		Exception e) {

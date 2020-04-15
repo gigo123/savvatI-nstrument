@@ -60,7 +60,7 @@ public class ControllresCheckWInDocTest {
 		ControllersCheckWDoc.initDAO();
 		ExDocWEBList docListWrap = new ExDocWEBList();
 		List<ExDocWEB> docList = new ArrayList<ExDocWEB>();
-		docList.add(new ExDocWEB("1", "1", 1, 2, "2", 1));
+		docList.add(new ExDocWEB("7", "1", 4, 2, "2", 5));
 
 		docListWrap.setDocList(docList);
 		String message = ControllersCheckWDoc.createExDocUnwrap(docListWrap,DocType.INDOC);
@@ -71,10 +71,11 @@ public class ControllresCheckWInDocTest {
 	@Test
 	void writeInDoc() {
 		ControllersCheckWDoc.initDAO();
-		ExDocWEB docW = new ExDocWEB("1", "1", 1, 1, "2", 1);
+		ExDocWEB docW = new ExDocWEB("1", "1", 1, 1, "2", 7);
 		ExDocTempStore exDocTempStore = ControllersCheckWDoc.makeExDoc(docW, 1,DocType.INDOC);
 		InDoc doc = (InDoc) exDocTempStore.getDoc();
 		String message = ControllersCheckWDoc.writeExDoc(doc, 3, exDocTempStore.getOutStorageId(),DocType.INDOC);
-		assertTrue(message.equals(""), "no errors");
+		System.out.println(message);
+		assertTrue(message.equals("документ создан"), "no errors");
 	}
 }
