@@ -8,11 +8,11 @@ public class ExDocWEB {
 	private long id;
 	 @NotEmpty
 	private String outLocation;
-	 @NotEmpty
+	// @NotEmpty
 	private String inLocation;
 	@PositiveOrZero (message = "ячейка должна быть положительним числом")
 	private int outBox;
-	@PositiveOrZero(message = "ячейка должна быть положительним числом")
+	//@PositiveOrZero(message = "ячейка должна быть положительним числом")
 	private int inBox;
 	 @NotEmpty
 	private String instrument;
