@@ -29,16 +29,26 @@ import savvats.ExDocWEBList;
 @Controller
 @RequestMapping("/createInDoc")
 public class CreateInDoc {
-
+	ExDocWEBList exDocWEBList = null;
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getInDocCF() {
 
 		ExDocWEB doc = new ExDocWEB();
-		ExDocWEBList exDocWEBList = new ExDocWEBList();
+		 exDocWEBList = new ExDocWEBList();
 		List<ExDocWEB> docList = new ArrayList<ExDocWEB>();
 		docList.add(doc);
 		exDocWEBList.setDocList(docList);
-		ModelAndView model = new ModelAndView("CreateExDoc");
+		ModelAndView model = new ModelAndView("CreateInDoc");
+		model.addObject("exDocWEBList", exDocWEBList);
+		return model;
+	}
+	@RequestMapping(method = RequestMethod.GET, params = { "addRow"})
+	public ModelAndView getProductListCategory() {
+		if (exDocWEBList != null) {
+		exDocWEBList.getDocList().add(new ExDocWEB());
+		}
+	
+		ModelAndView model = new ModelAndView("CreateInDoc");
 		model.addObject("exDocWEBList", exDocWEBList);
 		return model;
 	}
@@ -48,7 +58,7 @@ public class CreateInDoc {
 			BindingResult bindingResult, Model model) {
 		
 		if (bindingResult.hasErrors()) {
-			return "CreateExDoc";
+			return "CreateInDoc";
 		}
 		String message;
 		message=ControllersCheckWDoc.createExDocUnwrap(exDocWEBList, DocType.INDOC);
