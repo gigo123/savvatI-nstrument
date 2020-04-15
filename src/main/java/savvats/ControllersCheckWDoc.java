@@ -23,6 +23,7 @@ import models.InDocCatalog;
 import models.Instrument;
 import models.Location;
 import models.OutDoc;
+import models.OutDocCatalog;
 import models.Storage;
 
 public class ControllersCheckWDoc {
@@ -74,7 +75,16 @@ public class ControllersCheckWDoc {
 		if (errString.equals("<ul></ul>")) {
 			String error = writeExDocCatolog(docType);
 			if (!error.equals("<li>ошыбка бази данних </li>")) {
-				long catalogId = exDocCatalogDAO.getExDocCatalogBySnumber(error).getId();
+				long catalogId = 0;
+				if (docType == DocType.EXDOC) {
+					catalogId = exDocCatalogDAO.getExDocCatalogBySnumber(error).getId();
+				}
+				if (docType == DocType.OUTDOC) {
+					catalogId = outDocCatalogDAO.getExDocCatalogBySnumber(error).getId();
+				}
+				if (docType == DocType.INDOC) {
+					catalogId = inDocCatalogDAO.getExDocCatalogBySnumber(error).getId();
+				}
 				for (ExDocTempStore exDocTempStore : docTempList) {
 					error += writeExDoc(exDocTempStore.getDoc(), catalogId, exDocTempStore.getOutStorageId(), docType);
 				}
@@ -170,7 +180,7 @@ public class ControllersCheckWDoc {
 				} else {
 					errorText.append("<li>нет инструмента в ячеке видачи  в строке " + number + "</li>");
 				}
-				
+
 			}
 			if (docType == DocType.INDOC) {
 				doc.setInstrument(instrument);
@@ -220,54 +230,55 @@ public class ControllersCheckWDoc {
 
 	public static String writeExDoc(DocModel doc, long catId, long outStorageId, DocType docType) {
 		try {
-			
-		
+
 			long inStorageId = 0;
 			Storage storage = null;
 			List<Storage> storeList = null;
 			float amount;
 			ExDoc exDoc = null;
-			if (docType == DocType.EXDOC) {
-				 exDoc = (ExDoc) doc;
-				storage = storageDAO.getStorageByID(outStorageId);
-				amount = storage.getAmount() - doc.getAmount();
-				storage.setAmount(amount);
-				storageDAO.updateStorage(outStorageId, storage);
-				storeList = storageDAO.getStorageByBox(exDoc.getInBox());
-				doc.setCatalogId(exDocCatalogDAO.getExDocCatalogById(catId));
-			}
-			if (docType == DocType.INDOC) {
-				storeList = storageDAO.getStorageByBox(doc.getOutBox());
-				doc.setCatalogId(inDocCatalogDAO.getExDocCatalogById(catId));
-			}
-			Instrument instrument = doc.getInstrument();
-			boolean hasInstrument = false;
-			for (int i = 0; i < storeList.size(); i++) {
-				Instrument tempInst = storeList.get(i).getInstrument();
-				if (tempInst != null) {
-					if (tempInst.getId() == instrument.getId()) {
-						hasInstrument = true;
-						inStorageId = storeList.get(i).getId();
-					}
-				}
-			}
-			if (hasInstrument) {
-				storage = storageDAO.getStorageByID(inStorageId);
-				amount = storage.getAmount() + doc.getAmount();
-				storage.setAmount(amount);
-				storageDAO.updateStorage(inStorageId, storage);
-			} else {
+			if (docType == DocType.EXDOC || docType == DocType.INDOC) {
+
 				if (docType == DocType.EXDOC) {
-					Storage newInStorage = new Storage(exDoc.getInBox(), instrument, doc.getAmount());
-					storageDAO.createStorage(newInStorage);
+					exDoc = (ExDoc) doc;
+					storage = storageDAO.getStorageByID(outStorageId);
+					amount = storage.getAmount() - doc.getAmount();
+					storage.setAmount(amount);
+					storageDAO.updateStorage(outStorageId, storage);
+					storeList = storageDAO.getStorageByBox(exDoc.getInBox());
+					doc.setCatalogId(exDocCatalogDAO.getExDocCatalogById(catId));
 				}
 				if (docType == DocType.INDOC) {
-					Storage newInStorage = new Storage(doc.getOutBox(), instrument, doc.getAmount());
-					storageDAO.createStorage(newInStorage);
+					storeList = storageDAO.getStorageByBox(doc.getOutBox());
+					doc.setCatalogId(inDocCatalogDAO.getExDocCatalogById(catId));
 				}
+				Instrument instrument = doc.getInstrument();
+				boolean hasInstrument = false;
+				for (int i = 0; i < storeList.size(); i++) {
+					Instrument tempInst = storeList.get(i).getInstrument();
+					if (tempInst != null) {
+						if (tempInst.getId() == instrument.getId()) {
+							hasInstrument = true;
+							inStorageId = storeList.get(i).getId();
+						}
+					}
+				}
+				if (hasInstrument) {
+					storage = storageDAO.getStorageByID(inStorageId);
+					amount = storage.getAmount() + doc.getAmount();
+					storage.setAmount(amount);
+					storageDAO.updateStorage(inStorageId, storage);
+				} else {
+					if (docType == DocType.EXDOC) {
+						Storage newInStorage = new Storage(exDoc.getInBox(), instrument, doc.getAmount());
+						storageDAO.createStorage(newInStorage);
+					}
+					if (docType == DocType.INDOC) {
+						Storage newInStorage = new Storage(doc.getOutBox(), instrument, doc.getAmount());
+						storageDAO.createStorage(newInStorage);
+					}
 
+				}
 			}
-
 			if (docType == DocType.OUTDOC) {
 				doc.setCatalogId(outDocCatalogDAO.getExDocCatalogById(catId));
 				storage = storageDAO.getStorageByID(outStorageId);
@@ -276,8 +287,9 @@ public class ControllersCheckWDoc {
 				storageDAO.updateStorage(outStorageId, storage);
 
 			}
-			exDocDAO.createExDoc(doc, docType);
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			return "<li>ошыбка бази данних </li>";
 		}
 		return "";
@@ -300,7 +312,6 @@ public class ControllersCheckWDoc {
 				lastNumber++;
 			}
 			numberString = "" + year + "-" + lastNumber;
-
 			ExDocCatalog exCat = new ExDocCatalog(year, lastNumber, numberString, date);
 
 			if (!exDocCatalogDAO.createExDocCatalog(exCat)) {
@@ -322,6 +333,24 @@ public class ControllersCheckWDoc {
 			InDocCatalog inCat = new InDocCatalog(year, lastNumber, numberString, date);
 
 			if (!inDocCatalogDAO.createExDocCatalog(inCat)) {
+				errorText.append("<li>ошыбка бази данних </li>");
+			}
+		}
+		if (docType == DocType.OUTDOC) {
+			List<Integer> numberList = outDocCatalogDAO.getExDocCatalogByYearN(year);
+			Collections.sort(numberList);
+			int lastNumber;
+			if (numberList.size() == 0) {
+				lastNumber = 1;
+			} else {
+				lastNumber = numberList.get(numberList.size() - 1);
+				lastNumber++;
+			}
+			numberString = "" + year + "-" + lastNumber;
+
+			OutDocCatalog inCat = new OutDocCatalog(year, lastNumber, numberString, date);
+
+			if (!outDocCatalogDAO.createExDocCatalog(inCat)) {
 				errorText.append("<li>ошыбка бази данних </li>");
 			}
 		}

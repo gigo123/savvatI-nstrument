@@ -12,7 +12,6 @@ import java.util.List;
 import dao.DocCatalogDAO;
 import models.DocCatalog;
 import models.ExDocCatalog;
-import models.OutDocCatalog;
 
 public class SqliteOutDocCatalogDAO  implements DocCatalogDAO{
 
@@ -20,8 +19,8 @@ public class SqliteOutDocCatalogDAO  implements DocCatalogDAO{
 	private final static String SELECT_DATE_QUERY = "SELECT * FROM outdoccatalog WHERE date =?";
 	private final static String SELECT_NUBMER_QUERY = "SELECT * FROM outdoccatalog WHERE number = ? ";
 	private final static String SELECT_SNUBMER_QUERY = "SELECT * FROM outdoccatalog WHERE numberString = ? ";
-	private final static String INSERT_QUERY = "INSERT INTO outdoccatalog(numberString, number, date)"
-			+ " VALUES(?,?,?)";
+	private final static String INSERT_QUERY = "INSERT INTO outdoccatalog(year, number, numberString,date)"
+			+ " VALUES(?,?,?,?)";
 	
 	private final static String SELECT_YEAR_QUERY = "SELECT * FROM outdoccatalog WHERE year = ? ";
 	private final static String SELECT_YEAR_N_QUERY = "SELECT number FROM outdoccatalog WHERE year = ? ";
@@ -53,9 +52,9 @@ public class SqliteOutDocCatalogDAO  implements DocCatalogDAO{
 			PreparedStatement prepSt = null;
 			try {
 				prepSt = conn.prepareStatement(INSERT_QUERY);
-				prepSt.setString(1, exDoc.getNumberString());
+				prepSt.setInt(1, exDoc.getYear());
 				prepSt.setInt(2, exDoc.getNumber());
-				prepSt.setInt(3, exDoc.getYear());
+				prepSt.setString(3, exDoc.getNumberString());
 				Date exDate = java.sql.Date.valueOf(exDoc.getDate().toString());
 				prepSt.setDate(4, exDate);
 				prepSt.execute();
