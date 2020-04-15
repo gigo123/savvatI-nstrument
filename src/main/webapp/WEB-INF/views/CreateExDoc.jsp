@@ -26,7 +26,7 @@
 				<c:forEach items="${exDocWEBList.docList}"  varStatus="i">
 					<tr id="docRow${i.index}">
 						<td class="doc-id">
-								${i.index}
+								${i.index+1}
 							</td>
 							<td class="doc-out-loc text-left" id = "doc-out-loc-${i.index}">
 								<form:select path="docList[${i.index }].outLocation">
@@ -70,9 +70,8 @@
 						
 							</form:form>
 							<input type="submit" class="btn btn-size-md" value="add to cart"
-							id="buyButton${product.id}" value="Buy"
-						 />
-							<a href="./createExDoc?addBox=1" >добавть строку</a>
+							id="searchBox" value="checkBox" onclick="searchViaAjax()"/>
+							<div id="feedback"></div>
 </div>
 
 <script>
@@ -90,6 +89,43 @@ function confirmCreate() {
 					message("error");
 				}
 			});
+	
+}
+function searchViaAjax() {
+
+    var search = {}
+    search["boxId"]= $("doc-out-loc-0").val();
+    $.ajax({
+        type : "POST",
+        contentType : "application/json",
+        url : "/istrumnet1/createExDoc/getBoxFilter",
+        data : JSON.stringify(search),
+        dataType : 'json',
+        timeout : 100000,
+        success : function(data) {
+            console.log("SUCCESS: ", data);
+            display(data);
+        },
+        error : function(e) {
+            console.log("ERROR: ", e);
+            display(e);
+        },
+        done : function(e) {
+            console.log("DONE");
+            enableSearchButton(true);
+        }
+    });
+
+}
+
+function enableSearchButton(flag) {
+    $("#btn-search").prop("disabled", flag);
+}
+
+function display(data) {
+    var json = "<h4>Ajax Response</h4><pre>"
+            + JSON.stringify(data, null, 4) + "</pre>";
+    $('#feedback').html(json);
 }
 </script>
 	
