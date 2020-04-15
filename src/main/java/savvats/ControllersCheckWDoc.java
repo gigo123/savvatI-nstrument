@@ -192,16 +192,20 @@ public class ControllersCheckWDoc {
 
 	private static ExDocTempStore checkInParam(ExDocWEB docW, int number, ExDoc doc) {
 		String errorText = "";
-		Location location = locDAO.getLocById(Long.parseLong(docW.getInLocation()));
-		if (location != null) {
-			doc.setInLocation(location);
-			Box box = boxDAO.getBoxByNumber(docW.getInBox(), location.getId());
-			if (box == null) {
-				errorText = "<li>неправильная принимающая ячейка в строке " + number + "</li>";
+		try {
+			Location location = locDAO.getLocById(Long.parseLong(docW.getInLocation()));
+			if (location != null) {
+				doc.setInLocation(location);
+				Box box = boxDAO.getBoxByNumber(docW.getInBox(), location.getId());
+				if (box == null) {
+					errorText = "<li>неправильная принимающая ячейка в строке " + number + "</li>";
+				} else {
+					doc.setInBox(box);
+				}
 			} else {
-				doc.setInBox(box);
+				errorText = "<li>неправильное место приема в стоке " + number + "</li>";
 			}
-		} else {
+		} catch (Exception e) {
 			errorText = "<li>неправильное место приема в стоке " + number + "</li>";
 		}
 
@@ -211,17 +215,21 @@ public class ControllersCheckWDoc {
 
 	private static ExDocTempStore checkOutParam(ExDocWEB docW, int number, DocModel doc) {
 		String errorText = "";
-		Location location = locDAO.getLocById(Long.parseLong(docW.getOutLocation()));
-		if (location != null) {
-			doc.setOutLocation(location);
-			Box box = boxDAO.getBoxByNumber(docW.getOutBox(), location.getId());
-			if (box == null) {
-				errorText = "<li>неправильная видающая ячейка в строке " + number + "</li>";
+		try {
+			Location location = locDAO.getLocById(Long.parseLong(docW.getOutLocation()));
+			if (location != null) {
+				doc.setOutLocation(location);
+				Box box = boxDAO.getBoxByNumber(docW.getOutBox(), location.getId());
+				if (box == null) {
+					errorText = "<li>неправильная видающая ячейка в строке " + number + "</li>";
+				} else {
+					doc.setOutBox(box);
+				}
 			} else {
-				doc.setOutBox(box);
+				errorText = "<li>неправильное место  видачи в стоке " + number + "</li>";
 			}
-		} else {
-			errorText = "<li>неправильное место  видачи в стоке " + number + "</li>";
+		} catch (Exception e) {
+			errorText = "<li>неправильное место видачи в стоке " + number + "</li>";
 		}
 
 		ExDocTempStore tempDoc = new ExDocTempStore(errorText, doc, 0);
@@ -292,7 +300,7 @@ public class ControllersCheckWDoc {
 		Exception e) {
 			return "<li>ошыбка бази данних </li>";
 		}
-		return "";
+		return "документ создан";
 
 	}
 

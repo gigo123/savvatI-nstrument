@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -15,29 +17,33 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import dao.InstrumentDAO;
 import dao.LocationDAO;
 import models.Instrument;
 import models.Location;
+import savvats.ControllersCheckWDoc;
+import savvats.DocType;
 import savvats.ExDocWEB;
 import savvats.ExDocWEBList;
 
 @Controller
 @RequestMapping("/createExDoc")
 public class CreateExDoc {
-
+	ExDocWEBList exDocWEBList = null;
+	
+	
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getExDocCF() {
-
-		ExDocWEB doc = new ExDocWEB();
-		ExDocWEBList exDocWEBList = new ExDocWEBList();
-		List<ExDocWEB> docList = new ArrayList<ExDocWEB>();
-		docList.add(doc);
-		exDocWEBList.setDocList(docList);
+			ExDocWEB doc = new ExDocWEB();
+			exDocWEBList = new ExDocWEBList();
+			List<ExDocWEB> docList = new ArrayList<ExDocWEB>();
+			docList.add(doc);
+			exDocWEBList.setDocList(docList);
 		ModelAndView model = new ModelAndView("CreateExDoc");
 		model.addObject("exDocWEBList", exDocWEBList);
 		return model;
@@ -46,13 +52,26 @@ public class CreateExDoc {
 	@RequestMapping(method = RequestMethod.POST)
 	public String postBoxCF(@ModelAttribute("exDocWEBList") @Validated ExDocWEBList exDocWEBList,
 			BindingResult bindingResult, Model model) {
-		
+
 		if (bindingResult.hasErrors()) {
 			return "CreateExDoc";
 		}
-
-		model.addAttribute("errorText",exDocWEBList.toString());
+		String message;
+		message = ControllersCheckWDoc.createExDocUnwrap(exDocWEBList, DocType.EXDOC);
+		if (message.equals("документ создан")) {
+			exDocWEBList.getDocList().add(new ExDocWEB());
+		}
+		model.addAttribute("errorText", message);
 		return "OperationInfo";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, params = { "addRow"})
+	public ModelAndView getProductListCategory() {
+		if (exDocWEBList != null) {
+		exDocWEBList.getDocList().add(new ExDocWEB());
+		}
+	
+		return getExDocCF();
 	}
 
 	@ModelAttribute("exDocWEBList")

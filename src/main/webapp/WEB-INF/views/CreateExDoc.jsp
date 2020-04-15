@@ -69,6 +69,10 @@
 						class="btn btn-size-md" />
 						
 							</form:form>
+							<input type="submit" class="btn btn-size-md" value="add to cart"
+							id="buyButton${product.id}" value="Buy"
+						 />
+							<a href="./createExDoc?addBox=1" >добавть строку</a>
 </div>
 
 <script>
