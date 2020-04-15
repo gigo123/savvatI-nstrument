@@ -13,14 +13,7 @@ import models.ExDoc;
 
 public class ControllresCheckWExDocTest {
 
-	@Test
-	void writeExDocCatolog() {
-		ControllersCheckWDoc.initDAO();
-		String message = ControllersCheckWDoc.writeExDocCatolog(DocType.EXDOC);
-		assertTrue(message.equals("документ успешно создан"), "box created");
-
-	}
-
+	
 	@Test
 	void makeExDoc() {
 		ControllersCheckWDoc.initDAO();

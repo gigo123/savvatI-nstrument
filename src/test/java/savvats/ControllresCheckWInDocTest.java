@@ -11,14 +11,7 @@ import models.InDoc;
 
 
 public class ControllresCheckWInDocTest {
-	@Test
-	void writeExDocCatolog() {
-		ControllersCheckWDoc.initDAO();
-		String message = ControllersCheckWDoc.writeExDocCatolog(DocType.INDOC);
-		assertTrue(message.equals("документ успешно создан"), "box created");
-
-	}
-
+	
 	@Test
 	void makeExDoc() {
 		ControllersCheckWDoc.initDAO();
