@@ -74,6 +74,7 @@ class SQLStorage {
 		assertTrue((storeList.get(0).getBox().getId())!=0,"must be test1");
 	}
 	
+	
 /*	@Test
 	void deleteBox() {
 		initConnection();

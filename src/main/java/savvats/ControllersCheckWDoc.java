@@ -267,6 +267,7 @@ public class ControllersCheckWDoc {
 						if (tempInst.getId() == instrument.getId()) {
 							hasInstrument = true;
 							inStorageId = storeList.get(i).getId();
+							break;
 						}
 					}
 				}

@@ -67,6 +67,18 @@ public class ControllresCheckWInDocTest {
 		assertFalse(message.equals("2020"), "six errors"); // test mast fali
 
 	}
+	@Test
+	void cheakStorageUpdate() {
+		ControllersCheckWDoc.initDAO();
+		ExDocWEBList docListWrap = new ExDocWEBList();
+		List<ExDocWEB> docList = new ArrayList<ExDocWEB>();
+		docList.add(new ExDocWEB("7", "1", 4, 2, "2", 5));
+		docList.add( new ExDocWEB("1", null, 1, 0, "4", 3));
+		docListWrap.setDocList(docList);
+		String message = ControllersCheckWDoc.createExDocUnwrap(docListWrap,DocType.INDOC);
+		assertFalse(message.equals("2020"), "six errors"); // test mast fali
+
+	}
 	
 	@Test
 	void writeInDoc() {
