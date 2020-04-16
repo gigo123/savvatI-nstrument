@@ -17,7 +17,7 @@ import dao.InstrumentDAO;
 import models.Box;
 import models.Instrument;
 import savvats.AjaxResponseBodyDoc;
-import savvats.BoxSearch;
+import savvats.SearchById;
 import savvats.Views;
 
 @RestController
@@ -26,7 +26,29 @@ public class ExDocAjax {
 	
 	@JsonView(Views.Public.class)
 	@RequestMapping("/getBoxFilter")
-	public AjaxResponseBodyDoc getSearchResultViaAjax(@RequestBody BoxSearch search) {
+	public AjaxResponseBodyDoc getSearchBoxResultViaAjax(@RequestBody SearchById search) {
+
+		AjaxResponseBodyDoc result = new AjaxResponseBodyDoc();
+		result.setCode("200");
+        
+        long LocId = Long.parseLong(search.getBoxId());
+        
+        result.setMsg("LocId");
+        
+        Map<Long, Integer> boxMap = new HashMap<Long, Integer>();
+		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
+		List<Box> BoxList = boxDAO.getAllBoxByLocation(LocId);
+		for (Box box : BoxList) {
+			boxMap.put(box.getId(), box.getNumber());
+		}
+		result.setBoxMap(boxMap);
+		return result;
+
+	}
+	@JsonView(Views.Public.class)
+	@RequestMapping("/getInstrumentFilter")
+	public AjaxResponseBodyDoc getSearchInstrumentResultViaAjax(@RequestBody SearchById search) {
 
 		AjaxResponseBodyDoc result = new AjaxResponseBodyDoc();
 		result.setCode("200");

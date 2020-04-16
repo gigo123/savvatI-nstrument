@@ -30,7 +30,6 @@ import dao.LocationDAO;
 import models.Instrument;
 import models.Location;
 import savvats.AjaxResponseBodyDoc;
-import savvats.BoxSearch;
 import savvats.ControllersCheckWDoc;
 import savvats.DocType;
 import savvats.ExDocWEB;

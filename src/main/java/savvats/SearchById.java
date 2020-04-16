@@ -1,6 +1,6 @@
 package savvats;
 
-public class BoxSearch {
+public class SearchById {
 	private String boxId;
 
 	public String getBoxId() {
