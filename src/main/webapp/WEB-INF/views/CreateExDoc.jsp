@@ -35,7 +35,7 @@
 								</form:select>
 							</td>
 						<td class="doc-out-box text-left wide-column">
-							<form:input path ="docList[${i.index }].outBox" id="outBox-${i.index}"
+							<form:input path ="docList[${i.index }].outBox" id="outBox_${i.index}"
 						 class="form__input" required ="true"/>       
 						  <form:errors path = "docList[${i.index }].outBox" />
 						</td>
@@ -69,10 +69,10 @@
 						class="btn btn-size-md" />
 						
 							</form:form>
-							<input type="submit" class="btn btn-size-md" value="add to cart"
+							<input type="submit" class="btn btn-size-md" 
 							id="searchBox" value="searchBox" onclick="searchBox()"/>
 							<div id="feedback"></div>
-							<input type="submit" class="btn btn-size-md" value="add to cart"
+							<input type="submit" class="btn btn-size-md" 
 							id="searchInstrument" value="searchInstrument" onclick="searchInstrum()"/>
 							<div id="feedback"></div>
 </div>
@@ -124,9 +124,9 @@ function searchBox() {
 
 }
 
-function Instrum(){
+function searchInstrum(){
 	var search = {}
-	var id = document.getElementById("docList0.outBox").value;
+	var id = document.getElementById("outBox_0").value
 	alert("you select "+id);
     search["boxId"]= id;
     $.ajax({
