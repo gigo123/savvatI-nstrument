@@ -19,7 +19,7 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 	//private final static String SELECT_BOX_QUERY = "SELECT * FROM box WHERE  box = ? AND loaction = ?";
 	//private final static String SELECT_LOC_QUERY = "SELECT * FROM box WHERE  location = ?";
 	private final static String SELECT_ALL_QUERY = "SELECT * FROM instrument";
-	private final static String INSERT_QUERY = "INSERT INTO instrument(name, measure, comment)" + " VALUES(?, ?, ?)";
+	private final static String INSERT_QUERY = "INSERT INTO instrument(name, measure, comment, totalNumber)" + " VALUES(?, ?, ?,0)";
 	private final static String DELETE_QUERY = "DELETE FROM instrument WHERE id = ?";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;

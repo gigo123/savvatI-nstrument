@@ -10,7 +10,15 @@ public class Instrument {
 	private String comment;
 	@NotEmpty
 	private String measure;
+	private float totalNumber;
 	
+	
+	public float getTotalNumber() {
+		return totalNumber;
+	}
+	public void setTotalNumber(float totalNumber) {
+		this.totalNumber = totalNumber;
+	}
 	public long getId() {
 		return id;
 	}
@@ -49,7 +57,9 @@ public class Instrument {
 	public Instrument() {}
 	@Override
 	public String toString() {
-		return "Instrument [id=" + id + ", name=" + name + ", comment=" + comment + ", measure=" + measure + "]";
-	};
+		return "Instrument [id=" + id + ", name=" + name + ", comment=" + comment + ", measure=" + measure
+				+ ", totalNumber=" + totalNumber + "]";
+	}
+	
 	
 }
