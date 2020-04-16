@@ -58,27 +58,82 @@
 						class="btn btn-size-md" />
 						
 							</form:form>
-							<input type="submit" class="btn btn-size-md" value="add to cart"
-							id="buyButton${product.id}" value="Buy"
-						 ><a href="./createInDoc?addRow=1" >добавть строку</a></>
+							<input type="submit" class="btn btn-size-md" 
+							id="searchBox" value="searchBox" onclick="searchBox()"/>
+							<div id="feedback"></div>
+							<input type="submit" class="btn btn-size-md" 
+							id="searchInstrument" value="searchInstrument" onclick="searchInstrum()"/>
+							<div id="feedback"></div>
 							
 </div>
 
 <script>
-function confirmCreate() {
-	$.ajax({
-				url : "./createExDoc",
-				type : "POST",
-				dataType : "html",
-				data : {docMap: docMap},
-				success : function(responseJson) {
-					var returnedData = JSON.parse(responseJson);
-			message("sucses");
-				},
-				error : function(response) { // Данные не отправлены
-					message("error");
-				}
-			});
+function searchBox() {
+	
+    var search = {}
+	var list = document.getElementById("docList0.outLocation");
+	var id = list.options[list.selectedIndex].value;
+	alert("you select "+id);
+    search["boxId"]= id;
+    $.ajax({
+        type : "POST",
+        contentType : "application/json",
+        url : "/istrumnet1/createInDoc/getBoxFilter",
+        data : JSON.stringify(search),
+        dataType : 'json',
+        timeout : 100000,
+        success : function(data) {
+            console.log("SUCCESS: ", data);
+            display(data);
+        },
+        error : function(e) {
+            console.log("ERROR: ", e);
+            display(e);
+        },
+        done : function(e) {
+            console.log("DONE");
+            enableSearchButton(true);
+        }
+    });
+
+}
+
+function searchInstrum(){
+	var search = {}
+	var id = document.getElementById("outBox_0").value
+	alert("you select "+id);
+    search["boxId"]= id;
+    $.ajax({
+        type : "POST",
+        contentType : "application/json",
+        url : "/istrumnet1/createInDoc/getInstrumentFilter",
+        data : JSON.stringify(search),
+        dataType : 'json',
+        timeout : 100000,
+        success : function(data) {
+            console.log("SUCCESS: ", data);
+            display(data);
+        },
+        error : function(e) {
+            console.log("ERROR: ", e);
+            display(e);
+        },
+        done : function(e) {
+            console.log("DONE");
+            enableSearchButton(true);
+        }
+    });
+	
+}
+
+function enableSearchButton(flag) {
+    $("#btn-search").prop("disabled", flag);
+}
+
+function display(data) {
+    var json = "<h4>Ajax Response</h4><pre>"
+            + JSON.stringify(data, null, 4) + "</pre>";
+    $('#feedback').html(json);
 }
 </script>
 	
