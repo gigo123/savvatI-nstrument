@@ -8,16 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.InstrumentDAO;
-import models.Box;
+
 import models.Instrument;
-import models.Location;
+
 
 public class SqliteInstrumentDAO implements InstrumentDAO {
 
 	private final static String SELECT_ID_QUERY = "SELECT * FROM instrument WHERE id = ?";
 	private final static String SELECT_NAME_QUERY = "SELECT * FROM instrument WHERE NAME = ?";
-	private final static String SELECT_BOX_QUERY = "SELECT * FROM box WHERE  box = ? AND loaction = ?";
-	private final static String SELECT_LOC_QUERY = "SELECT * FROM box WHERE  location = ?";
+	//private final static String SELECT_BOX_QUERY = "SELECT * FROM box WHERE  box = ? AND loaction = ?";
+	//private final static String SELECT_LOC_QUERY = "SELECT * FROM box WHERE  location = ?";
 	private final static String SELECT_ALL_QUERY = "SELECT * FROM instrument";
 	private final static String INSERT_QUERY = "INSERT INTO instrument(name, measure, comment)" + " VALUES(?, ?, ?)";
 	private final static String DELETE_QUERY = "DELETE FROM instrument WHERE id = ?";
@@ -49,8 +49,6 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 			ResultSet rs = null;
 			PreparedStatement prepSt = null;
 			Instrument inst = null;
-			SqliteLocationDAO locDao = new SqliteLocationDAO();
-			List<Box> boxList = new ArrayList<Box>();
 			List<Instrument> instList = new ArrayList<Instrument>();
 			try {
 				switch (type) {
@@ -72,19 +70,8 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 					rs = prepSt.executeQuery();
 					break;
 				}
+
 				case 4: {
-					prepSt = conn.prepareStatement(SELECT_BOX_QUERY);
-					prepSt.setInt(1, (int) obj);
-					rs = prepSt.executeQuery();
-					break;
-				}
-				case 5: {
-					prepSt = conn.prepareStatement(SELECT_LOC_QUERY);
-					prepSt.setLong(1, (long) obj);
-					rs = prepSt.executeQuery();
-					break;
-				}
-				case 6: {
 					prepSt = conn.prepareStatement(SELECT_ALL_QUERY);
 					rs = prepSt.executeQuery();
 					break;
@@ -102,20 +89,14 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 						inst.setMeasure(rs.getString("measure"));
 						break;
 					}
-					if(type == 6||type == 3) {
+					else {
+
 						inst = new Instrument();
 						inst.setId(rs.getInt("id"));
 						inst.setName(rs.getString("name"));
 						inst.setComment(rs.getString("comment"));
 						inst.setMeasure(rs.getString("measure"));
 						instList.add(inst);
-					}
-					else {
-						Box box = new Box();
-						box.setId(rs.getInt("id"));
-						box.setLocation(locDao.getLocById(rs.getInt("location")));
-						box.setNumber(rs.getInt("number"));
-						boxList.add(box);
 					}
 					
 				}
@@ -124,10 +105,10 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 				if(type == 1||type == 2){
 					return inst;
 				}
-				if(type == 6||type == 3) {
+				else {
+				
 					return instList;
 				}
-					return boxList;
 					
 			} catch (SQLException e) {
 				sqlError = true;
@@ -164,22 +145,12 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 		return (List<Instrument>) selectQ(name, null, 3);
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Instrument> getInstrumentByBox(long idB, int idL) {
-		return (List<Instrument>) selectQ(idB, idL, 4);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Instrument> getInstrumentByLocation(long locationId) {
-		return (List<Instrument>) selectQ(locationId, null, 5);
-	}
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Instrument> getAllInstrument() {
-		return (List<Instrument>) selectQ(null, null, 6);
+		return (List<Instrument>) selectQ(null, null, 4);
 	}
 
 	@Override
