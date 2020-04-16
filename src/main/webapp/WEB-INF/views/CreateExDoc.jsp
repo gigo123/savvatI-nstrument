@@ -70,7 +70,10 @@
 						
 							</form:form>
 							<input type="submit" class="btn btn-size-md" value="add to cart"
-							id="searchBox" value="checkBox" onclick="searchViaAjax()"/>
+							id="searchBox" value="searchBox" onclick="searchBox()"/>
+							<div id="feedback"></div>
+							<input type="submit" class="btn btn-size-md" value="add to cart"
+							id="searchInstrument" value="searchInstrument" onclick="searchInstrum()"/>
 							<div id="feedback"></div>
 </div>
 
@@ -91,7 +94,7 @@ function confirmCreate() {
 			});
 	
 }
-function searchViaAjax() {
+function searchBox() {
 	
     var search = {}
 	var list = document.getElementById("docList0.outLocation");
@@ -119,6 +122,34 @@ function searchViaAjax() {
         }
     });
 
+}
+
+function Instrum(){
+	var search = {}
+	var id = document.getElementById("docList0.outBox").value;
+	alert("you select "+id);
+    search["boxId"]= id;
+    $.ajax({
+        type : "POST",
+        contentType : "application/json",
+        url : "/istrumnet1/createExDoc/getInstrumentFilter",
+        data : JSON.stringify(search),
+        dataType : 'json',
+        timeout : 100000,
+        success : function(data) {
+            console.log("SUCCESS: ", data);
+            display(data);
+        },
+        error : function(e) {
+            console.log("ERROR: ", e);
+            display(e);
+        },
+        done : function(e) {
+            console.log("DONE");
+            enableSearchButton(true);
+        }
+    });
+	
 }
 
 function enableSearchButton(flag) {
