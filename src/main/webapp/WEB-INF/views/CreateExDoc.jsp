@@ -69,12 +69,15 @@
 						class="btn btn-size-md" />
 						
 							</form:form>
+							<div id="feedback"></div>
 							<input type="submit" class="btn btn-size-md" 
 							id="searchBox" value="searchBox" onclick="searchBox()"/>
-							<div id="feedback"></div>
+							
 							<input type="submit" class="btn btn-size-md" 
 							id="searchInstrument" value="searchInstrument" onclick="searchInstrum()"/>
-							<div id="feedback"></div>
+							<input type="submit" class="btn btn-size-md" 
+							id="addRow" value="add row" onclick="addRow()" />
+							
 </div>
 
 <script>
@@ -150,6 +153,11 @@ function searchInstrum(){
         }
     });
 	
+}
+
+function addRow() {
+
+  window.location.href = "./createExDoc?addRow=1";
 }
 
 function enableSearchButton(flag) {

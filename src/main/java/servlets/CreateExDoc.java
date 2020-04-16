@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-
 import dao.InstrumentDAO;
 import dao.LocationDAO;
 import models.Instrument;
@@ -28,7 +27,6 @@ import savvats.ControllersCheckWDoc;
 import savvats.DocType;
 import savvats.ExDocWEB;
 import savvats.ExDocWEBList;
-
 
 @Controller
 @RequestMapping("/createExDoc")
@@ -63,16 +61,17 @@ public class CreateExDoc {
 		return "OperationInfo";
 	}
 
-	
-	/*
-	 * @RequestMapping(method = RequestMethod.GET, params = { "addRow"}) public
-	 * ModelAndView getProductListCategory() { if (exDocWEBList != null) {
-	 * exDocWEBList.getDocList().add(new ExDocWEB()); } ModelAndView model = new
-	 * ModelAndView("CreateExDoc"); model.addObject("exDocWEBList", exDocWEBList);
-	 * return model;
-	 * 
-	 * }
-	 */
+	@RequestMapping(method = RequestMethod.GET, params = { "addRow" })
+	public ModelAndView getProductListCategory() {
+		if (exDocWEBList != null) {
+			exDocWEBList.getDocList().add(new ExDocWEB());
+		}
+		ModelAndView model = new ModelAndView("CreateExDoc");
+		model.addObject("exDocWEBList", exDocWEBList);
+		return model;
+
+	}
+
 	@ModelAttribute("exDocWEBList")
 	public ExDocWEBList createExDocWEBListModel() {
 		return new ExDocWEBList();

@@ -33,7 +33,7 @@
 								</form:select>
 							</td>
 						<td class="doc-out-box text-left wide-column">
-							<form:input path ="docList[${i.index }].outBox" id="outBox-${i.index}"
+							<form:input path ="docList[${i.index }].outBox" id="outBox_${i.index}"
 						 class="form__input" required ="true"/>       
 						  <form:errors path = "docList[${i.index }].outBox" />
 						</td>
@@ -60,11 +60,12 @@
 							</form:form>
 							<input type="submit" class="btn btn-size-md" 
 							id="searchBox" value="searchBox" onclick="searchBox()"/>
-							<div id="feedback"></div>
+							
 							<input type="submit" class="btn btn-size-md" 
 							id="searchInstrument" value="searchInstrument" onclick="searchInstrum()"/>
+							<input type="submit" class="btn btn-size-md" 
+							id="searchInstrument" value="add row" onclick="addRow()" />
 							<div id="feedback"></div>
-							
 </div>
 
 <script>
@@ -124,6 +125,9 @@ function searchInstrum(){
         }
     });
 	
+}
+function addRow() {
+  window.location.href = "./createInDoc?addRow=1";
 }
 
 function enableSearchButton(flag) {
