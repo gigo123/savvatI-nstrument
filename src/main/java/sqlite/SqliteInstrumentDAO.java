@@ -17,7 +17,7 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 	private final static String SELECT_ID_QUERY = "SELECT * FROM instrument WHERE id = ?";
 	private final static String SELECT_NAME_QUERY = "SELECT * FROM instrument WHERE NAME = ?";
 	private final static String SELECT_BOX_QUERY = "SELECT * FROM box WHERE  box = ? AND loaction = ?";
-	private final static String SELECT_LOC_QUERY = "SELECT * FROM box WHERE  loaction = ?";
+	private final static String SELECT_LOC_QUERY = "SELECT * FROM box WHERE  location = ?";
 	private final static String SELECT_ALL_QUERY = "SELECT * FROM instrument";
 	private final static String INSERT_QUERY = "INSERT INTO instrument(name, measure, comment)" + " VALUES(?, ?, ?)";
 	private final static String DELETE_QUERY = "DELETE FROM instrument WHERE id = ?";
@@ -80,7 +80,7 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 				}
 				case 5: {
 					prepSt = conn.prepareStatement(SELECT_LOC_QUERY);
-					prepSt.setInt(1, (int) obj);
+					prepSt.setLong(1, (long) obj);
 					rs = prepSt.executeQuery();
 					break;
 				}
@@ -172,8 +172,8 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Instrument> getInstrumentByLocation(Location loacation) {
-		return (List<Instrument>) selectQ(loacation, null, 5);
+	public List<Instrument> getInstrumentByLocation(long locationId) {
+		return (List<Instrument>) selectQ(locationId, null, 5);
 	}
 
 	@SuppressWarnings("unchecked")
