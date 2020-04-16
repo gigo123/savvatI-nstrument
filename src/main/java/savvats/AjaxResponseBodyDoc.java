@@ -12,7 +12,7 @@ public class AjaxResponseBodyDoc {
     String code;
 
     @JsonView(Views.Public.class)
-    Map<Long, String> BoxMap;
+    Map<Long, Integer> BoxMap;
 
 	public String getMsg() {
 		return msg;
@@ -30,11 +30,11 @@ public class AjaxResponseBodyDoc {
 		this.code = code;
 	}
 
-	public Map<Long, String> getBoxMap() {
+	public Map<Long, Integer> getBoxMap() {
 		return BoxMap;
 	}
 
-	public void setBoxMap(Map<Long, String> boxMap) {
+	public void setBoxMap(Map<Long, Integer> boxMap) {
 		BoxMap = boxMap;
 	}
 

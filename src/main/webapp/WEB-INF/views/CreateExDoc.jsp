@@ -92,9 +92,12 @@ function confirmCreate() {
 	
 }
 function searchViaAjax() {
-
+	
     var search = {}
-    search["boxId"]= $("doc-out-loc-0").val();
+	var list = document.getElementById("docList0.outLocation");
+	var id = list.options[list.selectedIndex].value;
+	alert("you select "+id);
+    search["boxId"]= id;
     $.ajax({
         type : "POST",
         contentType : "application/json",

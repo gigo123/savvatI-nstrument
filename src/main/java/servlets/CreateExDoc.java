@@ -37,7 +37,6 @@ import savvats.ExDocWEB;
 import savvats.ExDocWEBList;
 import savvats.Views;
 
-@RestController
 @Controller
 @RequestMapping("/createExDoc")
 public class CreateExDoc {
@@ -71,7 +70,7 @@ public class CreateExDoc {
 		return "OperationInfo";
 	}
 
-	@JsonView(Views.Public.class)
+	/*@JsonView(Views.Public.class)
 	@RequestMapping("/getBoxFilter")
 	public AjaxResponseBodyDoc getSearchResultViaAjax(@RequestBody BoxSearch search) {
 
@@ -82,7 +81,7 @@ public class CreateExDoc {
 		return result;
 
 	}
-
+*/
 	/*
 	 * @RequestMapping(method = RequestMethod.GET, params = { "addRow"}) public
 	 * ModelAndView getProductListCategory() { if (exDocWEBList != null) {
