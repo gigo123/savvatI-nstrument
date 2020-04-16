@@ -67,7 +67,7 @@ class SQLStorage {
 	void getStorageByBox() {
 		
 		initConnection();
-		List<Storage> storeList  = storageDAO.getStorageByBox(boxDAO.getBoxByID(9));
+		List<Storage> storeList  = storageDAO.getStorageByBox(9);
 		boolean error = storageDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(storeList.size()>0,"must be test1");

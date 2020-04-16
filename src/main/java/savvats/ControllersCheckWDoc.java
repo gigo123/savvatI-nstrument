@@ -158,7 +158,7 @@ public class ControllersCheckWDoc {
 			errorText.append("<li>не правильний инструмент в строке " + number + " </li>");
 		} else {
 			if (docType == DocType.EXDOC || docType == DocType.OUTDOC) {
-				List<Storage> storeList = storageDAO.getStorageByBox(box);
+				List<Storage> storeList = storageDAO.getStorageByBox(box.getId());
 				boolean hasInstrument = false;
 				for (int i = 0; i < storeList.size(); i++) {
 					Instrument tempInst = storeList.get(i).getInstrument();
@@ -252,11 +252,11 @@ public class ControllersCheckWDoc {
 					amount = storage.getAmount() - doc.getAmount();
 					storage.setAmount(amount);
 					storageDAO.updateStorage(outStorageId, storage);
-					storeList = storageDAO.getStorageByBox(exDoc.getInBox());
+					storeList = storageDAO.getStorageByBox(exDoc.getInBox().getId());
 					doc.setCatalogId(exDocCatalogDAO.getExDocCatalogById(catId));
 				}
 				if (docType == DocType.INDOC) {
-					storeList = storageDAO.getStorageByBox(doc.getOutBox());
+					storeList = storageDAO.getStorageByBox(doc.getOutBox().getId());
 					doc.setCatalogId(inDocCatalogDAO.getExDocCatalogById(catId));
 				}
 				Instrument instrument = doc.getInstrument();
