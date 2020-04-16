@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.StorageDAO;
-import models.Box;
-import models.Instrument;
 import models.Storage;
 
 public class SqliteStorageDAO  implements StorageDAO{
@@ -67,7 +65,7 @@ private boolean sqlError = false;
 	}
 
 	@Override
-	public List<Storage> getStorageByinstrument(Instrument instrument) {
+	public List<Storage> getStorageByinstrument(long instrumentId) {
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
 		Storage storage = null;
@@ -82,7 +80,7 @@ private boolean sqlError = false;
 			Connection conn = conectionHolder.getConnection();
 		try {
 			prepSt = conn.prepareStatement(SELECT_INSTR_QUERY);
-			prepSt.setLong(1, (long)instrument.getId());
+			prepSt.setLong(1, instrumentId);
 			rs = prepSt.executeQuery();
 
 			while (rs.next()) {
@@ -114,7 +112,7 @@ private boolean sqlError = false;
 	}
 
 	@Override
-	public List<Storage> getStorageByBox(Box box) {
+	public List<Storage> getStorageByBox(long boxId) {
 		ResultSet rs = null;
 		PreparedStatement prepSt = null;
 		Storage storage = null;
@@ -127,7 +125,7 @@ private boolean sqlError = false;
 			Connection conn = conectionHolder.getConnection();
 		try {
 			prepSt = conn.prepareStatement(SELECT_BOX_QUERY);
-			prepSt.setLong(1, (long)box.getId());
+			prepSt.setLong(1, boxId);
 			rs = prepSt.executeQuery();
 
 			while (rs.next()) {
