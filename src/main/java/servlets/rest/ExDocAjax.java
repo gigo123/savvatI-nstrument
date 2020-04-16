@@ -13,29 +13,31 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import dao.BoxDAO;
-import dao.InstrumentDAO;
+import dao.StorageDAO;
 import models.Box;
-import models.Instrument;
-import savvats.AjaxResponseBodyDoc;
+import models.Storage;
 import savvats.SearchById;
 import savvats.Views;
+import savvats.ajax.AjaxResponseDocBox;
+import savvats.ajax.AjaxResponseDocInstrument;
 
 @RestController
 @RequestMapping("/createExDoc")
 public class ExDocAjax {
-	
+
 	@JsonView(Views.Public.class)
 	@RequestMapping("/getBoxFilter")
-	public AjaxResponseBodyDoc getSearchBoxResultViaAjax(@RequestBody SearchById search) {
+	public AjaxResponseDocBox getSearchBoxResultViaAjax(@RequestBody SearchById search) {
 
-		AjaxResponseBodyDoc result = new AjaxResponseBodyDoc();
+		AjaxResponseDocBox result = new AjaxResponseDocBox();
 		result.setCode("200");
-        
-        long LocId = Long.parseLong(search.getBoxId());
-        
-        result.setMsg("LocId");
-        
-        Map<Long, Integer> boxMap = new HashMap<Long, Integer>();
+
+		long LocId = Long.parseLong(search.getBoxId());
+
+		result.setMsg("LocId");
+
+		Map<Long, Integer> boxMap = new HashMap<Long, Integer>();
+		@SuppressWarnings("resource")
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
 		List<Box> BoxList = boxDAO.getAllBoxByLocation(LocId);
@@ -46,25 +48,28 @@ public class ExDocAjax {
 		return result;
 
 	}
+
 	@JsonView(Views.Public.class)
 	@RequestMapping("/getInstrumentFilter")
-	public AjaxResponseBodyDoc getSearchInstrumentResultViaAjax(@RequestBody SearchById search) {
+	public AjaxResponseDocInstrument getSearchInstrumentResultViaAjax(@RequestBody SearchById search) {
 
-		AjaxResponseBodyDoc result = new AjaxResponseBodyDoc();
+		AjaxResponseDocInstrument result = new AjaxResponseDocInstrument();
 		result.setCode("200");
-        
-        long LocId = Long.parseLong(search.getBoxId());
-        
-        result.setMsg("LocId");
-        
-        Map<Long, Integer> boxMap = new HashMap<Long, Integer>();
+
+		long boxId = Long.parseLong(search.getBoxId());
+
+		result.setMsg("boxId");
+
+		Map<Long, String> instrumentMap = new HashMap<Long, String>();
+		@SuppressWarnings("resource")
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
-		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
-		List<Box> BoxList = boxDAO.getAllBoxByLocation(LocId);
-		for (Box box : BoxList) {
-			boxMap.put(box.getId(), box.getNumber());
+		StorageDAO storeDAO = (StorageDAO) context.getBean("StorageDAO");
+		List<Storage> storeList = storeDAO.getStorageByBox(boxId);
+
+		for (Storage storsge : storeList) {
+			instrumentMap.put(storsge.getInstrument().getId(), storsge.getInstrument().getName());
 		}
-		result.setBoxMap(boxMap);
+		result.setInstrumentMap(instrumentMap);
 		return result;
 
 	}

@@ -15,26 +15,20 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.annotation.JsonView;
 
 import dao.InstrumentDAO;
 import dao.LocationDAO;
 import models.Instrument;
 import models.Location;
-import savvats.AjaxResponseBodyDoc;
 import savvats.ControllersCheckWDoc;
 import savvats.DocType;
 import savvats.ExDocWEB;
 import savvats.ExDocWEBList;
-import savvats.Views;
+
 
 @Controller
 @RequestMapping("/createExDoc")
@@ -69,18 +63,7 @@ public class CreateExDoc {
 		return "OperationInfo";
 	}
 
-	/*@JsonView(Views.Public.class)
-	@RequestMapping("/getBoxFilter")
-	public AjaxResponseBodyDoc getSearchResultViaAjax(@RequestBody BoxSearch search) {
-
-		AjaxResponseBodyDoc result = new AjaxResponseBodyDoc();
-		result.setCode("200");
-        result.setMsg("hello");
-
-		return result;
-
-	}
-*/
+	
 	/*
 	 * @RequestMapping(method = RequestMethod.GET, params = { "addRow"}) public
 	 * ModelAndView getProductListCategory() { if (exDocWEBList != null) {
