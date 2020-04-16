@@ -1,18 +1,15 @@
-package savvats;
-
-import java.util.Map;
+package savvats.ajax;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-public class AjaxResponseBodyDoc {
+import savvats.Views;
+
+public class AjaxResponse {
 	@JsonView(Views.Public.class)
     String msg;
 
     @JsonView(Views.Public.class)
     String code;
-
-    @JsonView(Views.Public.class)
-    Map<Long, Integer> BoxMap;
 
 	public String getMsg() {
 		return msg;
@@ -29,15 +26,6 @@ public class AjaxResponseBodyDoc {
 	public void setCode(String code) {
 		this.code = code;
 	}
-
-	public Map<Long, Integer> getBoxMap() {
-		return BoxMap;
-	}
-
-	public void setBoxMap(Map<Long, Integer> boxMap) {
-		BoxMap = boxMap;
-	}
-
     
-
+    
 }
