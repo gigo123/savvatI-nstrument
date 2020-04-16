@@ -287,6 +287,8 @@ public class ControllersCheckWDoc {
 					}
 
 				}
+				float instumentNumber = instrument.getTotalNumber() + doc.getAmount();
+				instrument.setTotalNumber(instumentNumber);
 			}
 			if (docType == DocType.OUTDOC) {
 				doc.setCatalogId(outDocCatalogDAO.getExDocCatalogById(catId));
@@ -294,7 +296,8 @@ public class ControllersCheckWDoc {
 				amount = storage.getAmount() - doc.getAmount();
 				storage.setAmount(amount);
 				storageDAO.updateStorage(outStorageId, storage);
-
+				float instumentNumber = doc.getInstrument().getTotalNumber() - doc.getAmount();
+				doc.getInstrument().setTotalNumber(instumentNumber);
 			}
 			docDAO.createExDoc(doc, docType);
 		} catch (
