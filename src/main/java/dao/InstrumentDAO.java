@@ -11,7 +11,7 @@ public interface InstrumentDAO {
 	public Instrument getInstrumentByName(String name);
 	public List<Instrument> getInstrumentByNameL(String name);
 	public List<Instrument> getInstrumentByBox(long idB,int idL);
-	public List<Instrument> getInstrumentByLocation(Location loacation);
+	public List<Instrument> getInstrumentByLocation(long locationId);
 	public List<Instrument> getAllInstrument();
 	public boolean createInstrument(Instrument instrument);
 	public boolean deleteInstrument(long id);
