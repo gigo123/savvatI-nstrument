@@ -29,17 +29,21 @@
 							<td class="doc-id">${i.index+1}</td>
 							<td class="doc-out-loc text-left" id="doc-out-loc-${i.index}">
 								<form:select path="docList[${i.index }].outLocation">
-									<form:option value="NONE" label="Select" />
 									<form:options items="${locationList}" />
 								</form:select>
 							</td>
-							<td class="doc-out-box text-left wide-column"><form:input
+							<td class="doc-out-box text-left wide-column" >
+							<form:select path="docList[${i.index }].outBox" >
+									<!--<form:option value="1" label="Select" />-->
+								</form:select>
+						<!--	<form:input
 									path="docList[${i.index }].outBox" id="outBox_${i.index}"
 									class="form__input" required="true" /> <form:errors
-									path="docList[${i.index }].outBox" /></td>
+									path="docList[${i.index }].outBox" />
+									-->
+									</td>
 							<td class="doc-in-loc" id="doc-in-loc-${i.index}"><form:select
 									path="docList[${i.index }].inLocation">
-									<form:option value="NONE" label="Select" />
 									<form:options items="${locationList}" />
 								</form:select></td>
 							<td class="doc-in-box"><form:input
@@ -47,7 +51,6 @@
 									class="form__input" required="true" /></td>
 							<td class="doc-instrum" id="doc-instrum-${i.index}"><form:select
 									path="docList[${i.index }].instrument">
-									<form:option value="NONE" label="Select" />
 									<form:options items="${instrumentMap}" />
 								</form:select></td>
 							<td class="doc-amount text-left"><form:input
@@ -102,6 +105,10 @@
 			counter = counter + 1;
 			list = document.getElementById("docList" + counter + ".outLocation");
 		}
+		var select = document.getElementById("docList0.outBox");
+		select.option = new Option("text" , "2");
+		alert(select);
+		
 		search["boxId"] = boxIndex;
 		alert(JSON.stringify(search));
 		$.ajax({

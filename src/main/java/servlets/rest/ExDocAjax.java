@@ -22,6 +22,7 @@ import savvats.Views;
 import savvats.ajax.AjaxResponseDocBox;
 import savvats.ajax.AjaxResponseDocInstrument;
 import savvats.ajax.DocBoxList;
+import savvats.ajax.DocInstrumentMap;
 
 @RestController
 @RequestMapping("/createExDoc")
@@ -62,31 +63,39 @@ public class ExDocAjax {
 
 	}
 
-	/*
-	 * @JsonView(Views.Public.class)
-	 * 
-	 * @RequestMapping("/getInstrumentFilter") public AjaxResponseDocInstrument
-	 * getSearchInstrumentResultViaAjax(@RequestBody SearchById search) {
-	 * 
-	 * AjaxResponseDocInstrument result = new AjaxResponseDocInstrument();
-	 * result.setCode("200");
-	 * 
-	 * long boxId = Long.parseLong(search.getBoxId());
-	 * 
-	 * result.setMsg("boxId");
-	 * 
-	 * Map<Long, String> instrumentMap = new HashMap<Long, String>();
-	 * 
-	 * @SuppressWarnings("resource") ApplicationContext context = new
-	 * ClassPathXmlApplicationContext("application-context.xml"); StorageDAO
-	 * storeDAO = (StorageDAO) context.getBean("StorageDAO"); List<Storage>
-	 * storeList = storeDAO.getStorageByBox(boxId);
-	 * 
-	 * for (Storage storsge : storeList) {
-	 * instrumentMap.put(storsge.getInstrument().getId(),
-	 * storsge.getInstrument().getName()); } result.setInstrumentMap(instrumentMap);
-	 * return result;
-	 * 
-	 * }
-	 */
+
+	  @JsonView(Views.Public.class)
+	  @RequestMapping("/getInstrumentFilter")
+	  public AjaxResponseDocInstrument getSearchInstrumentViaAjax(@RequestBody SearchById search) { 
+		  AjaxResponseDocInstrument result = new AjaxResponseDocInstrument();
+		result.setCode("200");
+		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+		StorageDAO storeDAO = (StorageDAO) context.getBean("StorageDAO");
+		
+		// long LocId = Long.parseLong(search.getBoxId());
+		List<Integer> boxIdList = search.getBoxId();
+
+		String msg="";
+		List<DocInstrumentMap> boxListId = new ArrayList<DocInstrumentMap>();
+		
+		for (int boxId : boxIdList) {
+			long LocId = boxId;
+			//msg=msg + " " + LocId;
+			Map<Long, String> instrumentMap = new HashMap<Long, String>();
+			List<Storage> storeList = storeDAO.getStorageByBox(boxId);
+			for (Storage storsge : storeList) {
+				instrumentMap.put(storsge.getInstrument().getId(), storsge.getInstrument().getName());
+			}
+			DocInstrumentMap instrumentListMap = new DocInstrumentMap();
+			instrumentListMap.setInstrumentMap(instrumentMap);
+			boxListId.add(instrumentListMap);
+			System.out.println(boxListId);
+			msg= boxListId.toString();
+		}
+		result.setMsg(msg);
+		result.setBoxListId(boxListId);
+		return result;
+	  
+	  }
+	
 }
