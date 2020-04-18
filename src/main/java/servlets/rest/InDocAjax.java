@@ -25,7 +25,7 @@ import savvats.ajax.AjaxResponseDocInstrument;
 @RequestMapping("/createInDoc")
 public class InDocAjax {
 
-	@JsonView(Views.Public.class)
+/*	@JsonView(Views.Public.class)
 	@RequestMapping("/getBoxFilter")
 	public AjaxResponseDocBox getSearchBoxResultViaAjax(@RequestBody SearchById search) {
 
@@ -73,5 +73,5 @@ public class InDocAjax {
 		return result;
 
 	}
-
+*/
 }

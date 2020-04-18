@@ -32,11 +32,11 @@ public class ExDocAjax {
 		AjaxResponseDocBox result = new AjaxResponseDocBox();
 		result.setCode("200");
 
-		long LocId = Long.parseLong(search.getBoxId());
+		//long LocId = Long.parseLong(search.getBoxId());
 
-		result.setMsg("LocId");
+		result.setMsg("hello");
 
-		Map<Long, Integer> boxMap = new HashMap<Long, Integer>();
+	/*	Map<Long, Integer> boxMap = new HashMap<Long, Integer>();
 		@SuppressWarnings("resource")
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
@@ -45,11 +45,12 @@ public class ExDocAjax {
 			boxMap.put(box.getId(), box.getNumber());
 		}
 		result.setBoxMap(boxMap);
+		*/
 		return result;
 
 	}
 
-	@JsonView(Views.Public.class)
+/*	@JsonView(Views.Public.class)
 	@RequestMapping("/getInstrumentFilter")
 	public AjaxResponseDocInstrument getSearchInstrumentResultViaAjax(@RequestBody SearchById search) {
 
@@ -73,5 +74,5 @@ public class ExDocAjax {
 		return result;
 
 	}
-
+*/
 }
