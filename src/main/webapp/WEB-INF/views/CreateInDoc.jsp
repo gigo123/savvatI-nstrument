@@ -28,7 +28,6 @@
 							</td>
 							<td class="doc-out-loc text-left" id = "doc-out-loc-${i.index}">
 								<form:select path="docList[${i.index }].outLocation">
-								<form:option value="NONE" label="Select" />
 								<form:options items="${locationList}" />
 								</form:select>
 							</td>
@@ -37,12 +36,12 @@
 						 class="form__input" required ="true"/>       
 						  <form:errors path = "docList[${i.index }].outBox" />
 						</td>
-						<td class="doc-in-loc" id = "doc-in-loc-${i.index}">
-						<form:select path="docList[${i.index }].inLocation">
-								<form:option value="NONE" label="Select" />
-								<form:options items="${locationList}" />
-								</form:select>
-						</td>
+					
+							<td class="doc-instrum" id="doc-instrum-${i.index}">
+							<form:select
+									path="docList[${i.index }].instrument">
+									<form:options items="${instrumentMap}" />
+								</form:select></td>
 						<td class="doc-amount text-left">
 						<form:input path ="docList[${i.index }].amount" id="amount-${i.index}"
 						class="form__input" required ="true"/>
@@ -71,11 +70,18 @@
 <script>
 function searchBox() {
 	
-    var search = {}
+	var counter = 0;
 	var list = document.getElementById("docList0.outLocation");
-	var id = list.options[list.selectedIndex].value;
-	alert("you select "+id);
-    search["boxId"]= id;
+	var search = {};
+	let boxIndex = new Array();
+	while (list != null) {
+		var search = {}
+		var id = list.options[list.selectedIndex].value;
+		boxIndex.push(id);
+		counter = counter + 1;
+		list = document.getElementById("docList" + counter + ".outLocation");
+	}
+	search["boxId"] = boxIndex;
     $.ajax({
         type : "POST",
         contentType : "application/json",
@@ -99,33 +105,7 @@ function searchBox() {
 
 }
 
-function searchInstrum(){
-	var search = {}
-	var id = document.getElementById("outBox_0").value
-	alert("you select "+id);
-    search["boxId"]= id;
-    $.ajax({
-        type : "POST",
-        contentType : "application/json",
-        url : "/istrumnet1/createInDoc/getInstrumentFilter",
-        data : JSON.stringify(search),
-        dataType : 'json',
-        timeout : 100000,
-        success : function(data) {
-            console.log("SUCCESS: ", data);
-            display(data);
-        },
-        error : function(e) {
-            console.log("ERROR: ", e);
-            display(e);
-        },
-        done : function(e) {
-            console.log("DONE");
-            enableSearchButton(true);
-        }
-    });
-	
-}
+
 function addRow() {
   window.location.href = "./createInDoc?addRow=1";
 }
