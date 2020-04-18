@@ -1,5 +1,6 @@
 package savvats.ajax;
 
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -8,15 +9,14 @@ import savvats.Views;
 
 public class AjaxResponseDocInstrument  extends AjaxResponse{
 	 @JsonView(Views.Public.class)
-	    Map<Long, String> instrumentMap;
+	 List<DocInstrumentMap> InstrumentListId;
 
-
-		public Map<Long, String> getInstrumentMap() {
-			return instrumentMap;
+		public List<DocInstrumentMap> getBoxListId() {
+			return InstrumentListId;
 		}
 
-		public void setInstrumentMap(Map<Long, String> instrumentMap) {
-			this.instrumentMap = instrumentMap;
+		public void setBoxListId(List<DocInstrumentMap> boxListId) {
+			this.InstrumentListId = boxListId;
 		}
 
 }
