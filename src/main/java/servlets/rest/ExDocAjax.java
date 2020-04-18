@@ -41,17 +41,16 @@ public class ExDocAjax {
 
 		String msg="";
 		List<DocBoxList> boxListId = new ArrayList<DocBoxList>();
-		DocBoxList boxListMap = new DocBoxList();
+		
 		for (int boxId : boxIdList) {
 			long LocId = boxId;
 			//msg=msg + " " + LocId;
 			Map<Long, Integer> boxMap = new HashMap<Long, Integer>();
 			List<Box> BoxList = boxDAO.getAllBoxByLocation(LocId);
 			for (Box box : BoxList) {
-				System.out.println(box.getId());
 				boxMap.put(box.getId(), box.getNumber());
 			}
-			System.out.println(boxMap);
+			DocBoxList boxListMap = new DocBoxList();
 			boxListMap.setBoxMap(boxMap);
 			boxListId.add(boxListMap);
 			System.out.println(boxListId);
