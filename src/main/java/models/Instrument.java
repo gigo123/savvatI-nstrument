@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 
 public class Instrument {
 	private long id;
-	 @Size(min = 4, max = 20, message = "имя должно бить от 4 до 20 символов")
+	 @Size(min = 4, max = 30, message = "имя должно бить от 4 до 20 символов")
 	private String name;
 	private String comment;
 	@NotEmpty
