@@ -87,6 +87,7 @@ public class ControllersCheckWrite {
 		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
 		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
 		boolean error = false;
+		boolean menyBox = false;
 		try {
 			long locId = Long.parseLong(box.getLocationWB());
 			Location loc = locDAO.getLocById(locId);
@@ -95,14 +96,18 @@ public class ControllersCheckWrite {
 				errorText.append("<li> неправильное место хранения </li>");
 			} else {
 				box.setLocation(loc);
-				Box tempBox = boxDAO.getBoxByNumber(box.getNumber(), box.getLocation().getId());
-				if (tempBox != null) {
-					error = true;
-					errorText.append("<li> ячейка с таким номером уже существует </li>");
-				}
-				if (!box.getLocation().isBoxes()) {
-					error = true;
-					errorText.append("<li> место хранения не может содержать ячейки </li>");
+				if (box.getManyBox().equals("O")) {
+					Box tempBox = boxDAO.getBoxByNumber(box.getNumber(), box.getLocation().getId());
+					if (tempBox != null) {
+						error = true;
+						errorText.append("<li> ячейка с таким номером уже существует </li>");
+					}
+					if (!box.getLocation().isBoxes()) {
+						error = true;
+						errorText.append("<li> место хранения не может содержать ячейки </li>");
+					}
+				} else {
+					menyBox = true;
 				}
 			}
 		} catch (Exception e) {
@@ -111,9 +116,21 @@ public class ControllersCheckWrite {
 		}
 
 		if (!error) {
-			if (!boxDAO.createBox(box)) {
-				error = true;
-				errorText.append("<li>ошыбка бази данних </li>");
+			if (menyBox) {
+				int start = Integer.parseInt(box.getStartNum());
+				int end = Integer.parseInt(box.getEndNum());
+				end++;
+				Box tempBox = new Box();
+				tempBox.setLocation(box.getLocation());
+				for (int i = start; i < end; i++) {
+					tempBox.setNumber(i);
+					boxDAO.createBox(tempBox);
+				}
+			} else {
+				if (!boxDAO.createBox(box)) {
+					error = true;
+					errorText.append("<li>ошыбка бази данних </li>");
+				}
 			}
 		}
 		errorText.append("</ul>");
