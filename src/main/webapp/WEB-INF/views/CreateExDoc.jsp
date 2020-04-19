@@ -116,21 +116,32 @@
 			timeout : 100000,
 			success : function(data) {
 				console.log("SUCCESS: ", data);
-				var returnedData = JSON.parse(data);
-			//	var row =data.boxListId;
-			var row =returnedData.boxListId;
-				//var boxes = row[0];
-				alert(boxes);
-				var select, i, option;
 				display(data);
-				var select = document.getElementById("docList0.outBox");
-				for(i=1;i<10;i++){
-					option = document.createElement("option");
-					option.value = option.text =i;
+				//var obj = JSON.parse(data); 
+				
+				for (var i = 0, j = data.boxListId.length; i < j; i += 1) {   
+var boxmap = new Map(Object.entries(data.boxListId[i].BoxMap))
+			
+			//for (var key of myMap.keys()) {
+  //console.log(key);
+//}
+
+
+//for (var value of myMap.values()) {
+ // console.log(value);
+//}
+			
+			
+				var select = document.getElementById("docList" + i +".outBox");
+				for (var [key, value] of boxmap) {
+			console.log(key + ' = ' + value);
+				
+					var option = document.createElement("option");
+					option.value = key,
+					option.text =value;
 					select.add(option);	
 				}
-		select.option = new Option("text" , "2");
-				
+				}
 			},
 			error : function(e) {
 				console.log("ERROR: ", e);
