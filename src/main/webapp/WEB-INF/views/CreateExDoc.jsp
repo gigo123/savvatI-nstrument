@@ -105,10 +105,6 @@
 			counter = counter + 1;
 			list = document.getElementById("docList" + counter + ".outLocation");
 		}
-		var select = document.getElementById("docList0.outBox");
-		select.option = new Option("text" , "2");
-		alert(select);
-		
 		search["boxId"] = boxIndex;
 		alert(JSON.stringify(search));
 		$.ajax({
@@ -120,7 +116,21 @@
 			timeout : 100000,
 			success : function(data) {
 				console.log("SUCCESS: ", data);
+				var returnedData = JSON.parse(data);
+			//	var row =data.boxListId;
+			var row =returnedData.boxListId;
+				//var boxes = row[0];
+				alert(boxes);
+				var select, i, option;
 				display(data);
+				var select = document.getElementById("docList0.outBox");
+				for(i=1;i<10;i++){
+					option = document.createElement("option");
+					option.value = option.text =i;
+					select.add(option);	
+				}
+		select.option = new Option("text" , "2");
+				
 			},
 			error : function(e) {
 				console.log("ERROR: ", e);
