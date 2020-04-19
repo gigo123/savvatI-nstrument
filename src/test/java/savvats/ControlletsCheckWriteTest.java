@@ -73,7 +73,5 @@ class ControlletsCheckWriteTest {
 		message = ControllersCheckWrite.addBoxWork(box);
 		assertTrue(message.equals("Ячейка успесно создана"), "box created");
 	}
-
 	
-
 }

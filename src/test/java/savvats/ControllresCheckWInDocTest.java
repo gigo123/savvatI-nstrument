@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import models.InDoc;
+import models.Instrument;
 
 
 public class ControllresCheckWInDocTest {
@@ -90,4 +91,17 @@ public class ControllresCheckWInDocTest {
 		System.out.println(message);
 		assertTrue(message.equals("документ создан"), "no errors");
 	}
+	@Test
+	void addInstrumentManyWork() {
+		ControllersCheckWDoc.initDAO();
+		ExDocWEBList docListWrap = new ExDocWEBList();
+		List<ExDocWEB> docList = new ArrayList<ExDocWEB>();
+		for(int i = 13;i<15;i++) {
+		docList.add(new ExDocWEB("10", "1", i, i, String.valueOf(i), 5));
+		}
+		docListWrap.setDocList(docList);
+		String message = ControllersCheckWDoc.createExDocUnwrap(docListWrap,DocType.INDOC);
+		assertFalse(message.equals("2020"), "six errors"); // test mast fali
+		}
+		
 }

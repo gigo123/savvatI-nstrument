@@ -287,8 +287,13 @@ public class ControllersCheckWDoc {
 					}
 
 				}
+				System.out.println(instrument.getTotalNumber());
+				
 				float instumentNumber = instrument.getTotalNumber() + doc.getAmount();
+				System.out.println(instumentNumber);
 				instrument.setTotalNumber(instumentNumber);
+				System.out.println(instrument.getTotalNumber());
+				instDAO.updateInstrument(instrument);
 			}
 			if (docType == DocType.OUTDOC) {
 				doc.setCatalogId(outDocCatalogDAO.getExDocCatalogById(catId));
@@ -298,6 +303,7 @@ public class ControllersCheckWDoc {
 				storageDAO.updateStorage(outStorageId, storage);
 				float instumentNumber = doc.getInstrument().getTotalNumber() - doc.getAmount();
 				doc.getInstrument().setTotalNumber(instumentNumber);
+				instDAO.updateInstrument(doc.getInstrument());
 			}
 			docDAO.createExDoc(doc, docType);
 		} catch (
