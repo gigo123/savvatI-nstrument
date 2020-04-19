@@ -84,5 +84,16 @@ SqliteInstrumentDAO instrumentDAO;
 		instrum  = instrumentDAO.getInstrumentByID(id);
 		assertTrue(instrum==null,"box must be null(deletet)");
 	}
+	/*@Test  dont run - damge test data
+	void updateInstrument() {
+		initConnection();
+		for( int i=16;i<100;i++) {
+			Instrument instrum = instrumentDAO.getInstrumentByID(i);
+			instrum.setTotalNumber(instrum.getTotalNumber()+5);
+			instrumentDAO.updateInstrument(instrum);
+		}
+		
+	}
+	*/	
 
 }

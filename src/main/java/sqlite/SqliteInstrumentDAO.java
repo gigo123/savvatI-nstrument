@@ -16,13 +16,12 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 
 	private final static String SELECT_ID_QUERY = "SELECT * FROM instrument WHERE id = ?";
 	private final static String SELECT_NAME_QUERY = "SELECT * FROM instrument WHERE NAME = ?";
-	//private final static String SELECT_BOX_QUERY = "SELECT * FROM box WHERE  box = ? AND loaction = ?";
-	//private final static String SELECT_LOC_QUERY = "SELECT * FROM box WHERE  location = ?";
 	private final static String SELECT_ALL_QUERY = "SELECT * FROM instrument";
 	private final static String INSERT_QUERY = "INSERT INTO instrument(name, measure, comment, totalNumber)" + " VALUES(?, ?, ?,0)";
 	private final static String DELETE_QUERY = "DELETE FROM instrument WHERE id = ?";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
+	private final static String UPDATE_QUERY ="UPDATE instrument SET name =? , measure =?, comment =? ,totalNumber =?  where id = ?";
 
 	@Override
 	public boolean hasError() {
@@ -218,6 +217,40 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 	public void closeConection() {
 		conectionHolder.closeConnection();
 		
+	}
+
+	@Override
+	public boolean updateInstrument(Instrument instrument) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
+			Connection conn = conectionHolder.getConnection();
+			PreparedStatement prepSt = null;
+			try {
+				prepSt = conn.prepareStatement(UPDATE_QUERY);
+				prepSt.setString(1, instrument.getName());
+				prepSt.setString(2, instrument.getMeasure());
+				prepSt.setString(3, instrument.getComment());
+				prepSt.setFloat(4, instrument.getTotalNumber());
+				prepSt.setLong(5, instrument.getId());
+				prepSt.execute();
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+				return false;
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
+			}
+			return true;
+		} else {
+			sqlError = true;
+			return false;
+		}
 	}
 
 }
