@@ -91,7 +91,7 @@ class SQLBox {
 		assertTrue(!error,"must be ok");
 		assertTrue(boxList.size()!=0,"must be at lease one element");
 	}
-	@Test
+	/*@Test
 	@AfterClass
 	void deleteBox() {
 		initConnection();
@@ -103,5 +103,5 @@ class SQLBox {
 		box  = boxDAO.getBoxByID(id);
 		assertTrue(box==null,"box must be null(deletet)");
 	}
-
+*/
 }
