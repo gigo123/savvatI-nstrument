@@ -171,9 +171,8 @@ public class ControllersCheckWDoc {
 				}
 				if (hasInstrument) {
 					Storage storage = storageDAO.getStorageByID(storageId);
-					if (storage.getAmount() >= docW.getAmount()) {
-						System.out.println(storage.getAmount());
-						System.out.println(docW.getAmount());
+					float instLeft= storage.getAmount()-docW.getAmount();
+					if(instLeft>0.0) {
 						doc.setInstrument(instrument);
 					} else {
 						errorText.append("<li>недостачно инструмента для видачи  в строке " + number + "</li>");
