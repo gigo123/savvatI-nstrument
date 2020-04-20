@@ -4,8 +4,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import savvats.SearchById;
 import servlets.rest.ExDocAjax;
 
 @WebAppConfiguration
@@ -26,16 +24,13 @@ public class ExDocAjaxTest {
 
 	MockMvc mockMvc;
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void setBox() {
 		this.mockMvc = MockMvcBuilders.standaloneSetup(ExDocAjax.class).build();
 		// this.mockMvc =
 		// MockMvcBuilders.webAppContextSetup(this.wac).dispatchOptions(true).build();
-		List<Integer> boxIdList = new ArrayList<Integer>();
-		boxIdList.add(1);
-		boxIdList.add(2);
-		SearchById search = new SearchById();
-		search.setBoxId(boxIdList);
+		
 		// создаем POST-запрос, набиваем его параметрами и выполняем
 		String searchString = "{\"boxId\":[\"1\",\"7\"]}";
 		try {
@@ -50,18 +45,15 @@ public class ExDocAjaxTest {
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void setInstrument() {
 		this.mockMvc = MockMvcBuilders.standaloneSetup(ExDocAjax.class).build();
 		// this.mockMvc =
 		// MockMvcBuilders.webAppContextSetup(this.wac).dispatchOptions(true).build();
-		List<Integer> boxIdList = new ArrayList<Integer>();
-		boxIdList.add(1);
-		boxIdList.add(2);
-		SearchById search = new SearchById();
-		search.setBoxId(boxIdList);
+		;
 		// создаем POST-запрос, набиваем его параметрами и выполняем
-		String searchString = "{\"boxId\":[\"13\",\"9\"]}";
+		String searchString = "{\"boxId\":\"35\"}";
 		try {
 			mockMvc.perform(MockMvcRequestBuilders.post("/createExDoc//getInstrumentFilter").content(searchString)
 					.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
