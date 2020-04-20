@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import dao.BoxDAO;
 import models.Box;
-import savvats.SearchById;
+import savvats.SearchByIdList;
 import savvats.Views;
 import savvats.ajax.AjaxResponseDocBox;
 import savvats.ajax.AjaxResponseDocInstrument;
@@ -27,7 +27,7 @@ public class InDocAjax {
 
 	@JsonView(Views.Public.class)
 	@RequestMapping("/getBoxFilter")
-	public AjaxResponseDocBox getSearchBoxResultViaAjax(@RequestBody SearchById search) {
+	public AjaxResponseDocBox getSearchBoxResultViaAjax(@RequestBody SearchByIdList search) {
 AjaxResponseDocBox result = new AjaxResponseDocBox();
 		result.setCode("200");
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");

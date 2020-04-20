@@ -32,16 +32,9 @@
 									<form:options items="${locationList}" />
 								</form:select>
 							</td>
-							<td class="doc-out-box text-left wide-column" >
-							<form:select path="docList[${i.index }].outBox" >
-									<!--<form:option value="1" label="Select" />-->
-								</form:select>
-						<!--	<form:input
-									path="docList[${i.index }].outBox" id="outBox_${i.index}"
-									class="form__input" required="true" /> <form:errors
-									path="docList[${i.index }].outBox" />
-									-->
-									</td>
+							<td class="doc-out-box text-left wide-column"><form:select
+									path="docList[${i.index }].outBox">
+								</form:select></td>
 							<td class="doc-in-loc" id="doc-in-loc-${i.index}"><form:select
 									path="docList[${i.index }].inLocation">
 									<form:options items="${locationList}" />
@@ -75,24 +68,7 @@
 </div>
 
 <script>
-	function confirmCreate() {
-		$.ajax({
-			url : "./createExDoc",
-			type : "POST",
-			dataType : "html",
-			data : {
-				docMap : docMap
-			},
-			success : function(responseJson) {
-				var returnedData = JSON.parse(responseJson);
-				message("sucses");
-			},
-			error : function(response) { // Данные не отправлены
-				message("error");
-			}
-		});
-
-	}
+	
 	function searchBox() {
 		var counter = 0;
 		var list = document.getElementById("docList0.outLocation");
@@ -106,7 +82,6 @@
 			list = document.getElementById("docList" + counter + ".outLocation");
 		}
 		search["boxId"] = boxIndex;
-		alert(JSON.stringify(search));
 		$.ajax({
 			type : "POST",
 			contentType : "application/json",
@@ -116,23 +91,18 @@
 			timeout : 100000,
 			success : function(data) {
 				console.log("SUCCESS: ", data);
-				display(data);
-				//var obj = JSON.parse(data); 
+			//	display(data);
 				
-				for (var i = 0, j = data.boxListId.length; i < j; i += 1) {   
-var boxmap = new Map(Object.entries(data.boxListId[i].BoxMap))
-			
+			for (var i = 0, j = data.boxListId.length; i < j; i += 1) {   
+				var boxmap = new Map(Object.entries(data.boxListId[i].BoxMap))
 			//for (var key of myMap.keys()) {
   //console.log(key);
 //}
-
-
 //for (var value of myMap.values()) {
  // console.log(value);
 //}
-			
-			
 				var select = document.getElementById("docList" + i +".outBox");
+				select.options.length=0;
 				for (var [key, value] of boxmap) {
 			console.log(key + ' = ' + value);
 				
@@ -157,8 +127,7 @@ var boxmap = new Map(Object.entries(data.boxListId[i].BoxMap))
 
 	function searchInstrum() {
 		var search = {}
-		var id = document.getElementById("outBox_0").value
-		alert("you select " + id);
+		var id = document.getElementById("docList0.outBox").value
 		search["boxId"] = id;
 		$.ajax({
 			type : "POST",
@@ -168,7 +137,18 @@ var boxmap = new Map(Object.entries(data.boxListId[i].BoxMap))
 			timeout : 100000,
 			success : function(data) {
 				console.log("SUCCESS: ", data);
-				display(data);
+				//display(data);
+				   
+			var instrumentMap = new Map(Object.entries(data.InstrumentMapId));
+				var select = document.getElementById("docList0.instrument");
+				select.options.length=0;
+				for (var [key, value] of instrumentMap) {
+			console.log(key + ' = ' + value);
+					var option = document.createElement("option");
+					option.value = key,
+					option.text =value;
+					select.add(option);	
+				}
 			},
 			error : function(e) {
 				console.log("ERROR: ", e);
