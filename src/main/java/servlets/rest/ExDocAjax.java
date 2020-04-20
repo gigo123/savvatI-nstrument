@@ -18,6 +18,7 @@ import dao.StorageDAO;
 import models.Box;
 import models.Storage;
 import savvats.SearchById;
+import savvats.SearchByIdList;
 import savvats.Views;
 import savvats.ajax.AjaxResponseDocBox;
 import savvats.ajax.AjaxResponseDocInstrument;
@@ -31,7 +32,7 @@ public class ExDocAjax {
 	@SuppressWarnings("resource")
 	@JsonView(Views.Public.class)
 	@RequestMapping("/getBoxFilter")
-	public AjaxResponseDocBox getSearchBoxResultViaAjax(@RequestBody SearchById search) {
+	public AjaxResponseDocBox getSearchBoxResultViaAjax(@RequestBody SearchByIdList search) {
 
 		AjaxResponseDocBox result = new AjaxResponseDocBox();
 		result.setCode("200");
@@ -72,28 +73,22 @@ public class ExDocAjax {
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		StorageDAO storeDAO = (StorageDAO) context.getBean("StorageDAO");
 		
-		// long LocId = Long.parseLong(search.getBoxId());
-		List<Integer> boxIdList = search.getBoxId();
 
 		String msg="";
-		List<DocInstrumentMap> boxListId = new ArrayList<DocInstrumentMap>();
-		
-		for (int boxId : boxIdList) {
-			long LocId = boxId;
-			//msg=msg + " " + LocId;
+
+			
+			long boxId = search.getBoxId();
+			System.out.println(boxId);
 			Map<Long, String> instrumentMap = new HashMap<Long, String>();
 			List<Storage> storeList = storeDAO.getStorageByBox(boxId);
 			for (Storage storsge : storeList) {
 				instrumentMap.put(storsge.getInstrument().getId(), storsge.getInstrument().getName());
 			}
-			DocInstrumentMap instrumentListMap = new DocInstrumentMap();
-			instrumentListMap.setInstrumentMap(instrumentMap);
-			boxListId.add(instrumentListMap);
-			System.out.println(boxListId);
-			msg= boxListId.toString();
-		}
+System.out.println(instrumentMap);
+			
+			msg= instrumentMap.toString();
 		result.setMsg(msg);
-		result.setBoxListId(boxListId);
+		result.setInstrumentMapId(instrumentMap);
 		return result;
 	  
 	  }
