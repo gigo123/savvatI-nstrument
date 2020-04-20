@@ -11,17 +11,17 @@ import dao.InstrumentDAO;
 
 import models.Instrument;
 
-
 public class SqliteInstrumentDAO implements InstrumentDAO {
 
 	private final static String SELECT_ID_QUERY = "SELECT * FROM instrument WHERE id = ?";
 	private final static String SELECT_NAME_QUERY = "SELECT * FROM instrument WHERE NAME = ?";
 	private final static String SELECT_ALL_QUERY = "SELECT * FROM instrument";
-	private final static String INSERT_QUERY = "INSERT INTO instrument(name, measure, comment, totalNumber)" + " VALUES(?, ?, ?,0)";
+	private final static String INSERT_QUERY = "INSERT INTO instrument(name, measure, comment, totalNumber)"
+			+ " VALUES(?, ?, ?,0)";
 	private final static String DELETE_QUERY = "DELETE FROM instrument WHERE id = ?";
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
-	private final static String UPDATE_QUERY ="UPDATE instrument SET name =? , measure =?, comment =? ,totalNumber =?  where id = ?";
+	private final static String UPDATE_QUERY = "UPDATE instrument SET name =? , measure =?, comment =? ,totalNumber =?  where id = ?";
 
 	@Override
 	public boolean hasError() {
@@ -42,8 +42,8 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 
 	private Object selectQ(Object obj, Object obj2, int type) {
 		sqlError = false;
-		
-		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
+
+		if (conectionHolder != null && conectionHolder.getConnection() != null) {
 			Connection conn = conectionHolder.getConnection();
 			ResultSet rs = null;
 			PreparedStatement prepSt = null;
@@ -80,35 +80,25 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 				}
 				}
 				while (rs.next()) {
-					if (type == 1||type == 2) {
-						inst = new Instrument();
-						inst.setId(rs.getInt("id"));
-						inst.setName(rs.getString("name"));
-						inst.setComment(rs.getString("comment"));
-						inst.setMeasure(rs.getString("measure"));
+					inst = new Instrument();
+					inst.setId(rs.getInt("id"));
+					inst.setName(rs.getString("name"));
+					inst.setComment(rs.getString("comment"));
+					inst.setMeasure(rs.getString("measure"));
+					inst.setTotalNumber(rs.getFloat("totalNumber"));
+					if (type == 1 || type == 2) {
 						break;
-					}
-					else {
-
-						inst = new Instrument();
-						inst.setId(rs.getInt("id"));
-						inst.setName(rs.getString("name"));
-						inst.setComment(rs.getString("comment"));
-						inst.setMeasure(rs.getString("measure"));
+					} else {
 						instList.add(inst);
 					}
-					
 				}
-				
-			//conectionHolder.closeConnection();
-				if(type == 1||type == 2){
+				// conectionHolder.closeConnection();
+				if (type == 1 || type == 2) {
 					return inst;
-				}
-				else {
-				
+				} else {
 					return instList;
 				}
-					
+
 			} catch (SQLException e) {
 				sqlError = true;
 				e.printStackTrace();
@@ -144,8 +134,6 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 		return (List<Instrument>) selectQ(name, null, 3);
 	}
 
-	
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Instrument> getAllInstrument() {
@@ -155,7 +143,7 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 	@Override
 	public boolean createInstrument(Instrument instrument) {
 		sqlError = false;
-		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
+		if (conectionHolder != null && conectionHolder.getConnection() != null) {
 			Connection conn = conectionHolder.getConnection();
 			PreparedStatement prepSt = null;
 			try {
@@ -189,7 +177,7 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 	public boolean deleteInstrument(long id) {
 		sqlError = false;
 		PreparedStatement prepSt = null;
-		if ( conectionHolder!=null&&!conectionHolder.isError()) {
+		if (conectionHolder != null && !conectionHolder.isError()) {
 			Connection conn = conectionHolder.getConnection();
 			try {
 				prepSt = conn.prepareStatement(DELETE_QUERY);
@@ -213,15 +201,16 @@ public class SqliteInstrumentDAO implements InstrumentDAO {
 		}
 		return false;
 	}
+
 	@Override
 	public void closeConection() {
 		conectionHolder.closeConnection();
-		
+
 	}
 
 	@Override
 	public boolean updateInstrument(Instrument instrument) {
-		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
+		if (conectionHolder != null && conectionHolder.getConnection() != null) {
 			Connection conn = conectionHolder.getConnection();
 			PreparedStatement prepSt = null;
 			try {
