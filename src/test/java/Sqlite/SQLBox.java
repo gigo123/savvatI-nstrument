@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.sql.Connection;
 import java.util.List;
 
-import org.junit.AfterClass;
 import org.junit.jupiter.api.Test;
 import models.Box;
 import models.Location;
