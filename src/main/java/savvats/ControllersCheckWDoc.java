@@ -172,6 +172,8 @@ public class ControllersCheckWDoc {
 				if (hasInstrument) {
 					Storage storage = storageDAO.getStorageByID(storageId);
 					if (storage.getAmount() >= docW.getAmount()) {
+						System.out.println(storage.getAmount());
+						System.out.println(docW.getAmount());
 						doc.setInstrument(instrument);
 					} else {
 						errorText.append("<li>недостачно инструмента для видачи  в строке " + number + "</li>");
@@ -219,10 +221,7 @@ public class ControllersCheckWDoc {
 			Location location = locDAO.getLocById(Long.parseLong(docW.getOutLocation()));
 			if (location != null) {
 				doc.setOutLocation(location);
-				System.out.println(location);
-				System.out.println(docW.getOutBox());
 				Box box = boxDAO.getBoxByID(docW.getOutBox());
-				System.out.println(box);
 				if (box == null) {
 					errorText = "<li>неправильная видающая ячейка в строке " + number + "</li>";
 				} else {
@@ -263,7 +262,6 @@ public class ControllersCheckWDoc {
 					doc.setCatalogId(inDocCatalogDAO.getExDocCatalogById(catId));
 				}
 				Instrument instrument = doc.getInstrument();
-				System.out.println(instrument);
 				boolean hasInstrument = false;
 				for (int i = 0; i < storeList.size(); i++) {
 					Instrument tempInst = storeList.get(i).getInstrument();
@@ -290,14 +288,10 @@ public class ControllersCheckWDoc {
 						storageDAO.createStorage(newInStorage);
 					}
 
-				}
-				System.out.println(instrument.getTotalNumber());
-				
+				}	
 				float instumentNumber = instrument.getTotalNumber() + doc.getAmount();
-				System.out.println(instumentNumber);
 				instrument.setTotalNumber(instumentNumber);
 				instDAO.updateInstrument(instrument);
-				System.out.println(instrument.getTotalNumber());
 			}
 			if (docType == DocType.OUTDOC) {
 				doc.setCatalogId(outDocCatalogDAO.getExDocCatalogById(catId));
