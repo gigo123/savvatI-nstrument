@@ -251,8 +251,13 @@ public class ControllersCheckWDoc {
 					exDoc = (ExDoc) doc;
 					storage = storageDAO.getStorageByID(outStorageId);
 					amount = storage.getAmount() - doc.getAmount();
-					storage.setAmount(amount);
-					storageDAO.updateStorage(outStorageId, storage);
+					if(amount<=0.0) {
+						storageDAO.deleteStorage(outStorageId);
+					}
+					else {
+						storage.setAmount(amount);
+						storageDAO.updateStorage(outStorageId, storage);
+					}
 					storeList = storageDAO.getStorageByBox(exDoc.getInBox().getId());
 					doc.setCatalogId(exDocCatalogDAO.getExDocCatalogById(catId));
 				}
@@ -296,8 +301,14 @@ public class ControllersCheckWDoc {
 				doc.setCatalogId(outDocCatalogDAO.getExDocCatalogById(catId));
 				storage = storageDAO.getStorageByID(outStorageId);
 				amount = storage.getAmount() - doc.getAmount();
-				storage.setAmount(amount);
-				storageDAO.updateStorage(outStorageId, storage);
+				if(amount<=0.0) {
+					storageDAO.deleteStorage(outStorageId);
+				}
+				else {
+					storage.setAmount(amount);
+					storageDAO.updateStorage(outStorageId, storage);
+				}
+				
 				float instumentNumber = doc.getInstrument().getTotalNumber() - doc.getAmount();
 				doc.getInstrument().setTotalNumber(instumentNumber);
 				instDAO.updateInstrument(doc.getInstrument());
