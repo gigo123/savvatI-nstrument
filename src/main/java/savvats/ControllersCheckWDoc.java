@@ -219,7 +219,10 @@ public class ControllersCheckWDoc {
 			Location location = locDAO.getLocById(Long.parseLong(docW.getOutLocation()));
 			if (location != null) {
 				doc.setOutLocation(location);
-				Box box = boxDAO.getBoxByNumber(docW.getOutBox(), location.getId());
+				System.out.println(location);
+				System.out.println(docW.getOutBox());
+				Box box = boxDAO.getBoxByID(docW.getOutBox());
+				System.out.println(box);
 				if (box == null) {
 					errorText = "<li>неправильная видающая ячейка в строке " + number + "</li>";
 				} else {
@@ -260,6 +263,7 @@ public class ControllersCheckWDoc {
 					doc.setCatalogId(inDocCatalogDAO.getExDocCatalogById(catId));
 				}
 				Instrument instrument = doc.getInstrument();
+				System.out.println(instrument);
 				boolean hasInstrument = false;
 				for (int i = 0; i < storeList.size(); i++) {
 					Instrument tempInst = storeList.get(i).getInstrument();
@@ -292,8 +296,8 @@ public class ControllersCheckWDoc {
 				float instumentNumber = instrument.getTotalNumber() + doc.getAmount();
 				System.out.println(instumentNumber);
 				instrument.setTotalNumber(instumentNumber);
-				System.out.println(instrument.getTotalNumber());
 				instDAO.updateInstrument(instrument);
+				System.out.println(instrument.getTotalNumber());
 			}
 			if (docType == DocType.OUTDOC) {
 				doc.setCatalogId(outDocCatalogDAO.getExDocCatalogById(catId));
