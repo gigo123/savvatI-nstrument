@@ -1,4 +1,4 @@
-package servlets;
+package pages.create;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +30,23 @@ import savvats.ExDocWEBList;
 @RequestMapping("/createInDoc")
 public class CreateInDoc {
 	ExDocWEBList exDocWEBList = null;
+	@ModelAttribute("exDocWEBList")
+	public ExDocWEBList createExDocWEBListModel() {
+		return new ExDocWEBList();
+	}
+	@SuppressWarnings("resource")
+	@ModelAttribute("boxMap")
+	private Map<Long, String> getBoxMap() {
+		Map<Long, String> instrumentMap = new HashMap<Long, String>();
+		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+		InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
+		List<Instrument> instList = instDAO.getAllInstrument();
+		for (Instrument instrument : instList) {
+			instrumentMap.put(instrument.getId(), instrument.getName());
+		}
+		return instrumentMap;
+	}
+
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getInDocCF() {
 
@@ -42,6 +59,32 @@ public class CreateInDoc {
 		model.addObject("exDocWEBList", exDocWEBList);
 		return model;
 	}
+
+	@ModelAttribute("instrumentMap")
+	private Map<Long, String> getInstrumentMap() {
+		Map<Long, String> instrumentMap = new HashMap<Long, String>();
+		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+		InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
+		List<Instrument> instList = instDAO.getAllInstrument();
+		for (Instrument instrument : instList) {
+			instrumentMap.put(instrument.getId(), instrument.getName());
+		}
+		return instrumentMap;
+	}
+
+	@SuppressWarnings("resource")
+	@ModelAttribute("locationList")
+	private Map<Long, String> getLocationList() {
+		Map<Long, String> lociationMap = new HashMap<Long, String>();
+		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
+		List<Location> locList = locDAO.getAllLocatin();
+		for (Location location : locList) {
+			lociationMap.put(location.getId(), location.getName());
+		}
+		return lociationMap;
+	}
+
 	@RequestMapping(method = RequestMethod.GET, params = { "addRow"})
 	public ModelAndView getProductListCategory() {
 		if (exDocWEBList != null) {
@@ -64,47 +107,6 @@ public class CreateInDoc {
 		message=ControllersCheckWDoc.createExDocUnwrap(exDocWEBList, DocType.INDOC);
 		model.addAttribute("errorText",message);
 		return "OperationInfo";
-	}
-
-	@ModelAttribute("exDocWEBList")
-	public ExDocWEBList createExDocWEBListModel() {
-		return new ExDocWEBList();
-	}
-
-	@ModelAttribute("locationList")
-	private Map<Long, String> getLocationList() {
-		Map<Long, String> lociationMap = new HashMap<Long, String>();
-		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
-		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
-		List<Location> locList = locDAO.getAllLocatin();
-		for (Location location : locList) {
-			lociationMap.put(location.getId(), location.getName());
-		}
-		return lociationMap;
-	}
-
-	@ModelAttribute("instrumentMap")
-	private Map<Long, String> getInstrumentMap() {
-		Map<Long, String> instrumentMap = new HashMap<Long, String>();
-		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
-		InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
-		List<Instrument> instList = instDAO.getAllInstrument();
-		for (Instrument instrument : instList) {
-			instrumentMap.put(instrument.getId(), instrument.getName());
-		}
-		return instrumentMap;
-	}
-
-	@ModelAttribute("boxMap")
-	private Map<Long, String> getBoxMap() {
-		Map<Long, String> instrumentMap = new HashMap<Long, String>();
-		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
-		InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
-		List<Instrument> instList = instDAO.getAllInstrument();
-		for (Instrument instrument : instList) {
-			instrumentMap.put(instrument.getId(), instrument.getName());
-		}
-		return instrumentMap;
 	}
 
 

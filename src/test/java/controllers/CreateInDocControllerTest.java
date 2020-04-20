@@ -5,14 +5,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import servlets.AddBox;
-import servlets.CreateInDoc;
 
 public class CreateInDocControllerTest {
 	MockMvc mockMvc;
 	@Test
 	public void setBox() {
-		this.mockMvc = MockMvcBuilders.standaloneSetup(CreateInDoc.class).build();
+		this.mockMvc = MockMvcBuilders.standaloneSetup(pages.create.CreateInDoc.class).build();
 		
 		try {
 			mockMvc.perform(MockMvcRequestBuilders.post("/createInDoc")

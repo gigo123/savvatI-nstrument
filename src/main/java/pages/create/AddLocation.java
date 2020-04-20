@@ -1,4 +1,4 @@
-package servlets;
+package pages.create;
 
 
 import org.springframework.stereotype.Controller;
@@ -17,12 +17,16 @@ import savvats.ControllersCheckWrite;
 @RequestMapping("/addlocation")
 public class AddLocation {
 
+	@ModelAttribute("location")
+	public Location createLocationModel() {
+		return new Location();
+	}
+
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getLocationCF() {
 		ModelAndView model = new ModelAndView("AddLocation", "command", new Location());
 		return model;
 	}
-
 	@RequestMapping(method = RequestMethod.POST)
 	public String postLocationCF(@ModelAttribute("location") @Validated Location location, 
 			BindingResult bindingResult, Model model) {
@@ -32,10 +36,6 @@ public class AddLocation {
 		}
 		model.addAttribute("errorText",ControllersCheckWrite.addLocationWork(location));
 		return "OperationInfo";
-	}
-	@ModelAttribute("location")
-	public Location createLocationModel() {
-		return new Location();
 	}
 
 }

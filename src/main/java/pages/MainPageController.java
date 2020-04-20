@@ -1,4 +1,4 @@
-package servlets;
+package pages;
 
 import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;

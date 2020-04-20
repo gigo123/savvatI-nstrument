@@ -1,4 +1,4 @@
-package servlets;
+package pages.create;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,12 +15,17 @@ import savvats.ControllersCheckWrite;
 @Controller
 @RequestMapping("/addinstument")
 public class AddInstrument {
+	@ModelAttribute("instrument")
+	public Instrument createInstrumentModel() {
+		return new Instrument();
+	}
+
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getInstrumentCF() {
 		ModelAndView model = new ModelAndView("AddInstrument", "command", new Instrument());
 		return model;
 	}
-
+	
 	@RequestMapping(method = RequestMethod.POST)
 	public String postInstrumentCF(@ModelAttribute("instrument") @Validated Instrument instrument, 
 			BindingResult bindingResult, Model model) {
@@ -30,11 +35,6 @@ public class AddInstrument {
 		}
 		model.addAttribute("errorText", ControllersCheckWrite.addInstrumentWork(instrument));
 		return "OperationInfo";
-	}
-	
-	@ModelAttribute("instrument")
-	public Instrument createInstrumentModel() {
-		return new Instrument();
 	}
 
 
