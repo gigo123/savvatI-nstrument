@@ -1,28 +1,15 @@
 package savvats;
 
-import java.util.List;
-import java.util.Map;
 
 public class SearchById {
-	private List<Integer> boxId;
+	private int boxId;
 
-	public List<Integer> getBoxId() {
+	public int getBoxId() {
 		return boxId;
 	}
 
-	public void setBoxId(List<Integer> boxId) {
+	public void setBoxId(int boxId) {
 		this.boxId = boxId;
 	}
 	
-/*	private String boxId;
-
-	public String getBoxId() {
-		return boxId;
-	}
-
-	public void setBoxId(String boxId) {
-		this.boxId = boxId;
-	}
-	*/
-
 }
