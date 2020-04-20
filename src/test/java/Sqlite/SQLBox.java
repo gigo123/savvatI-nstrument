@@ -66,14 +66,14 @@ class SQLBox {
 	@Test
 	void getBoxByNumber() {
 		SqliteBoxDAO  boxDAOc = new SqliteBoxDAO();
-		boxDAOc.getBoxByNumber(1, 1);
+		boxDAOc.getBoxByNumber(0, 1);
 		boolean error = boxDAOc.hasError();
 		assertTrue(error,"must be error");
 		initConnection();
-		Box box  = boxDAO.getBoxByNumber(1, 1);
+		Box box  = boxDAO.getBoxByNumber(0, 1);
 		error = boxDAO.hasError();
 		assertTrue(!error,"must be ok");
-		assertTrue(box.getNumber()==1,"must be test1");
+		assertTrue(box.getNumber()==0,"must be test1");
 	}
 	@Test
 	void getAllBox() {
