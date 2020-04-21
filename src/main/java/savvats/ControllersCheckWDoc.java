@@ -171,8 +171,8 @@ public class ControllersCheckWDoc {
 				}
 				if (hasInstrument) {
 					Storage storage = storageDAO.getStorageByID(storageId);
-					float instLeft= storage.getAmount()-docW.getAmount();
-					if(instLeft>0.0) {
+					float instLeft = storage.getAmount() - docW.getAmount();
+					if (instLeft > 0.0) {
 						doc.setInstrument(instrument);
 					} else {
 						errorText.append("<li>недостачно инструмента для видачи  в строке " + number + "</li>");
@@ -251,10 +251,9 @@ public class ControllersCheckWDoc {
 					exDoc = (ExDoc) doc;
 					storage = storageDAO.getStorageByID(outStorageId);
 					amount = storage.getAmount() - doc.getAmount();
-					if(amount<=0.0) {
+					if (amount <= 0.0) {
 						storageDAO.deleteStorage(outStorageId);
-					}
-					else {
+					} else {
 						storage.setAmount(amount);
 						storageDAO.updateStorage(outStorageId, storage);
 					}
@@ -284,6 +283,12 @@ public class ControllersCheckWDoc {
 					storageDAO.updateStorage(inStorageId, storage);
 				} else {
 					if (docType == DocType.EXDOC) {
+						Box box = doc.getOutBox();
+						List<Storage> tempStoreList = storageDAO.getStorageByBox(box.getId());
+						if (tempStoreList.size() == 0) {
+							box.setNotEmpty(true);
+							boxDAO.updateBox(box.getId(), box);
+						}
 						Storage newInStorage = new Storage(exDoc.getInBox(), instrument, doc.getAmount());
 						storageDAO.createStorage(newInStorage);
 					}
@@ -292,7 +297,7 @@ public class ControllersCheckWDoc {
 						storageDAO.createStorage(newInStorage);
 					}
 
-				}	
+				}
 				float instumentNumber = instrument.getTotalNumber() + doc.getAmount();
 				instrument.setTotalNumber(instumentNumber);
 				instDAO.updateInstrument(instrument);
@@ -301,14 +306,19 @@ public class ControllersCheckWDoc {
 				doc.setCatalogId(outDocCatalogDAO.getExDocCatalogById(catId));
 				storage = storageDAO.getStorageByID(outStorageId);
 				amount = storage.getAmount() - doc.getAmount();
-				if(amount<=0.0) {
+				if (amount <= 0.0) {
 					storageDAO.deleteStorage(outStorageId);
-				}
-				else {
+					Box box = doc.getOutBox();
+					List<Storage> tempStoreList = storageDAO.getStorageByBox(box.getId());
+					if (tempStoreList.size() == 0) {
+						box.setNotEmpty(false);
+						boxDAO.updateBox(box.getId(), box);
+					}
+				} else {
 					storage.setAmount(amount);
 					storageDAO.updateStorage(outStorageId, storage);
 				}
-				
+
 				float instumentNumber = doc.getInstrument().getTotalNumber() - doc.getAmount();
 				doc.getInstrument().setTotalNumber(instumentNumber);
 				instDAO.updateInstrument(doc.getInstrument());
