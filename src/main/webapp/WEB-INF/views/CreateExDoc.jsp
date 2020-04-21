@@ -26,7 +26,7 @@
 				<div class="col-1">${i.index+1}</div>
 				<div class="col-2">
 					<form:select path="docList[${i.index }].outLocation"
-						onchange="searchOutBox(1,${i.index })">
+						onchange="searchOutBoxNE(${i.index })">
 						<form:options items="${locationList}" />
 					</form:select>
 				</div>
@@ -38,7 +38,7 @@
 				</div>
 				<div class="col-2">
 					<form:select path="docList[${i.index }].inLocation"
-						onchange="searchOutBox(2,${i.index })">
+						onchange="searchOutBox(${i.index })">
 						<form:options items="${locationList}" />
 					</form:select>
 				</div>
@@ -71,20 +71,14 @@
 	<div id="feedback"></div>
 
 	<script>
-	function searchOutBox(doc,id) {
-		var list;
-		if(doc==1){
-			list = document.getElementById("docList" + id + ".outLocation");
-		}
-		if(doc==2){
-			list = document.getElementById("docList" + id + ".inLocation");	
-		}
+	function searchOutBox(id) {
+		var list= document.getElementById("docList" + id + ".inLocation");	
 		var search = {};
 		search["boxId"] = list.options[list.selectedIndex].value;
 		$.ajax({
 			type : "POST",
 			contentType : "application/json",
-			url : "/istrumnet1/createExDoc/getBoxFilter",
+			url : "./createExDoc/getBoxFilter",
 			data : JSON.stringify(search),
 			dataType : 'json',
 			timeout : 100000,
@@ -92,13 +86,7 @@
 				console.log("SUCCESS: ", data);
 				//display(data);
 				var boxmap = new Map(Object.entries(data.boxListId))
-				var select ;
-				if(doc==1){
-				 	select = document.getElementById("docList" + id +".outBox");
-				}
-				if(doc==2){
-					select = document.getElementById("docList" + id +".inBox");
-				}
+				var select  = document.getElementById("docList" + id +".inBox");
 				select.options.length=0;
 				for (var [key, value] of boxmap) {
 					console.log(key + ' = ' + value);
@@ -118,6 +106,43 @@
 			}
 		});
 
+	}
+	
+	
+	function searchOutBoxNE(id) {
+		var list=  document.getElementById("docList" + id + ".outLocation");
+	var search = {};
+	search["boxId"] = list.options[list.selectedIndex].value;
+	$.ajax({
+		type : "POST",
+		contentType : "application/json",
+		url : "./createExDoc/getBoxFilterNE",
+		data : JSON.stringify(search),
+		dataType : 'json',
+		timeout : 100000,
+		success : function(data) {
+			console.log("SUCCESS: ", data);
+			//display(data);
+			var boxmap = new Map(Object.entries(data.boxListId))
+			var select = document.getElementById("docList" + id +".outBox");
+			select.options.length=0;
+			for (var [key, value] of boxmap) {
+				console.log(key + ' = ' + value);
+				var option = document.createElement("option");
+				option.value = key,
+				option.text =value;
+				select.add(option);	
+			}
+		},
+		error : function(e) {
+			console.log("ERROR: ", e);
+			display(e);
+		},
+		done : function(e) {
+			console.log("DONE");
+			enableSearchButton(true);
+		}
+	});
 	}
 
 	function searchInstrum(id) {

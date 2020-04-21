@@ -49,6 +49,28 @@ public class ExDocAjax {
 		return result;
 
 	}
+	@SuppressWarnings("resource")
+	@JsonView(Views.Public.class)
+	@RequestMapping("/getBoxFilterNE")
+	public AjaxResponseDocBox getSearchBoxNEResultViaAjax(@RequestBody SearchById search) {
+
+		AjaxResponseDocBox result = new AjaxResponseDocBox();
+		result.setCode("200");
+		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
+		String msg = "ок";
+		long LocId = search.getBoxId();
+		msg = msg + " " + LocId;
+		Map<Long, Integer> boxMap = new HashMap<Long, Integer>();
+		List<Box> BoxList = boxDAO.getNotEmptyBoxByLocation(LocId);
+		for (Box box : BoxList) {
+			boxMap.put(box.getId(), box.getNumber());
+		}
+		result.setMsg(msg);
+		result.setBoxListId(boxMap);
+		return result;
+
+	}
 
 	@SuppressWarnings("resource")
 	@JsonView(Views.Public.class)
