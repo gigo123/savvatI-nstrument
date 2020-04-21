@@ -7,81 +7,80 @@
 <%@ include file="/WEB-INF/include/SideMenuView.jsp"%>
 <div class="col-9">
 	создание нового документа премещения
-	<div class="table-content table-responsive">
-		<form:form action="./createExDoc" method="post"
-			modelAttribute="exDocWEBList">
-			<form:errors path="*" cssClass="errorblock" element="div" />
-			<table class="table text-center">
-				<thead>
-					<tr>
-						<th class="text-left">номер</th>
-						<th>место видачи</th>
-						<th>ячека видачи</th>
-						<th>место приема</th>
-						<th>ячейка приема</th>
-						<th>инструмент</th>
-						<th>количество</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach items="${exDocWEBList.docList}" varStatus="i">
-						<tr id="docRow${i.index}">
-							<td class="doc-id">${i.index+1}</td>
-							<td class="doc-out-loc text-left" id="doc-out-loc-${i.index}">
-								<form:select path="docList[${i.index }].outLocation">
-									<form:options items="${locationList}" />
-								</form:select>
-							</td>
-							<td class="doc-out-box text-left wide-column"><form:select
-									path="docList[${i.index }].outBox">
-								</form:select></td>
-							<td class="doc-in-loc" id="doc-in-loc-${i.index}"><form:select
-									path="docList[${i.index }].inLocation">
-									<form:options items="${locationList}" />
-								</form:select></td>
-							<td class="doc-in-box"><form:input
-									path="docList[${i.index }].inBox" id="inBox-${i.index}"
-									class="form__input" required="true" /></td>
-							<td class="doc-instrum" id="doc-instrum-${i.index}"><form:select
-									path="docList[${i.index }].instrument">
-									<form:options items="${instrumentMap}" />
-								</form:select></td>
-							<td class="doc-amount text-left"><form:input
-									path="docList[${i.index }].amount" id="amount-${i.index}"
-									class="form__input" required="true" /></td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
-	</div>
+	<form:form action="./createExDoc" method="post"
+		modelAttribute="exDocWEBList">
+		<form:errors path="*" cssClass="errorblock" element="div" />
+		<div class="row mb--20">
+			<div class="col-1">номер</div>
+			<div class="col-2">место видачи</div>
+			<div class="col-1">ячека видачи</div>
+			<div class="col-2">место приема</div>
+			<div class="col-1">ячейка приема</div>
+			<div class="col-2">инструмент</div>
+			<div class="col-2">количество</div>
+			<div class="col-1">удалить</div>
+		</div>
 
-	<input type="submit" value="создать документ" class="btn btn-size-md" />
+		<c:forEach items="${exDocWEBList.docList}" varStatus="i">
+			<div class="row mb--20">
+				<div class="col-1">${i.index+1}</div>
+				<div class="col-2">
+					<form:select path="docList[${i.index }].outLocation"
+						onchange="searchOutBox(1,${i.index })">
+						<form:options items="${locationList}" />
+					</form:select>
+				</div>
 
+				<div class="col-1">
+					<form:select path="docList[${i.index }].outBox"
+						onchange="searchInstrum(${i.index })">
+					</form:select>
+				</div>
+				<div class="col-2">
+					<form:select path="docList[${i.index }].inLocation"
+						onchange="searchOutBox(2,${i.index })">
+						<form:options items="${locationList}" />
+					</form:select>
+				</div>
+				<div class="col-1">
+					<form:select path="docList[${i.index }].inBox">
+					</form:select>
+				</div>
+				<div class="col-2">
+					<form:select path="docList[${i.index }].instrument">
+						<form:options items="${instrumentMap}" />
+					</form:select>
+				</div>
+				<div class="col-2">
+					<form:input path="docList[${i.index }].amount"
+						id="amount-${i.index}" class="form__input" required="true" />
+				</div>
+				<div class="col-1">
+					<input type="button" value="remove"
+						onclick="removeRow(${i.index })">
+				</div>
+			</div>
+		</c:forEach>
+
+
+
+		<input type="submit" value="создать документ" class="btn btn-size-md" />
+		<input class="btn btn-size-md" id="searchInstrument" value="add row"
+			onclick="addRow()" />
 	</form:form>
 	<div id="feedback"></div>
-	<input type="submit" class="btn btn-size-md" id="searchBox"
-		value="searchBox" onclick="searchBox()" /> <input type="submit"
-		class="btn btn-size-md" id="searchInstrument" value="searchInstrument"
-		onclick="searchInstrum()" /> <input type="submit"
-		class="btn btn-size-md" id="addRow" value="add row" onclick="addRow()" />
 
-</div>
-
-<script>
-	
-	function searchBox() {
-		var counter = 0;
-		var list = document.getElementById("docList0.outLocation");
-		var search = {};
-		let boxIndex = new Array();
-		while (list != null) {
-			var search = {}
-			var id = list.options[list.selectedIndex].value;
-			boxIndex.push(id);
-			counter = counter + 1;
-			list = document.getElementById("docList" + counter + ".outLocation");
+	<script>
+	function searchOutBox(doc,id) {
+		var list;
+		if(doc==1){
+			list = document.getElementById("docList" + id + ".outLocation");
 		}
-		search["boxId"] = boxIndex;
+		if(doc==2){
+			list = document.getElementById("docList" + id + ".inLocation");	
+		}
+		var search = {};
+		search["boxId"] = list.options[list.selectedIndex].value;
 		$.ajax({
 			type : "POST",
 			contentType : "application/json",
@@ -91,26 +90,22 @@
 			timeout : 100000,
 			success : function(data) {
 				console.log("SUCCESS: ", data);
-			//	display(data);
-				
-			for (var i = 0, j = data.boxListId.length; i < j; i += 1) {   
-				var boxmap = new Map(Object.entries(data.boxListId[i].BoxMap))
-			//for (var key of myMap.keys()) {
-  //console.log(key);
-//}
-//for (var value of myMap.values()) {
- // console.log(value);
-//}
-				var select = document.getElementById("docList" + i +".outBox");
+				//display(data);
+				var boxmap = new Map(Object.entries(data.boxListId))
+				var select ;
+				if(doc==1){
+				 	select = document.getElementById("docList" + id +".outBox");
+				}
+				if(doc==2){
+					select = document.getElementById("docList" + id +".inBox");
+				}
 				select.options.length=0;
 				for (var [key, value] of boxmap) {
-			console.log(key + ' = ' + value);
-				
+					console.log(key + ' = ' + value);
 					var option = document.createElement("option");
 					option.value = key,
 					option.text =value;
 					select.add(option);	
-				}
 				}
 			},
 			error : function(e) {
@@ -125,10 +120,9 @@
 
 	}
 
-	function searchInstrum() {
+	function searchInstrum(id) {
 		var search = {}
-		var id = document.getElementById("docList0.outBox").value
-		search["boxId"] = id;
+		search["boxId"] = document.getElementById("docList"+id+".outBox").value
 		$.ajax({
 			type : "POST",
 			contentType : "application/json",
@@ -137,13 +131,12 @@
 			timeout : 100000,
 			success : function(data) {
 				console.log("SUCCESS: ", data);
-				//display(data);
-				   
-			var instrumentMap = new Map(Object.entries(data.InstrumentMapId));
-				var select = document.getElementById("docList0.instrument");
+				//display(data);  
+				var instrumentMap = new Map(Object.entries(data.InstrumentMapId));
+				var select = document.getElementById("docList"+id+".instrument");
 				select.options.length=0;
 				for (var [key, value] of instrumentMap) {
-			console.log(key + ' = ' + value);
+					console.log(key + ' = ' + value);
 					var option = document.createElement("option");
 					option.value = key,
 					option.text =value;
@@ -160,6 +153,10 @@
 			}
 		});
 
+	}
+	function removeRow(id) {
+		window.location.href = "./createExDoc?removeRow=" + id;
+			
 	}
 
 	function addRow() {

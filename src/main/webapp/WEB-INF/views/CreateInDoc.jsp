@@ -61,56 +61,49 @@
 </div>
 
 <script>
-function searchBox() {
-	var counter = 0;
-		var list = document.getElementById("docList0.outLocation");
-		var search = {};
-		let boxIndex = new Array();
-		while (list != null) {
-			var search = {}
-			var id = list.options[list.selectedIndex].value;
-			boxIndex.push(id);
-			counter = counter + 1;
-			list = document.getElementById("docList" + counter + ".outLocation");
-		}
-		search["boxId"] = boxIndex;
-		$.ajax({
-			type : "POST",
-			contentType : "application/json",
-			url : "/istrumnet1/createExDoc/getBoxFilter",
-			data : JSON.stringify(search),
-			dataType : 'json',
-			timeout : 100000,
-			success : function(data) {
-				console.log("SUCCESS: ", data);
-			//	display(data);
-				for (var i = 0, j = data.boxListId.length; i < j; i += 1) {   
-					var boxmap = new Map(Object.entries(data.boxListId[i].BoxMap))
-					var select = document.getElementById("docList" + i +".outBox");
-					select.options.length=0;
-					for (var [key, value] of boxmap) {
-						console.log(key + ' = ' + value);
-						var option = document.createElement("option");
-						option.value = key,
-						option.text =value;
-						select.add(option);	
-					}
-				}
-			},
-			error : function(e) {
-				console.log("ERROR: ", e);
-				display(e);
-			},
-			done : function(e) {
-				console.log("DONE");
-				enableSearchButton(true);
+function searchOutBox(id) {
+	var list=  document.getElementById("docList" + id + ".outLocation");
+	var search = {};
+	search["boxId"] = list.options[list.selectedIndex].value;
+	$.ajax({
+		type : "POST",
+		contentType : "application/json",
+		url : "/istrumnet1/createExDoc/getBoxFilter",
+		data : JSON.stringify(search),
+		dataType : 'json',
+		timeout : 100000,
+		success : function(data) {
+			console.log("SUCCESS: ", data);
+			//display(data);
+			var boxmap = new Map(Object.entries(data.boxListId))
+			var select = document.getElementById("docList" + id +".outBox");
+			select.options.length=0;
+			for (var [key, value] of boxmap) {
+				console.log(key + ' = ' + value);
+				var option = document.createElement("option");
+				option.value = key,
+				option.text =value;
+				select.add(option);	
 			}
-		});
-}
+		},
+		error : function(e) {
+			console.log("ERROR: ", e);
+			display(e);
+		},
+		done : function(e) {
+			console.log("DONE");
+			enableSearchButton(true);
+		}
+	});
 
+}
 
 function addRow() {
   window.location.href = "./createInDoc?addRow=1";
+}
+function removeRow(id) {
+	window.location.href = "./createExDoc?removeRow=" + id;
+		
 }
 
 function enableSearchButton(flag) {
