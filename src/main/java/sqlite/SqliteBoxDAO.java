@@ -13,10 +13,13 @@ import models.Box;
 public class SqliteBoxDAO implements BoxDAO {
 	private final static String SELECT_ID_QUERY = "SELECT * FROM box WHERE id = ?";
 	private final static String SELECT_NUMBER_QUERY = "SELECT * FROM box WHERE number = ? AND location =?";
-	private final static String INSERT_QUERY = "INSERT INTO box(number, location)" + " VALUES(?, ?)";
+	private final static String INSERT_QUERY = "INSERT INTO box(number, location, notEmpty)" + " VALUES(?,?,?)";
 	private final static String DELETE_QUERY = "DELETE FROM box WHERE id = ?";
 	private final static String SELECT_ALL = "SELECT * FROM box";
 	private final static String SELECT_ALL_LOCATION = "SELECT * FROM box WHERE location = ?";
+	private final static String SELECT_NOT_EMPTY = "SELECT * FROM box WHERE notEmpty = ?";
+	private final static String UPDATE_QUERY = "UPDATE storage SET number =?, location=?, notEmpty=?  where id = ?";
+	
 	private SQLConectionHolder conectionHolder;
 	private boolean sqlError = false;
 
@@ -56,6 +59,7 @@ public class SqliteBoxDAO implements BoxDAO {
 				prepSt = conn.prepareStatement(INSERT_QUERY);
 				prepSt.setInt(1, box.getNumber());
 				prepSt.setLong(2, box.getLocation().getId());
+				prepSt.setBoolean(3, box.isNotEmpty());
 				prepSt.execute();
 				conectionHolder.closeConnection();
 			} catch (SQLException e) {
@@ -156,6 +160,11 @@ public class SqliteBoxDAO implements BoxDAO {
 					rs = prepSt.executeQuery();
 					break;
 				}
+				case 5: {
+					prepSt = conn.prepareStatement(SELECT_NOT_EMPTY);
+					rs = prepSt.executeQuery();
+					break;
+				}
 
 				default: {
 					sqlError = true;
@@ -166,6 +175,7 @@ public class SqliteBoxDAO implements BoxDAO {
 					box.setId(rs.getInt("id"));
 					box.setLocation(locDao.getLocById(rs.getInt("location")));
 					box.setNumber(rs.getInt("number"));
+					box.setNotEmpty(rs.getBoolean("notEmpty"));
 					if (type == 1||type ==2) {
 						break;
 					} else {
@@ -201,5 +211,44 @@ public class SqliteBoxDAO implements BoxDAO {
 	public void closeConection() {
 		conectionHolder.closeConnection();
 		
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Box> getNotEmptyBox() {
+		return (List<Box>)selectQ(null,null,5);
+	}
+
+	@Override
+	public boolean updateBox(long id, Box box) {
+		if (conectionHolder!=null&&conectionHolder.getConnection()!=null) {
+			Connection conn = conectionHolder.getConnection();
+			PreparedStatement prepSt = null;
+			try {
+				prepSt = conn.prepareStatement(UPDATE_QUERY);
+				prepSt.setInt(1, box.getNumber());
+				prepSt.setLong(2, box.getLocation().getId());
+				prepSt.setBoolean(3,box.isNotEmpty());
+				prepSt.setLong(4, id);
+				prepSt.execute();
+				conectionHolder.closeConnection();
+			} catch (SQLException e) {
+				sqlError = true;
+				e.printStackTrace();
+				return false;
+			} finally {
+				if (prepSt != null) {
+					try {
+						prepSt.close();
+					} catch (SQLException sqlEx) {
+					}
+					prepSt = null;
+				}
+			}
+			return true;
+		} else {
+			sqlError = true;
+			return false;
+		}
 	}
 }

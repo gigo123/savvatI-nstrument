@@ -10,7 +10,9 @@ public interface BoxDAO {
 	public boolean createBox(Box box);
 	public boolean deleteBox(long id);
 	public boolean hasError();
+	public boolean updateBox(long id,Box box);
 	public List<Box> getAllBox();
+	public List<Box> getNotEmptyBox();
 	public List<Box> getAllBoxByLocation(long idLocation);
 	public void closeConection();
 }

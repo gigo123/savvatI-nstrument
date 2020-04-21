@@ -8,7 +8,15 @@ public class Box {
 	@PositiveOrZero (message = "ячейка должна бить положительным числом")
 	private int number;
 	private Location location;
+	private boolean notEmpty;
 	
+	
+	public boolean isNotEmpty() {
+		return notEmpty;
+	}
+	public void setNotEmpty(boolean notEmpty) {
+		this.notEmpty = notEmpty;
+	}
 	public long getId() {
 		return id;
 	}
