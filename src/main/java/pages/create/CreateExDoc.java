@@ -37,18 +37,6 @@ public class CreateExDoc {
 		return new ExDocWEBList();
 	}
 
-	@SuppressWarnings("resource")
-	@ModelAttribute("boxMap")
-	private Map<Long, String> getBoxMap() {
-		Map<Long, String> instrumentMap = new HashMap<Long, String>();
-		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
-		InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
-		List<Instrument> instList = instDAO.getAllInstrument();
-		for (Instrument instrument : instList) {
-			instrumentMap.put(instrument.getId(), instrument.getName());
-		}
-		return instrumentMap;
-	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getExDocCF() {
