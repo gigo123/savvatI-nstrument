@@ -8,15 +8,18 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import models.Box;
 import models.Location;
+import models.Storage;
 import sqlite.SQLConectionHolder;
 import sqlite.SqliteBoxDAO;
 import sqlite.SqliteInstrumentDAO;
 import sqlite.SqliteLocationDAO;
+import sqlite.SqliteStorageDAO;
 
 class SQLBox {
 	SqliteBoxDAO boxDAO;
 	SqliteLocationDAO locationDAO;
 	SqliteInstrumentDAO instrumentDAO;
+	SqliteStorageDAO storageDAO;
 	
 	void initConnection() {
 		SQLConectionHolder conectHolder = new SQLConectionHolder();
@@ -27,6 +30,8 @@ class SQLBox {
 		locationDAO.setConectionHolder(conectHolder);
 		instrumentDAO = new SqliteInstrumentDAO();
 		instrumentDAO.setConectionHolder(conectHolder);
+		storageDAO = new SqliteStorageDAO();
+		storageDAO.setConectionHolder(conectHolder);
 	}
 
 	@Test
@@ -89,6 +94,17 @@ class SQLBox {
 		boolean error = boxDAO.hasError();
 		assertTrue(!error,"must be ok");
 		assertTrue(boxList.size()!=0,"must be at lease one element");
+	}
+	
+	@Test
+	void getBoxByEmpty() {
+		initConnection();
+		List<Box>  boxList  = boxDAO.getNotEmptyBox();
+		boolean error = boxDAO.hasError();
+		assertTrue(!error,"must be ok");
+		
+		
+		assertTrue(boxList.size()>0,"must be at lease one element");
 	}
 	/*@Test
 	@AfterClass
