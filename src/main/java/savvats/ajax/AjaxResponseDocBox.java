@@ -1,8 +1,6 @@
 package savvats.ajax;
 
-import java.util.List;
-
-
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -11,13 +9,13 @@ import savvats.Views;
 public class AjaxResponseDocBox  extends AjaxResponse{
 	
     @JsonView(Views.Public.class)
-    List<DocBoxList> boxListId;
+    Map<Long, Integer>  boxListId;
 
-	public List<DocBoxList> getBoxListId() {
+	public Map<Long, Integer> getBoxListId() {
 		return boxListId;
 	}
 
-	public void setBoxListId(List<DocBoxList> boxListId) {
+	public void setBoxListId(Map<Long, Integer> boxListId) {
 		this.boxListId = boxListId;
 	}
 
