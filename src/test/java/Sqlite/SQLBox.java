@@ -101,9 +101,15 @@ class SQLBox {
 		initConnection();
 		List<Box>  boxList  = boxDAO.getNotEmptyBox();
 		boolean error = boxDAO.hasError();
+		assertTrue(!error,"must be ok");	
+		assertTrue(boxList.size()>0,"must be at lease one element");
+	}
+	@Test
+	void getBoxByEmptyLocation() {
+		initConnection();
+		List<Box>  boxList  = boxDAO.getNotEmptyBoxByLocation(7);
+		boolean error = boxDAO.hasError();
 		assertTrue(!error,"must be ok");
-		
-		
 		assertTrue(boxList.size()>0,"must be at lease one element");
 	}
 	/*@Test

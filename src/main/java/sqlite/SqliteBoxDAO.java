@@ -18,6 +18,8 @@ public class SqliteBoxDAO implements BoxDAO {
 	private final static String SELECT_ALL = "SELECT * FROM box";
 	private final static String SELECT_ALL_LOCATION = "SELECT * FROM box WHERE location = ?";
 	private final static String SELECT_NOT_EMPTY = "SELECT * FROM box WHERE notEmpty = ?";
+	private final static String SELECT_NOT_EMPTY_LOCATION = "SELECT * FROM box WHERE notEmpty = ? and location =?";
+	
 	private final static String UPDATE_QUERY = "UPDATE box SET number =?, location=?, notEmpty=?  where id = ?";
 	
 	private SQLConectionHolder conectionHolder;
@@ -166,6 +168,13 @@ public class SqliteBoxDAO implements BoxDAO {
 					rs = prepSt.executeQuery();
 					break;
 				}
+				case 6: {
+					prepSt = conn.prepareStatement(SELECT_NOT_EMPTY_LOCATION);
+					prepSt.setBoolean(1, true);
+					prepSt.setLong(2, (long) obj);
+					rs = prepSt.executeQuery();
+					break;
+				}
 
 				default: {
 					sqlError = true;
@@ -251,5 +260,11 @@ public class SqliteBoxDAO implements BoxDAO {
 			sqlError = true;
 			return false;
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Box> getNotEmptyBoxByLocation(long idLocation) {
+		return (List<Box>)selectQ(idLocation,null,6);
 	}
 }

@@ -13,6 +13,7 @@ public interface BoxDAO {
 	public boolean updateBox(long id,Box box);
 	public List<Box> getAllBox();
 	public List<Box> getNotEmptyBox();
+	public List<Box> getNotEmptyBoxByLocation(long idLocation);
 	public List<Box> getAllBoxByLocation(long idLocation);
 	public void closeConection();
 }
