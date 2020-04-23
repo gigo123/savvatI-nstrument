@@ -4,7 +4,10 @@
 <%@ taglib uri = "http://www.springframework.org/tags/form" prefix = "form"%>
 <%@ page isELIgnored="false"%>
 <%@ include file="/WEB-INF/include/HeaderView.jsp"%>
-<%@ include file="/WEB-INF/include/SideMenuView.jsp"%>
+<div class="main-content-wrapper">
+	<div class="page-content-inner ptb--80 ptb-md--60 pb-sm--55">
+		<div class="container">
+			<div class="row">
 <div class="col-6">
 	результат
 	${errorText}

@@ -4,7 +4,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ page isELIgnored="false"%>
 <%@ include file="/WEB-INF/include/HeaderView.jsp"%>
-<%@ include file="/WEB-INF/include/SideMenuView.jsp"%>
+<%@ include file="/WEB-INF/include/SideMenuDocView.jsp"%>
 <div class="col-9">
 	создание нового документа приема
 	<form:form action="./createInDoc" method="post"
