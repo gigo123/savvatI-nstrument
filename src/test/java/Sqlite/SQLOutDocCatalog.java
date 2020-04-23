@@ -102,6 +102,15 @@ void getExDocCatalogByYearNumber(){
 	boolean error = exDoccDAO.hasError();
 	assertTrue(!error,"must be ok");
 	assertTrue(exDocList.size()!=0,"must not be 0");
+}
+@Test
+void getAllDoc(){
+	initConnection();
+	List<DocCatalog> exDocList  = exDoccDAO.getAllDoc();
+	System.out.println(exDocList);
+	boolean error = exDoccDAO.hasError();
+	assertTrue(!error,"must be ok");
+	assertTrue(exDocList.size()!=0,"must not be 0");
 	
 }
 }

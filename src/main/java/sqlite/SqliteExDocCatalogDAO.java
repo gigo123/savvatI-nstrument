@@ -191,6 +191,7 @@ public class SqliteExDocCatalogDAO implements DocCatalogDAO {
 						exDoc.setId(rs.getInt("id"));
 						exDoc.setNumberString(rs.getString("numberString"));
 						exDoc.setNumber(rs.getInt("number"));
+						exDoc.setYear(rs.getInt("year"));
 						Date inDate = rs.getDate("date");
 						exDoc.setDate(inDate.toLocalDate());
 						if (type == 1 || type == 3) {

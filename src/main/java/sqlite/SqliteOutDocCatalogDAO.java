@@ -21,7 +21,7 @@ public class SqliteOutDocCatalogDAO  implements DocCatalogDAO{
 	private final static String SELECT_SNUBMER_QUERY = "SELECT * FROM outdoccatalog WHERE numberString = ? ";
 	private final static String INSERT_QUERY = "INSERT INTO outdoccatalog(year, number, numberString,date)"
 			+ " VALUES(?,?,?,?)";
-	
+	private final static String SELECT_ALL = "SELECT * FROM outdoccatalog ";
 	private final static String SELECT_YEAR_QUERY = "SELECT * FROM outdoccatalog WHERE year = ? ";
 	private final static String SELECT_YEAR_N_QUERY = "SELECT number FROM outdoccatalog WHERE year = ? ";
 	private final static String DELETE_QUERY = "DELETE FROM outdoccatalog WHERE id = ?";
@@ -157,6 +157,11 @@ public class SqliteOutDocCatalogDAO  implements DocCatalogDAO{
 					rs = prepSt.executeQuery();
 					break;
 				}
+				case 7: {
+					prepSt = conn.prepareStatement(SELECT_ALL);
+					rs = prepSt.executeQuery();
+					break;
+				}
 
 				default: {
 					sqlError = true;
@@ -171,6 +176,7 @@ public class SqliteOutDocCatalogDAO  implements DocCatalogDAO{
 						exDoc.setId(rs.getInt("id"));
 						exDoc.setNumberString(rs.getString("numberString"));
 						exDoc.setNumber(rs.getInt("number"));
+						exDoc.setYear(rs.getInt("year"));
 						Date inDate = rs.getDate("date");
 						exDoc.setDate(inDate.toLocalDate());
 						if (type == 1 || type == 3) {
@@ -242,6 +248,10 @@ public class SqliteOutDocCatalogDAO  implements DocCatalogDAO{
 	public void closeConection() {
 		conectionHolder.closeConnection();
 		
+	}
+	@Override
+	public List<DocCatalog> getAllDoc() {
+		return (List<DocCatalog>) selectQ(null, 7);
 	}
 
 }
