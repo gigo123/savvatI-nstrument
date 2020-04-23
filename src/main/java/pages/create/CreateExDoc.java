@@ -47,6 +47,7 @@ public class CreateExDoc {
 		exDocWEBList.setDocList(docList);
 		ModelAndView model = new ModelAndView("CreateExDoc");
 		model.addObject("exDocWEBList", exDocWEBList);
+		model.addObject("page", "exdoc");
 		return model;
 	}
 
@@ -83,6 +84,7 @@ public class CreateExDoc {
 		}
 		ModelAndView model = new ModelAndView("CreateExDoc");
 		model.addObject("exDocWEBList", exDocWEBList);
+		model.addObject("page", "exdoc");
 		return model;
 
 	}
@@ -113,6 +115,7 @@ public class CreateExDoc {
 		}
 		ModelAndView model = new ModelAndView("CreateExDoc");
 		model.addObject("exDocWEBList", exDocWEBList);
+		model.addObject("page", "exdoc");
 		return model;
 
 	}
