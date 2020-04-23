@@ -12,6 +12,7 @@ public interface DocCatalogDAO {
 	public List<DocCatalog> getExDocCatalogByDate(LocalDate date);
 	public List<DocCatalog> getExDocCatalogByNumber(int number);
 	public List<DocCatalog> getExDocCatalogByYear(int year);
+	public List<DocCatalog> getAllDoc();
 	public List<Integer> getExDocCatalogByYearN(int year);
 	public DocCatalog getExDocCatalogBySnumber(String numberString);
 	public boolean deleteExDocCatalogDoc(long id);

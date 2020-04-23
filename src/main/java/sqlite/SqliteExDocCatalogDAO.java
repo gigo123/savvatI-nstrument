@@ -21,6 +21,8 @@ public class SqliteExDocCatalogDAO implements DocCatalogDAO {
 	private final static String SELECT_SNUBMER_QUERY = "SELECT * FROM exdoccatalog WHERE numberString = ?";
 	private final static String INSERT_QUERY = "INSERT INTO exdoccatalog(numberString, number,year, date)"
 			+ " VALUES(?,?,?,?)";
+	private final static String SELECT_ALL = "SELECT * FROM exdoccatalog ";
+	
 	private final static String DELETE_QUERY = "DELETE FROM exdoccatalog WHERE id = ?";
 	private final static String SELECT_YEAR_QUERY = "SELECT * FROM exdoccatalog WHERE year = ? ";
 	private final static String SELECT_YEAR_N_QUERY = "SELECT number FROM exdoccatalog WHERE year = ? ";
@@ -171,6 +173,11 @@ public class SqliteExDocCatalogDAO implements DocCatalogDAO {
 					rs = prepSt.executeQuery();
 					break;
 				}
+				case 7: {
+					prepSt = conn.prepareStatement(SELECT_ALL);
+					rs = prepSt.executeQuery();
+					break;
+				}
 
 				default: {
 					sqlError = true;
@@ -180,7 +187,6 @@ public class SqliteExDocCatalogDAO implements DocCatalogDAO {
 					if (type == 6) {
 						numberList.add(rs.getInt("number"));
 					} else {
-
 						exDoc = new ExDocCatalog();
 						exDoc.setId(rs.getInt("id"));
 						exDoc.setNumberString(rs.getString("numberString"));
@@ -241,6 +247,12 @@ public class SqliteExDocCatalogDAO implements DocCatalogDAO {
 	public void closeConection() {
 		conectionHolder.closeConnection();
 		
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DocCatalog> getAllDoc() {
+		return (List<DocCatalog>) selectQ(null, 7);
 	}
 
 }
