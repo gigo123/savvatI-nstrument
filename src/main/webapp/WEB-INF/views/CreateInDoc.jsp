@@ -7,56 +7,55 @@
 <%@ include file="/WEB-INF/include/SideMenuView.jsp"%>
 <div class="col-9">
 	создание нового документа приема
-	<div class="table-content table-responsive">
-		<form:form action="./createInDoc" method="post"
-			modelAttribute="exDocWEBList">
-			<form:errors path="*" cssClass="errorblock" element="div" />
-			<table class="table text-center">
-				<thead>
-					<tr>
-						<th class="text-left">номер</th>
-						<th>место приема</th>
-						<th>ячейка приема</th>
-						<th>инструмент</th>
-						<th>количество</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach items="${exDocWEBList.docList}" varStatus="i">
-						<tr id="docRow${i.index}">
-							<td class="doc-id">${i.index+1}</td>
-							<td class="doc-out-loc text-left" id="doc-out-loc-${i.index}">
-								<form:select path="docList[${i.index }].outLocation">
-									<form:options items="${locationList}" />
-								</form:select>
-							</td>
-							<td class="doc-out-box text-left wide-column"><form:select
-									path="docList[${i.index }].outBox">
-								</form:select></td>
+	<form:form action="./createInDoc" method="post"
+		modelAttribute="exDocWEBList">
+		<form:errors path="*" cssClass="errorblock" element="div" />
+		<div class="row mb--20">
+			<div class="col-1">номер</div>
+			<div class="col-2">место приема</div>
+			<div class="col-1">ячейка приема</div>
+			<div class="col-3">инструмент</div>
+			<div class="col-2">количество</div>
+			<div class="col-1">удалить</div>
+		</div>
 
-							<td class="doc-instrum" id="doc-instrum-${i.index}"><form:select
-									path="docList[${i.index }].instrument">
-									<form:options items="${instrumentMap}" />
-								</form:select></td>
-							<td class="doc-amount text-left"><form:input
-									path="docList[${i.index }].amount" id="amount-${i.index}"
-									class="form__input" required="true" /> <form:errors
-									path="docList[${i.index }].amount" /></td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
-	</div>
+		<c:forEach items="${exDocWEBList.docList}" varStatus="i">
+			<div class="row mb--20">
+				<div class="col-1">${i.index+1}</div>
+				<div class="col-2">
+					<form:select path="docList[${i.index }].outLocation"
+						onchange="searchOutBox(${i.index })">
+						<form:options items="${locationList}" />
+					</form:select>
+				</div>
 
-	<input type="submit" value="создать документ" class="btn btn-size-md" />
+				<div class="col-1">
+					<form:select path="docList[${i.index }].outBox"
+						onchange="searchInstrum(${i.index })">
+					</form:select>
+				</div>
 
+				<div class="col-3">
+					<form:select path="docList[${i.index }].instrument">
+						<form:options items="${instrumentMap}" />
+					</form:select>
+				</div>
+				<div class="col-2">
+					<form:input path="docList[${i.index }].amount"
+						id="amount-${i.index}" class="form__input" required="true" />
+				</div>
+				<div class="col-1">
+					<input type="button" value="remove"
+						onclick="removeRow(${i.index })">
+				</div>
+			</div>
+		</c:forEach>
+
+		<input type="submit" value="создать документ" class="btn btn-size-md" />
+		<input class="btn btn-size-md" id="searchInstrument" value="add row"
+			onclick="addRow()" />
 	</form:form>
-	<input type="submit" class="btn btn-size-md" id="searchBox"
-		value="searchBox" onclick="searchBox()" /> <input type="submit"
-		class="btn btn-size-md" id="searchInstrument" value="searchInstrument"
-		onclick="searchInstrum()" /> <input type="submit"
-		class="btn btn-size-md" id="searchInstrument" value="add row"
-		onclick="addRow()" />
+
 	<div id="feedback"></div>
 </div>
 
@@ -106,9 +105,6 @@ function removeRow(id) {
 		
 }
 
-function enableSearchButton(flag) {
-    $("#btn-search").prop("disabled", flag);
-}
 
 function display(data) {
     var json = "<h4>Ajax Response</h4><pre>"
