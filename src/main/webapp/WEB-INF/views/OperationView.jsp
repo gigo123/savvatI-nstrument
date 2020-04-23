@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page isELIgnored="false"%>
 <%@ include file="/WEB-INF/include/HeaderView.jsp"%>
-<%@ include file="/WEB-INF/include/SideMenuView.jsp"%>
+<%@ include file="/WEB-INF/include/SideMenuOperationView.jsp"%>
 <div class="col-9 mb--50">
 <div class="login-box" class="form__label">
 страница операций добавления и удаления

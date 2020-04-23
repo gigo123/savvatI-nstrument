@@ -4,7 +4,7 @@
 <%@ taglib uri = "http://www.springframework.org/tags/form" prefix = "form"%>
 <%@ page isELIgnored="false"%>
 <%@ include file="/WEB-INF/include/HeaderView.jsp"%>
-<%@ include file="/WEB-INF/include/SideMenuView.jsp"%>
+<%@ include file="/WEB-INF/include/SideMenuOperationView.jsp"%>
 <div class="col-6">
 	создание нового инструмента
 	<form:form  action="./addinstument" method="post" class="form form--account">
