@@ -197,7 +197,7 @@ public class ControllersCheckWDoc {
 			Location location = locDAO.getLocById(Long.parseLong(docW.getInLocation()));
 			if (location != null) {
 				doc.setInLocation(location);
-				Box box = boxDAO.getBoxByNumber(docW.getInBox(), location.getId());
+				Box box = boxDAO.getBoxByID(docW.getInBox());
 				if (box == null) {
 					errorText = "<li>неправильная принимающая ячейка в строке " + number + "</li>";
 				} else {
