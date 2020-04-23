@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!doctype html>
+<html>
 <head>
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-<title>apples from Taras</title>
+<title>Instrument storage</title>
 <meta name="description" content="">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -25,7 +26,7 @@
 	<div class="wrapper">
 		<!-- Header Start -->
 		<header class="header">
-			<div class="header__inner fixed-header">
+			<div class="header__inner ">
 				<div class="header__main">
 					<div class="container-fluid">
 						<div class="row">
