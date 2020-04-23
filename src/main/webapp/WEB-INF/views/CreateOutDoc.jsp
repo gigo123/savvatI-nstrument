@@ -6,7 +6,7 @@
 <%@ include file="/WEB-INF/include/HeaderView.jsp"%>
 <%@ include file="/WEB-INF/include/SideMenuDocView.jsp"%>
 <div class="col-9">
-	создание нового документа премещения
+	создание нового документа списания
 	<form:form action="./createOutDoc" method="post"
 		modelAttribute="exDocWEBList">
 		<form:errors path="*" cssClass="errorblock" element="div" />

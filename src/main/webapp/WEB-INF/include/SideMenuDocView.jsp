@@ -14,7 +14,7 @@
 							${page!=null?page.equals("doc")?"active": "":""}"
 							href="./doc">Документи</a>
 							<a class="nav-link 
-							${page!=null?page.equals("exodoc")?"active": "":""}"
+							${page!=null?page.equals("exdoc")?"active": "":""}"
 							 href="./createExDoc">создать док перемещения</a>
 							  <a class="nav-link 
 							 ${page!=null?page.equals("indoc")?"active": "":""}"
