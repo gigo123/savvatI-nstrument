@@ -13,7 +13,7 @@ import models.Instrument;
 import savvats.ControllersCheckWrite;
 
 @Controller
-@RequestMapping("/addinstument")
+@RequestMapping("/addinstrument")
 public class AddInstrument {
 	@ModelAttribute("instrument")
 	public Instrument createInstrumentModel() {
