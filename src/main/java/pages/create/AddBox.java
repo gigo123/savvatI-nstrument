@@ -33,7 +33,7 @@ public class AddBox {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getBoxCF() {
 		ModelAndView model = new ModelAndView("AddBox", "command", new BoxListLocation());
-
+		model.addObject("page", "box");
 		return model;
 	}
 

@@ -23,6 +23,7 @@ public class AddInstrument {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getInstrumentCF() {
 		ModelAndView model = new ModelAndView("AddInstrument", "command", new Instrument());
+		model.addObject("page", "instrument");
 		return model;
 	}
 	

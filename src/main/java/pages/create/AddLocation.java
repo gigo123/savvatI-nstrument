@@ -25,6 +25,7 @@ public class AddLocation {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getLocationCF() {
 		ModelAndView model = new ModelAndView("AddLocation", "command", new Location());
+		model.addObject("page", "location");
 		return model;
 	}
 	@RequestMapping(method = RequestMethod.POST)
