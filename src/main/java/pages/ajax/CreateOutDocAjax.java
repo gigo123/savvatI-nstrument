@@ -35,12 +35,11 @@ public class CreateOutDocAjax {
 		result.setCode("200");
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
-		// long LocId = Long.parseLong(search.getBoxId());
 		String msg = "ок";
 		long LocId = search.getBoxId();
 		msg = msg + " " + LocId;
 		Map<Long, Integer> boxMap = new HashMap<Long, Integer>();
-		List<Box> BoxList = boxDAO.getAllBoxByLocation(LocId);
+		List<Box> BoxList = boxDAO.getNotEmptyBoxByLocation(LocId);
 		for (Box box : BoxList) {
 			boxMap.put(box.getId(), box.getNumber());
 		}

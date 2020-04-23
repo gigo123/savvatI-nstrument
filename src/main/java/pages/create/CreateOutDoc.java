@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import dao.InstrumentDAO;
@@ -79,6 +80,35 @@ public class CreateOutDoc {
 			exDocWEBList.getDocList().add(new ExDocWEB());
 		}
 		ModelAndView model = new ModelAndView("CreateOutDoc");
+		model.addObject("exDocWEBList", exDocWEBList);
+		return model;
+
+	}
+	@RequestMapping(method = RequestMethod.GET, params = { "removeRow" })
+	public ModelAndView docRemoveRow(@RequestParam("removeRow") String id) {
+		System.out.println(id);
+		int idInt = 0;
+		try {
+			idInt = Integer.parseInt(id);
+		} catch (Exception e) {
+			ModelAndView model = new ModelAndView("CreateExDoc");
+			model.addObject("exDocWEBList", exDocWEBList);
+			return model;
+		}
+		if (exDocWEBList != null) {
+			if (exDocWEBList.getDocList().size() == 1) {
+				ExDocWEB doc = new ExDocWEB();
+				List<ExDocWEB> docList = new ArrayList<ExDocWEB>();
+				docList.add(doc);
+				exDocWEBList.setDocList(docList);
+			}
+			if (exDocWEBList.getDocList().size() > 1) {
+				if (idInt <= exDocWEBList.getDocList().size()) {
+					exDocWEBList.getDocList().remove(idInt);
+				}
+			}
+		}
+		ModelAndView model = new ModelAndView("CreateExDoc");
 		model.addObject("exDocWEBList", exDocWEBList);
 		return model;
 
