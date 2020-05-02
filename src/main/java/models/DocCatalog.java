@@ -64,10 +64,20 @@ public class DocCatalog {
 		this.date = date;
 	}
 	
+	
+	public DocCatalog(int year, int number, String numberString, LocalDate date, int totalInstrum, float totalAmount) {
+		super();
+		this.year = year;
+		this.number = number;
+		this.numberString = numberString;
+		this.date = date;
+		this.totalInstrum = totalInstrum;
+		this.totalAmount = totalAmount;
+	}
 	@Override
 	public String toString() {
 		return "DocCatalog [id=" + id + ", year=" + year + ", number=" + number + ", numberString=" + numberString
-				+ ", date=" + date + "]";
+				+ ", date=" + date + ", totalInstrum=" + totalInstrum + ", totalAmount=" + totalAmount + "]";
 	}
 	public DocCatalog() {
 		

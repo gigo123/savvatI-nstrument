@@ -13,9 +13,12 @@ public class InDocCatalog extends DocCatalog {
 	}
 	@Override
 	public String toString() {
-		return "InDocCatalog [getNumberString()=" + getNumberString() + ", getId()=" + getId() + ", getYear()="
-				+ getYear() + ", getNumber()=" + getNumber() + ", getDate()=" + getDate() + "]";
+		return "InDocCatalog [getTotalInstrum()=" + getTotalInstrum() + ", getTotalAmount()=" + getTotalAmount()
+				+ ", getNumberString()=" + getNumberString() + ", getId()=" + getId() + ", getYear()=" + getYear()
+				+ ", getNumber()=" + getNumber() + ", getDate()=" + getDate() + ", toString()=" + super.toString()
+				+ "]";
 	}
+	
 	
 	
 

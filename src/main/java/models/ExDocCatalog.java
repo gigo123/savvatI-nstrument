@@ -11,12 +11,13 @@ public class ExDocCatalog  extends DocCatalog{
 	public ExDocCatalog() {
 		
 	}
+	
 	@Override
 	public String toString() {
-		return "ExDocCatalog [getNumberString()=" + getNumberString() + ", getId()=" + getId() + ", getYear()="
-				+ getYear() + ", getNumber()=" + getNumber() + ", getDate()=" + getDate() + "]";
+		return "ExDocCatalog [getTotalInstrum()=" + getTotalInstrum() + ", getTotalAmount()=" + getTotalAmount()
+				+ ", getNumberString()=" + getNumberString() + ", getId()=" + getId() + ", getYear()=" + getYear()
+				+ ", getNumber()=" + getNumber() + ", getDate()=" + getDate() + "]";
 	}
-	
 	
 	
 	

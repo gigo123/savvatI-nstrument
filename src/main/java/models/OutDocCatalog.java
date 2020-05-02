@@ -13,9 +13,12 @@ public class OutDocCatalog extends DocCatalog {
 	}
 	@Override
 	public String toString() {
-		return "OutDocCatalog [getNumberString()=" + getNumberString() + ", getId()=" + getId() + ", getYear()="
-				+ getYear() + ", getNumber()=" + getNumber() + ", getDate()=" + getDate() + "]";
+		return "OutDocCatalog [getTotalInstrum()=" + getTotalInstrum() + ", getTotalAmount()=" + getTotalAmount()
+				+ ", getNumberString()=" + getNumberString() + ", getId()=" + getId() + ", getYear()=" + getYear()
+				+ ", getNumber()=" + getNumber() + ", getDate()=" + getDate() + ", toString()=" + super.toString()
+				+ "]";
 	}
+	
 	
 	
 
