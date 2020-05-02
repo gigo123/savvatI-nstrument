@@ -19,8 +19,8 @@ public class SqliteExDocCatalogDAO implements DocCatalogDAO {
 	private final static String SELECT_DATE_QUERY = "SELECT * FROM exdoccatalog WHERE date =?";
 	private final static String SELECT_NUBMER_QUERY = "SELECT * FROM exdoccatalog WHERE number = ? ";
 	private final static String SELECT_SNUBMER_QUERY = "SELECT * FROM exdoccatalog WHERE numberString = ?";
-	private final static String INSERT_QUERY = "INSERT INTO exdoccatalog(numberString, number,year, date)"
-			+ " VALUES(?,?,?,?)";
+	private final static String INSERT_QUERY = "INSERT INTO exdoccatalog(numberString, number,year, date,totalInst,totalAmount)"
+			+ " VALUES(?,?,?,?,?,?)";
 	private final static String SELECT_ALL = "SELECT * FROM exdoccatalog ";
 	
 	private final static String DELETE_QUERY = "DELETE FROM exdoccatalog WHERE id = ?";
@@ -59,6 +59,9 @@ public class SqliteExDocCatalogDAO implements DocCatalogDAO {
 				prepSt.setInt(3, exDoc.getYear());
 				Date exDate = java.sql.Date.valueOf(exDoc.getDate().toString());
 				prepSt.setDate(4, exDate);
+				prepSt.setInt(5, exDoc.getTotalInstrum());
+				prepSt.setFloat(6, exDoc.getTotalAmount());
+				
 				prepSt.execute();
 			} catch (SQLException e) {
 				sqlError = true;
@@ -194,6 +197,8 @@ public class SqliteExDocCatalogDAO implements DocCatalogDAO {
 						exDoc.setYear(rs.getInt("year"));
 						Date inDate = rs.getDate("date");
 						exDoc.setDate(inDate.toLocalDate());
+						exDoc.setTotalInstrum(rs.getInt("totalInst"));
+						exDoc.setTotalAmount(rs.getFloat("totalAmount"));
 						if (type == 1 || type == 3) {
 							break;
 						} else {
