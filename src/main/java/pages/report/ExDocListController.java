@@ -23,13 +23,15 @@ public class ExDocListController {
 
 	@SuppressWarnings("resource")
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView getexDocList() {
-	//	ModelAndView model = new ModelAndView("ExDocList");
+	public ModelAndView getexDocList() {	
+		ModelAndView model = new ModelAndView("ExDocList");
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		DocCatalogDAO 	docCatalogDAO = (DocCatalogDAO) context.getBean("ExDocCatalogDAO");
 	List<DocCatalog>  docList = docCatalogDAO.getAllDoc();
 	//docList.get(1).ge
-	ModelAndView model = new ModelAndView("ExDocList", "command", docList);
+
+	model.addObject("DocList", docList);
+	model.addObject("page", "exDocList");
 	return model;
 	//	model.addObject("page", "exdoclist");
 	}

@@ -8,56 +8,34 @@
 <div class="col-9">
 	список документов перемещения
 	<form:form action="./createExDoc" method="post"
-		modelAttribute="exDocWEBList">
+		modelAttribute="docList">
 		<form:errors path="*" cssClass="errorblock" element="div" />
 		<div class="row mb--20">
 			<div class="col-1">номер</div>
-			<div class="col-2">место видачи</div>
-			<div class="col-1">ячека видачи</div>
-			<div class="col-2">место приема</div>
-			<div class="col-1">ячейка приема</div>
-			<div class="col-2">инструмент</div>
-			<div class="col-2">количество</div>
-			<div class="col-1">удалить</div>
+			<div class="col-1">количетво стр</div>
+			<div class="col-1">общее кол </div>
+			<div class="col-1">дата</div>
 		</div>
 
-		<c:forEach items="${exDocWEBList.docList}" varStatus="i">
+		<c:forEach items="${docList}" varStatus="i">
 			<div class="row mb--20">
-				<div class="col-1">${i.index+1}</div>
+			
 				<div class="col-2">
-					<form:select path="docList[${i.index }].outLocation"
-						onchange="searchOutBoxNE(${i.index })">
-						<form:options items="${locationList}" />
-					</form:select>
+					<form:label path="docList[${i.index }].numberString">
+					</form:label>
 				</div>
 
 				<div class="col-1">
-					<form:select path="docList[${i.index }].outBox"
-						onchange="searchInstrum(${i.index })">
-					</form:select>
+					<form:label path="docList[${i.index }].totalInstrum;">
+					</form:label>
 				</div>
 				<div class="col-2">
-					<form:select path="docList[${i.index }].inLocation"
-						onchange="searchOutBox(${i.index })">
-						<form:options items="${locationList}" />
-					</form:select>
+						<form:label path="docList[${i.index }]. totalAmount;">
+					</form:label>
 				</div>
 				<div class="col-1">
-					<form:select path="docList[${i.index }].inBox">
-					</form:select>
-				</div>
-				<div class="col-2">
-					<form:select path="docList[${i.index }].instrument">
-						<form:options items="${instrumentMap}" />
-					</form:select>
-				</div>
-				<div class="col-2">
-					<form:input path="docList[${i.index }].amount"
-						id="amount-${i.index}" class="form__input" required="true" />
-				</div>
-				<div class="col-1">
-					<input type="button" value="remove"
-						onclick="removeRow(${i.index })">
+					<form:label path="docList[${i.index }].  date;">
+					</form:label>
 				</div>
 			</div>
 		</c:forEach>
