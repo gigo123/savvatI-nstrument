@@ -73,7 +73,7 @@ public class ControllersCheckWDoc {
 		errorText.append("</ul>");
 		String errString = errorText.toString();
 		if (errString.equals("<ul></ul>")) {
-			String error = writeExDocCatolog(docType);
+			String error = writeExDocCatolog(docType,docTempList.size(),calcTotalAmount(docTempList));
 			if (!error.equals("<li>ошыбка бази данних </li>")) {
 				long catalogId = 0;
 				if (docType == DocType.EXDOC) {
@@ -333,7 +333,7 @@ public class ControllersCheckWDoc {
 
 	}
 
-	public static String writeExDocCatolog(DocType docType) {
+	public static String writeExDocCatolog(DocType docType,int tInstr,float tAmount) {
 		StringBuilder errorText = new StringBuilder("");
 		LocalDate date = LocalDate.now();
 		int year = date.getYear();
@@ -350,7 +350,8 @@ public class ControllersCheckWDoc {
 			}
 			numberString = "" + year + "-" + lastNumber;
 			ExDocCatalog exCat = new ExDocCatalog(year, lastNumber, numberString, date);
-
+			exCat.setTotalInstrum(tInstr);
+			exCat.setTotalAmount(tAmount);
 			if (!exDocCatalogDAO.createExDocCatalog(exCat)) {
 				errorText.append("<li>ошыбка бази данних </li>");
 			}
@@ -368,7 +369,8 @@ public class ControllersCheckWDoc {
 			numberString = "" + year + "-" + lastNumber;
 
 			InDocCatalog inCat = new InDocCatalog(year, lastNumber, numberString, date);
-
+			inCat.setTotalInstrum(tInstr);
+			inCat.setTotalAmount(tAmount);
 			if (!inDocCatalogDAO.createExDocCatalog(inCat)) {
 				errorText.append("<li>ошыбка бази данних </li>");
 			}
@@ -385,9 +387,10 @@ public class ControllersCheckWDoc {
 			}
 			numberString = "" + year + "-" + lastNumber;
 
-			OutDocCatalog inCat = new OutDocCatalog(year, lastNumber, numberString, date);
-
-			if (!outDocCatalogDAO.createExDocCatalog(inCat)) {
+			OutDocCatalog outCat = new OutDocCatalog(year, lastNumber, numberString, date);
+			outCat.setTotalInstrum(tInstr);
+			outCat.setTotalAmount(tAmount);
+			if (!outDocCatalogDAO.createExDocCatalog(outCat)) {
 				errorText.append("<li>ошыбка бази данних </li>");
 			}
 		}
@@ -398,5 +401,13 @@ public class ControllersCheckWDoc {
 			return errString;
 		}
 
+	}
+	private static float calcTotalAmount  (List<ExDocTempStore> docTempList){
+		float tAmount=0;
+		for (ExDocTempStore exDocTempStore : docTempList) {
+			tAmount+=exDocTempStore.getDoc().getAmount();
+		}
+		return tAmount;
+		
 	}
 }
