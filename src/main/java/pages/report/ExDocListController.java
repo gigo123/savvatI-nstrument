@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import dao.DocCatalogDAO;
 import models.DocCatalog;
-import savvats.BoxListLocation;
+import savvats.DocListWeb;
 
 
 @Controller
@@ -24,13 +24,15 @@ public class ExDocListController {
 	@SuppressWarnings("resource")
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getexDocList() {	
-		ModelAndView model = new ModelAndView("ExDocList");
+		ModelAndView model = new ModelAndView("reports/ExDocList");
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		DocCatalogDAO 	docCatalogDAO = (DocCatalogDAO) context.getBean("ExDocCatalogDAO");
 	List<DocCatalog>  docList = docCatalogDAO.getAllDoc();
+	DocListWeb docListw= new DocListWeb(docList);
+	System.out.println(docList);
 	//docList.get(1).ge
 
-	model.addObject("DocList", docList);
+	model.addObject("docList", docListw);
 	model.addObject("page", "exDocList");
 	return model;
 	//	model.addObject("page", "exdoclist");
