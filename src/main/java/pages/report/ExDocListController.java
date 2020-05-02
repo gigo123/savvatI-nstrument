@@ -1,5 +1,7 @@
-package pages;
+package pages.report;
 
+
+import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import dao.DocCatalogDAO;
+import models.DocCatalog;
+import savvats.BoxListLocation;
 
 
 @Controller
@@ -20,12 +24,14 @@ public class ExDocListController {
 	@SuppressWarnings("resource")
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getexDocList() {
-		ModelAndView model = new ModelAndView("ExDocList");
+	//	ModelAndView model = new ModelAndView("ExDocList");
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		DocCatalogDAO 	docCatalogDAO = (DocCatalogDAO) context.getBean("ExDocCatalogDAO");
-	//	docCatalogDAO.get
+	List<DocCatalog>  docList = docCatalogDAO.getAllDoc();
+	//docList.get(1).ge
+	ModelAndView model = new ModelAndView("ExDocList", "command", docList);
+	return model;
 	//	model.addObject("page", "exdoclist");
-		return model;
 	}
 
 }
