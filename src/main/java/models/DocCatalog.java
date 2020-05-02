@@ -8,7 +8,21 @@ public class DocCatalog {
 	private int number;
 	private String numberString;
 	private LocalDate date;
+	private int totalInstrum;
+	private float totalAmount;
 	
+	public int getTotalInstrum() {
+		return totalInstrum;
+	}
+	public void setTotalInstrum(int totalInstrum) {
+		this.totalInstrum = totalInstrum;
+	}
+	public float getTotalAmount() {
+		return totalAmount;
+	}
+	public void setTotalAmount(float totalAmount) {
+		this.totalAmount = totalAmount;
+	}
 	public String getNumberString() {
 		return numberString;
 	}
