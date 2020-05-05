@@ -9,8 +9,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import dao.BoxDAO;
+import dao.LocationDAO;
 import dao.StorageDAO;
 import models.Box;
+import models.Location;
 import models.Storage;
 
 public class ReportsWorker {
@@ -42,6 +44,33 @@ public class ReportsWorker {
 		System.out.println(boxReport);
 		return boxReport;
 		
+		
+	}
+	
+	@SuppressWarnings("resource")
+	public static LocationReport getInstInLocation(long locationId) {
+		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
+		Location location = locDAO.getLocById(locationId);
+		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
+		LocationReport locReport = null;
+		if(location!=null) {
+			
+			float tAmount =0;
+		List<Box> boxList = boxDAO.getAllBoxByLocation(locationId);
+		List<BoxReport> boxReports = new ArrayList<BoxReport>();
+		BoxReport boxReport= null;
+		for (Box box : boxList) {
+			boxReport = getInstInBox(box.getId());
+			tAmount+=boxReport.getTotalAmount();
+			boxReports.add(boxReport);
+		}
+		
+		 locReport = new LocationReport(location.getName(), tAmount, boxReports);
+		 System.out.println(locReport);
+	
+		}
+		return null;
 		
 	}
 
