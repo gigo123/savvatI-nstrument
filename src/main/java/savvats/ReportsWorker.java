@@ -41,7 +41,6 @@ public class ReportsWorker {
 		 boxReport = new BoxReport(String.valueOf(box.getNumber())
 				, tAmount, reportItems);
 	}
-		System.out.println(boxReport);
 		return boxReport;
 		
 		
@@ -67,10 +66,25 @@ public class ReportsWorker {
 		}
 		
 		 locReport = new LocationReport(location.getName(), tAmount, boxReports);
-		 System.out.println(locReport);
-	
 		}
-		return null;
+		return locReport;
+		
+	}
+	@SuppressWarnings("resource")
+	public static AllReport AllReport() {
+		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
+		List<Location> locList = locDAO.getAllLocatin();
+		List<LocationReport> locReportList = new ArrayList<LocationReport>();
+		float tAmount=0;
+		LocationReport locReport = null;
+		for (Location location : locList) {
+			locReport =getInstInLocation(location.getId());
+			locReportList.add(locReport);
+			tAmount+=locReport.getTotalAmount();
+		}
+		AllReport report = new AllReport(locReportList, tAmount);
+		return report;
 		
 	}
 

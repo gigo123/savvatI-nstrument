@@ -7,8 +7,13 @@ public class ReportWorkerTest {
 	void getBox() {
 		ReportsWorker.getInstInBox(9);
 	}
+	
 	@Test
 	void getLocation() {
 		ReportsWorker.getInstInLocation(7);
+	}
+	@Test
+	void getALL() {
+		ReportsWorker.AllReport();
 	}
 }
