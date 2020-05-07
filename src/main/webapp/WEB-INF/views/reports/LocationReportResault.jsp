@@ -28,13 +28,24 @@
 	<form:form action="./locationReport" method="post"
 		modelAttribute="locReport">
 		<div class="row mb--20">
-			<div class="col-2">
-				<form:label path="locReport.name;">
+		<div class="col-4">
+		название
+		</div>
+		<div class="col-2">
+		количество
+		</div>
+		<div class="col-2">
+		ед измирения
+		</div>
+		</div>
+		<div class="row mb--20">
+			<div class="col-4">
+				<form:label path="name">
 					${locReport.name}
 					</form:label>
 			</div>
 			<div class="col-2">
-				<form:label path="locReport.totalAmount;">
+				<form:label path="totalAmount">
 					${locReport.totalAmount}
 					</form:label>
 			</div>
@@ -42,25 +53,41 @@
 			<c:forEach items="${locReport.reportBox}" varStatus="i">
 			<div class="row mb--20">
 			
-				<div class="col-2">
-					<form:label path="reportBox[${i.index }].name;">
+				<div class="col-4">
+					<form:label path="reportBox[${i.index }].name">
 					${locReport.reportBox[i.index].name}
 					</form:label>
 				</div>
 
 				<div class="col-2">
-					<form:label path="reportBox[${i.index }].amount;">
-					{locReport.reportBox[i.index].amount}
+					<form:label path="reportBox[${i.index }].totalAmount">
+					${locReport.reportBox[i.index].totalAmount}
 					</form:label>
 				</div>
+
+			</div>
+			<c:forEach items="${locReport.reportBox[i.index].reportItems}" varStatus="j">
+			<div class="row mb--20">
+			
+				<div class="col-4">
+					<form:label path="reportBox[${i.index}].reportItems[${j.index}].name">
+					${locReport.reportBox[i.index].reportItems[j.index].name}
+					</form:label>
+				</div>
+
 				<div class="col-2">
-					<form:label path="reportBox[${i.index }].measure;">
-					{locReport.reportBox[i.index].measure}
+					<form:label path="reportBox[${i.index}].reportItems[${j.index}].amount">
+					${locReport.reportBox[i.index].reportItems[j.index].amount}
+					</form:label>
+				</div>
+					<div class="col-2">
+					<form:label path="reportBox[${i.index}].reportItems[${j.index}].measure">
+					${locReport.reportBox[i.index].reportItems[j.index].measure}
 					</form:label>
 				</div>
 			</div>
+			</c:forEach>
 		</c:forEach>
-		-->
 
 	</form:form>
 	<div id="feedback"></div>
