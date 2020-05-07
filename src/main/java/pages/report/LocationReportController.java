@@ -18,6 +18,8 @@ import models.DocCatalog;
 import models.Location;
 import savvats.DocListWeb;
 import savvats.LocationReport;
+import savvats.ReportSettings;
+import savvats.utils.ControllerReportsWorker;
 
 @Controller
 @RequestMapping("/locationReport")
@@ -26,20 +28,19 @@ public class LocationReportController {
 
 		@RequestMapping(method = RequestMethod.GET)
 		public ModelAndView getLocReportForm() {	
-			ModelAndView model = new ModelAndView("reports/LocationReport");
+			ModelAndView model = new ModelAndView("reports/LocationReport", "command", new ReportSettings());
+			model.addObject("page", "box");
+
 		return model;
 		}
 		
 		@SuppressWarnings("resource")
 		@RequestMapping(method = RequestMethod.POST)
-		public ModelAndView generateReport() {	
+		public ModelAndView generateReport(@ModelAttribute("ReportSettings")  ReportSettings settings) {	
 			ModelAndView model = new ModelAndView("reports/LocationReport");
-			ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
-			DocCatalogDAO 	docCatalogDAO = (DocCatalogDAO) context.getBean("ExDocCatalogDAO");
-		List<DocCatalog>  docList = docCatalogDAO.getAllDoc();
-		DocListWeb docListw= new DocListWeb(docList);
-		System.out.println(docList);
-		model.addObject("docList", docListw);
+			//ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+		LocationReport locReport = ControllerReportsWorker.getInstInLocation(settings.getLocationId());
+		model.addObject("locReport",locReport);
 		model.addObject("page", "exDocList");
 		return model;
 		}
