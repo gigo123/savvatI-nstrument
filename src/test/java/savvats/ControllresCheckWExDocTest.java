@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 
 import models.ExDoc;
+import savvats.utils.ControllersCheckWDoc;
 
 
 public class ControllresCheckWExDocTest {

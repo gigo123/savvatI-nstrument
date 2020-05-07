@@ -1,4 +1,4 @@
-package savvats;
+package savvats.utils;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -9,6 +9,7 @@ import dao.LocationDAO;
 import models.Box;
 import models.Instrument;
 import models.Location;
+import savvats.BoxListLocation;
 
 public class ControllersCheckWrite {
 	static ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");

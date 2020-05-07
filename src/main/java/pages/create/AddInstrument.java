@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import models.Instrument;
-import savvats.ControllersCheckWrite;
+import savvats.utils.ControllersCheckWrite;
 
 @Controller
 @RequestMapping("/addinstrument")

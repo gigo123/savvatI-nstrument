@@ -15,6 +15,7 @@ import dao.LocationDAO;
 import dao.StorageDAO;
 import models.Instrument;
 import models.Location;
+import savvats.utils.ControllersCheckWrite;
 
 class ControlletsCheckWriteTest {
 

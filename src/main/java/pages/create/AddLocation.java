@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import models.Location;
-import savvats.ControllersCheckWrite;
+import savvats.utils.ControllersCheckWrite;
 
 @Controller
 @RequestMapping("/addlocation")

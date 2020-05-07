@@ -21,10 +21,10 @@ import dao.InstrumentDAO;
 import dao.LocationDAO;
 import models.Instrument;
 import models.Location;
-import savvats.ControllersCheckWDoc;
 import savvats.DocType;
 import savvats.ExDocWEB;
 import savvats.ExDocWEBList;
+import savvats.utils.ControllersCheckWDoc;
 
 
 @Controller

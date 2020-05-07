@@ -1,4 +1,4 @@
-package savvats;
+package savvats.utils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,6 +25,10 @@ import models.Location;
 import models.OutDoc;
 import models.OutDocCatalog;
 import models.Storage;
+import savvats.DocType;
+import savvats.ExDocTempStore;
+import savvats.ExDocWEB;
+import savvats.ExDocWEBList;
 
 public class ControllersCheckWDoc {
 	static ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");

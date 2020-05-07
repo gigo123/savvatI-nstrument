@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import dao.LocationDAO;
 import models.Location;
 import savvats.BoxListLocation;
-import savvats.ControllersCheckWrite;
+import savvats.utils.ControllersCheckWrite;
 
 @Controller
 @RequestMapping("/addbox")
