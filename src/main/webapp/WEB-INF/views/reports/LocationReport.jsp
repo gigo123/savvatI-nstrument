@@ -7,7 +7,7 @@
 <%@ include file="/WEB-INF/include/SideMenuDocView.jsp"%>
 <div class="col-9">
 	отчет об месте хранения
-	<form:form action="./locationReport" method="post">
+	<form:form action="./locationReport" method="post" modelAttribute="reportSettings">
 		<form:errors path="*" cssClass="errorblock" element="div" />
 		<div class="row mb--20">
 			<div class="col-1">

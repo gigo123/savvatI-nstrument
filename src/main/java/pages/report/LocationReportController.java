@@ -26,7 +26,8 @@ public class LocationReportController {
 
 		@RequestMapping(method = RequestMethod.GET)
 		public ModelAndView getLocReportForm() {	
-			ModelAndView model = new ModelAndView("reports/LocationReport", "command", new ReportSettings());
+			ModelAndView model = new ModelAndView("reports/LocationReport");
+			model.addObject("reportSettings", new ReportSettings());
 			model.addObject("page", "box");
 
 		return model;
@@ -35,11 +36,12 @@ public class LocationReportController {
 		@SuppressWarnings("resource")
 		@RequestMapping(method = RequestMethod.POST)
 		public ModelAndView generateReport(@ModelAttribute("ReportSettings")  ReportSettings settings) {	
-			ModelAndView model = new ModelAndView("reports/LocationReport");
+			ModelAndView model = new ModelAndView("reports/LocationReportResault");
 			//ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		LocationReport locReport = ControllerReportsWorker.getInstInLocation(settings.getLocationId());
 		System.out.println(locReport);
-		model.addObject("locReport",locReport);
+		model.addObject("reportSettings", new ReportSettings());
+		model.addObject("locReport", locReport);
 		model.addObject("page", "exDocList");
 		return model;
 		}
