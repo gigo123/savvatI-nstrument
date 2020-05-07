@@ -6,38 +6,40 @@
 <%@ include file="/WEB-INF/include/HeaderView.jsp"%>
 <%@ include file="/WEB-INF/include/SideMenuDocView.jsp"%>
 <div class="col-9">
-	список документов поступления
-	<form:form action="./createExDoc" method="post"
-		modelAttribute="docList">
+	отчет об месте хранения
+	<form:form action="./locationReport" method="post">
 		<form:errors path="*" cssClass="errorblock" element="div" />
 		<div class="row mb--20">
-			<div class="col-2">номер</div>
-			<div class="col-2">количетво стр</div>
-			<div class="col-2">общее кол </div>
-			<div class="col-2">дата</div>
+			<div class="col-1">
+			виберете место хранения
+			</div>
+			<div class="col-2">
+					<form:select path="locationId"
+						onchange="searchOutBoxNE(${i.index })">
+						<form:options items="${locationList}" />
+					</form:select>
+				</div>
+				<div class="col-2">
+				<div class="form__group">
+					<input type="submit" value="создать отчет" class="btn btn-size-md" />
+				</div>
+			</div>
 		</div>
-		<c:forEach items="${docList.docList}" varStatus="i">
+		</form:form>
+		<form:form action="./locationReport" method="post"
+		modelAttribute="locReport">
+		<c:forEach items="${locReport}" varStatus="i">
 			<div class="row mb--20">
 			
 				<div class="col-2">
-					<form:label path="docList[${i.index }].numberString">
-					${docList.docList[i.index].numberString}
+					<form:label path="locReport[${i.index }].name;">
+					${locReport[i.index].name}
 					</form:label>
 				</div>
 
 				<div class="col-2">
-					<form:label path="docList[${i.index }].totalInstrum">
-					${docList.docList[i.index].totalInstrum}
-					</form:label>
-				</div>
-				<div class="col-2">
-						<form:label path="docList[${i.index }].totalAmount">
-						${docList.docList[i.index].totalAmount}
-					</form:label>
-				</div>
-				<div class="col-2">
-					<form:label path="docList[${i.index }].date">
-					${docList.docList[i.index].date}
+					<form:label path="locReport[${i.index }].totalAmount;">
+					{locReport[i.index].totalAmount}
 					</form:label>
 				</div>
 			</div>
