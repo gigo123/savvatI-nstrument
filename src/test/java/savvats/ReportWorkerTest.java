@@ -2,18 +2,20 @@ package savvats;
 
 import org.junit.jupiter.api.Test;
 
+import savvats.utils.ControllerReportsWorker;
+
 public class ReportWorkerTest {
 	@Test
 	void getBox() {
-		ReportsWorker.getInstInBox(9);
+		ControllerReportsWorker.getInstInBox(9);
 	}
 	
 	@Test
 	void getLocation() {
-		ReportsWorker.getInstInLocation(7);
+		ControllerReportsWorker.getInstInLocation(7);
 	}
 	@Test
 	void getALL() {
-		ReportsWorker.AllReport();
+		ControllerReportsWorker.AllReport();
 	}
 }
