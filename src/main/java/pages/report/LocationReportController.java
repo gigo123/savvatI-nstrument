@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import dao.DocCatalogDAO;
 import dao.LocationDAO;
-import models.DocCatalog;
+
 import models.Location;
-import savvats.DocListWeb;
 import savvats.LocationReport;
 import savvats.ReportSettings;
 import savvats.utils.ControllerReportsWorker;
@@ -40,6 +38,7 @@ public class LocationReportController {
 			ModelAndView model = new ModelAndView("reports/LocationReport");
 			//ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		LocationReport locReport = ControllerReportsWorker.getInstInLocation(settings.getLocationId());
+		System.out.println(locReport);
 		model.addObject("locReport",locReport);
 		model.addObject("page", "exDocList");
 		return model;
