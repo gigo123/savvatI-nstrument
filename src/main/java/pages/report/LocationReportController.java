@@ -35,7 +35,7 @@ public class LocationReportController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView generateReport(@ModelAttribute("ReportSettings") ReportSettings settings) {
+	public ModelAndView generateReport(@ModelAttribute("ReportSettings") ReportSettings settings ) {
 		ModelAndView model = new ModelAndView("reports/LocationReportResault");
 		LocationReport locReport = null;
 		if (settings.isBox() == true) {
@@ -47,7 +47,7 @@ public class LocationReportController {
 		} else {
 			locReport = ControllerReportsWorker.getInstInLocation(settings.getLocationId());
 		}
-		model.addObject("reportSettings", new ReportSettings());
+		model.addObject("reportSettings", settings);
 		model.addObject("locReport", locReport);
 		model.addObject("page", "exDocList");
 		return model;
