@@ -7,28 +7,77 @@
 <%@ include file="/WEB-INF/include/SideMenuDocView.jsp"%>
 <div class="col-9">
 	отчет об месте хранения
-	<form:form action="./locationReport" method="post" modelAttribute="reportSettings">
+	<form:form action="./locationReport" method="post"
+		modelAttribute="reportSettings">
 		<form:errors path="*" cssClass="errorblock" element="div" />
 		<div class="row mb--20">
-			<div class="col-1">
-			виберете место хранения
-			</div>
-			<div class="col-2">
-					<form:select path="locationId"
-						onchange="searchOutBoxNE(${i.index })">
+			<div class="form__group">
+				<div class="col-1">виберете место хранения</div>
+				<div class="col-2">
+					<form:select path="locationId">
 						<form:options items="${locationList}" />
 					</form:select>
 				</div>
 				<div class="col-2">
-				<div class="form__group">
+					<form:label path="box" class="form__label checkbox-label" for="box">
+						<span>Есть ячейки</span>
+						<form:checkbox path="box" name="box" id="box"
+							onchange="searchBo()" />
+					</form:label>
+				</div>
+				<div class="col-2">
+					<form:select path="boxId">
+					</form:select>
+				</div>
+				<div>
 					<input type="submit" value="создать отчет" class="btn btn-size-md" />
 				</div>
 			</div>
 		</div>
-		</form:form>
-		
-	<div id="feedback"></div>
 </div>
+</form:form>
+
+<div id="feedback"></div>
+</div>
+
+<script>
+	function searchBox() {
+		var list= document.getElementById("locationId");	
+		
+		var boxId = list.options[list.selectedIndex].value;
+		$.ajax({
+			type : "POST",
+			contentType : "application/json",
+			url : "./report/getBoxFilter",
+			data : JSON.stringify(boxId),
+			dataType : 'json',
+			timeout : 100000,
+			success : function(data) {
+				console.log("SUCCESS: ", data);
+				//display(data);
+				var boxmap = new Map(Object.entries(data.boxListId))
+				var select  = document.getElementById("boxId");
+				select.options.length=0;
+				for (var [key, value] of boxmap) {
+					console.log(key + ' = ' + value);
+					var option = document.createElement("option");
+					option.value = key,
+					option.text =value;
+					select.add(option);	
+				}
+			},
+			error : function(e) {
+				console.log("ERROR: ", e);
+				display(e);
+			},
+			done : function(e) {
+				console.log("DONE");
+				enableSearchButton(true);
+			}
+		});
+
+	}
+	</script>
 <!--  close div of SideMenuView -->
 </div>
 </div>
