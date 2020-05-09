@@ -11,8 +11,7 @@
 		modelAttribute="reportSettings">
 		<form:errors path="*" cssClass="errorblock" element="div" />
 		<div class="row mb--20">
-			<div class="form__group">
-				<div class="col-1">виберете место хранения</div>
+				<div class="col-3">виберете место хранения</div>
 				<div class="col-2">
 					<form:select path="locationId">
 						<form:options items="${locationList}" />
@@ -20,9 +19,9 @@
 				</div>
 				<div class="col-2">
 					<form:label path="box" class="form__label checkbox-label" for="box">
-						<span>Есть ячейки</span>
+						<span>по ячейке</span>
 						<form:checkbox path="box" name="box" id="box"
-							onchange="searchBo()" />
+							onchange="searchBox()" />
 					</form:label>
 				</div>
 				<div class="col-2">
@@ -32,7 +31,6 @@
 				<div>
 					<input type="submit" value="создать отчет" class="btn btn-size-md" />
 				</div>
-			</div>
 		</div>
 </div>
 </form:form>
@@ -43,13 +41,13 @@
 <script>
 	function searchBox() {
 		var list= document.getElementById("locationId");	
-		
-		var boxId = list.options[list.selectedIndex].value;
+			var search = {};
+		search["boxId"] = list.options[list.selectedIndex].value;
 		$.ajax({
 			type : "POST",
 			contentType : "application/json",
 			url : "./report/getBoxFilter",
-			data : JSON.stringify(boxId),
+			data : JSON.stringify(search),
 			dataType : 'json',
 			timeout : 100000,
 			success : function(data) {
@@ -68,7 +66,7 @@
 			},
 			error : function(e) {
 				console.log("ERROR: ", e);
-				display(e);
+				//display(e);
 			},
 			done : function(e) {
 				console.log("DONE");

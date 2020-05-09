@@ -1,5 +1,6 @@
 package pages.report;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import dao.LocationDAO;
 
 import models.Location;
+import savvats.BoxReport;
 import savvats.LocationReport;
 import savvats.ReportSettings;
 import savvats.utils.ControllerReportsWorker;
@@ -22,43 +24,46 @@ import savvats.utils.ControllerReportsWorker;
 @Controller
 @RequestMapping("/locationReport")
 public class LocationReportController {
-	private LocationReport locReport;
 
-		@RequestMapping(method = RequestMethod.GET)
-		public ModelAndView getLocReportForm() {	
-			ModelAndView model = new ModelAndView("reports/LocationReport");
-			model.addObject("reportSettings", new ReportSettings());
-			model.addObject("page", "box");
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView getLocReportForm() {
+		ModelAndView model = new ModelAndView("reports/LocationReport");
+		model.addObject("reportSettings", new ReportSettings());
+		model.addObject("page", "box");
 
 		return model;
+	}
+
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView generateReport(@ModelAttribute("ReportSettings") ReportSettings settings) {
+		ModelAndView model = new ModelAndView("reports/LocationReportResault");
+		LocationReport locReport = null;
+		if (settings.isBox() == true) {
+			locReport = new LocationReport();
+			BoxReport boxReport = ControllerReportsWorker.getInstInBox(settings.getBoxId());
+			List<BoxReport> boxList = new ArrayList<BoxReport>();
+			boxList.add(boxReport);
+			locReport.setReportBox(boxList);
+		} else {
+			locReport = ControllerReportsWorker.getInstInLocation(settings.getLocationId());
 		}
-		
-		@SuppressWarnings("resource")
-		@RequestMapping(method = RequestMethod.POST)
-		public ModelAndView generateReport(@ModelAttribute("ReportSettings")  ReportSettings settings) {	
-			ModelAndView model = new ModelAndView("reports/LocationReportResault");
-			//ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
-		LocationReport locReport = ControllerReportsWorker.getInstInLocation(settings.getLocationId());
-		System.out.println(locReport);
 		model.addObject("reportSettings", new ReportSettings());
 		model.addObject("locReport", locReport);
 		model.addObject("page", "exDocList");
 		return model;
-		}
-		
+	}
 
-		@SuppressWarnings("resource")
-		@ModelAttribute("locationList")
-		private Map<Long, String> getLocationList() {
-			Map<Long, String> lociationMap = new HashMap<Long, String>();
-			ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
-			LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
-			List<Location> locList = locDAO.getAllLocatin();
-			for (Location location : locList) {
-				lociationMap.put(location.getId(), location.getName());
-			}
-			return lociationMap;
+	@SuppressWarnings("resource")
+	@ModelAttribute("locationList")
+	private Map<Long, String> getLocationList() {
+		Map<Long, String> lociationMap = new HashMap<Long, String>();
+		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
+		List<Location> locList = locDAO.getAllLocatin();
+		for (Location location : locList) {
+			lociationMap.put(location.getId(), location.getName());
 		}
-
+		return lociationMap;
+	}
 
 }
