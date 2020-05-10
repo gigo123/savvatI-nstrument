@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import dao.LocationDAO;
-
 import models.Location;
 import savvats.BoxReport;
 import savvats.LocationReport;
@@ -34,12 +33,16 @@ public class LocationReportController {
 		return model;
 	}
 
+	@SuppressWarnings("resource")
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView generateReport(@ModelAttribute("ReportSettings") ReportSettings settings ) {
 		ModelAndView model = new ModelAndView("reports/LocationReportResault");
 		LocationReport locReport = null;
 		if (settings.isBox() == true) {
 			locReport = new LocationReport();
+			ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+			LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
+			locReport.setName(locDAO.getLocById(settings.getLocationId()).getName());
 			BoxReport boxReport = ControllerReportsWorker.getInstInBox(settings.getBoxId());
 			List<BoxReport> boxList = new ArrayList<BoxReport>();
 			boxList.add(boxReport);
