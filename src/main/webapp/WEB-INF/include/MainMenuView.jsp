@@ -7,18 +7,18 @@
 		href="./" class="mainmenu__link"> <span class="mm-text">начальная страница</span>
 	</a></li>
 	<li class="mainmenu__item">
-		<a href="./product" class="mainmenu__link"> <span class="mm-text">операции</span>
+		<a href="./operation" class="mainmenu__link"> <span class="mm-text">операции</span>
 	</a></li>
 	<!--my menu  -->
 	
-			<li class="mainmenu__item"><a href="./logout"
+			<li class="mainmenu__item"><a href="./doc"
 				class="mainmenu__link"> <span class="mm-text">документы</span>
 			</a></li>
 
 			
 		
 
-	<li class="mainmenu__item"><a href="./cart"
+	<li class="mainmenu__item"><a href="./report"
 		class="mainmenu__link" >  <span class="mm-text">отчеты</span>
 	</a></li>
 	

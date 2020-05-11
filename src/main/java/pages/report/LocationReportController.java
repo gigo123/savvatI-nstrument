@@ -28,7 +28,7 @@ public class LocationReportController {
 	public ModelAndView getLocReportForm() {
 		ModelAndView model = new ModelAndView("reports/LocationReport");
 		model.addObject("reportSettings", new ReportSettings());
-		model.addObject("page", "box");
+		model.addObject("page", "locReport");
 
 		return model;
 	}

@@ -12,7 +12,7 @@ public class ReportPageController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView returnString(HttpSession session) {
 		ModelAndView model = new ModelAndView("ReportView");
-		model.addObject("page", "operation");
+		model.addObject("page", "report");
 		return model;
 	}
 }
