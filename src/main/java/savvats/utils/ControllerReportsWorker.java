@@ -1,9 +1,7 @@
 package savvats.utils;
 
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -25,71 +23,76 @@ public class ControllerReportsWorker {
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		StorageDAO storeDAO = (StorageDAO) context.getBean("StorageDAO");
 		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
-		Box box =boxDAO.getBoxByID(boxId);
-		BoxReport boxReport = null;
-		if(box!=null) {
-			
-		List<Storage> storeList = storeDAO.getStorageByBox(boxId);
+		Box box = boxDAO.getBoxByID(boxId);
+		float tAmount = 0;
 		List<ReportItem> reportItems = new ArrayList<ReportItem>();
-		ReportItem reportItem = null;
-		float tAmount =0;
-		for (Storage storage : storeList) {
-			 reportItem = new ReportItem();
-			 tAmount +=storage.getAmount();
-			 reportItem.setAmount(storage.getAmount());
-			 reportItem.setName(storage.getInstrument().getName());
-			 reportItem.setMeasure(storage.getInstrument().getMeasure());
-			 reportItems.add(reportItem);
-		} 
-	
-		 boxReport = new BoxReport(String.valueOf(box.getNumber())
-				, tAmount, reportItems);
+		if (box != null) {
+			List<Storage> storeList = storeDAO.getStorageByBox(boxId);
+			ReportItem reportItem = null;
+			for (Storage storage : storeList) {
+				reportItem = new ReportItem();
+				if (storage.getAmount() != 0) {
+					tAmount += storage.getAmount();
+					reportItem.setAmount(storage.getAmount());
+					reportItem.setName(storage.getInstrument().getName());
+					reportItem.setMeasure(storage.getInstrument().getMeasure());
+					reportItems.add(reportItem);
+				}
+			}
+		}
+		if (tAmount == 0) {
+			return null;
+		} else {
+			return new BoxReport(String.valueOf(box.getNumber()), tAmount, reportItems);
+		}
+
 	}
-		return boxReport;
-		
-		
-	}
-	
+
 	@SuppressWarnings("resource")
 	public static LocationReport getInstInLocation(long locationId) {
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
 		Location location = locDAO.getLocById(locationId);
 		BoxDAO boxDAO = (BoxDAO) context.getBean("BoxDAO");
-		LocationReport locReport = null;
-		if(location!=null) {
-			
-			float tAmount =0;
-		List<Box> boxList = boxDAO.getAllBoxByLocation(locationId);
+		float tAmount = 0;
 		List<BoxReport> boxReports = new ArrayList<BoxReport>();
-		BoxReport boxReport= null;
-		for (Box box : boxList) {
-			boxReport = getInstInBox(box.getId());
-			tAmount+=boxReport.getTotalAmount();
-			boxReports.add(boxReport);
+		if (location != null) {
+			List<Box> boxList = boxDAO.getAllBoxByLocation(locationId);
+			BoxReport boxReport = null;
+			for (Box box : boxList) {
+				boxReport = getInstInBox(box.getId());
+				if (boxReport != null) {
+					tAmount += boxReport.getTotalAmount();
+					boxReports.add(boxReport);
+				}
+			}
 		}
-		
-		 locReport = new LocationReport(location.getName(), tAmount, boxReports);
+		if (tAmount == 0) {
+			return null;
+		} else {
+			return new LocationReport(location.getName(), tAmount, boxReports);
 		}
-		return locReport;
-		
+
 	}
+
 	@SuppressWarnings("resource")
 	public static AllReport AllReport() {
 		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
 		LocationDAO locDAO = (LocationDAO) context.getBean("LocationDAO");
 		List<Location> locList = locDAO.getAllLocatin();
 		List<LocationReport> locReportList = new ArrayList<LocationReport>();
-		float tAmount=0;
+		float tAmount = 0;
 		LocationReport locReport = null;
 		for (Location location : locList) {
-			locReport =getInstInLocation(location.getId());
-			locReportList.add(locReport);
-			tAmount+=locReport.getTotalAmount();
+			locReport = getInstInLocation(location.getId());
+			if (locReport.getTotalAmount() != 0) {
+				locReportList.add(locReport);
+				tAmount += locReport.getTotalAmount();
+			}
 		}
 		AllReport report = new AllReport(locReportList, tAmount);
 		return report;
-		
+
 	}
 
 }
