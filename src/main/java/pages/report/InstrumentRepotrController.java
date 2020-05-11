@@ -1,7 +1,9 @@
 package pages.report;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -10,8 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import dao.InstrumentDAO;
 import dao.LocationDAO;
+import models.Instrument;
+import savvats.AllReport;
 import savvats.BoxReport;
+import savvats.InstrumentReport;
 import savvats.LocationReport;
 import savvats.ReportSettings;
 import savvats.utils.ControllerReportsWorker;
@@ -22,18 +28,32 @@ public class InstrumentRepotrController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getInstReportForm() {
 		ModelAndView model = new ModelAndView("reports/InstrumentReport");
-		model.addObject("reportSettings", new ReportSettings());
-		model.addObject("page", "locReport");
+		model.addObject("report", new InstrumentReport());
+		model.addObject("page", "instReport");
 
 		return model;
 	}
 
-	@SuppressWarnings("resource")
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView generateInstReport(@ModelAttribute("ReportSettings") ReportSettings settings ) {
+	public ModelAndView generateInstReport(@ModelAttribute("report") InstrumentReport instrumentReport ) {
 		ModelAndView model = new ModelAndView("reports/InstrumentReport");
-		
-		model.addObject("page", "exDocList");
+		long instId = instrumentReport.getId();
+		instrumentReport.setLocReport( ControllerReportsWorker.getBoxInstrum(instId));
+		model.addObject("report", instrumentReport);
+		model.addObject("page", "instReport");
 		return model;
+	}
+	
+	@SuppressWarnings("resource")
+	@ModelAttribute("instrumentMap")
+	private Map<Long, String> getInstrumentMap() {
+		Map<Long, String> instrumentMap = new HashMap<Long, String>();
+		ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+		InstrumentDAO instDAO = (InstrumentDAO) context.getBean("InstrumentDAO");
+		List<Instrument> instList = instDAO.getAllInstrument();
+		for (Instrument instrument : instList) {
+			instrumentMap.put(instrument.getId(), instrument.getName());
+		}
+		return instrumentMap;
 	}
 }
