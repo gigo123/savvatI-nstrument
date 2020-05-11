@@ -18,7 +18,8 @@ public class ReportItemWLoc  extends ReportItem{
 
 	@Override
 	public String toString() {
-		return "ReportItemWLoc [locationName=" + locationName + "]";
+		return "ReportItemWLoc [locationName=" + locationName + ", getName()=" + getName() + ", getAmount()="
+				+ getAmount() + ", getMeasure()=" + getMeasure() + "]";
 	}
 	
 

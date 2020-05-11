@@ -21,5 +21,10 @@ public class InstrumentReport {
 	public InstrumentReport() {
 		
 	}
+	@Override
+	public String toString() {
+		return "InstrumentReport [id=" + id + ", locReport=" + locReport + "]";
+	}
+	
 
 }
