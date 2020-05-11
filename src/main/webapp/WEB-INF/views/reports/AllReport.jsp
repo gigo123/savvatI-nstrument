@@ -4,7 +4,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ page isELIgnored="false"%>
 <%@ include file="/WEB-INF/include/HeaderView.jsp"%>
-<%@ include file="/WEB-INF/include/SideMenuDocView.jsp"%>
+<%@ include file="/WEB-INF/include/SideMenuReportView.jsp"%>
 <div class="col-9">
 	общий отчет об хранении
 	
