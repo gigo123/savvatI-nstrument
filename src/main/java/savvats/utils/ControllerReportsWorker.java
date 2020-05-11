@@ -34,7 +34,7 @@ public class ControllerReportsWorker {
 				if (storage.getAmount() != 0) {
 					tAmount += storage.getAmount();
 					reportItem.setAmount(storage.getAmount());
-					reportItem.setName(storage.getInstrument().getName());
+					reportItem.setName("Ячейка " + storage.getInstrument().getName());
 					reportItem.setMeasure(storage.getInstrument().getMeasure());
 					reportItems.add(reportItem);
 				}
@@ -70,7 +70,7 @@ public class ControllerReportsWorker {
 		if (tAmount == 0) {
 			return null;
 		} else {
-			return new LocationReport(location.getName(), tAmount, boxReports);
+			return new LocationReport("место хран "+location.getName(), tAmount, boxReports);
 		}
 
 	}
