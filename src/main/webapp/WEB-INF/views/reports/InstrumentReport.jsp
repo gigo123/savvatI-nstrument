@@ -6,19 +6,19 @@
 <%@ include file="/WEB-INF/include/HeaderView.jsp"%>
 <%@ include file="/WEB-INF/include/SideMenuReportView.jsp"%>
 <div class="col-9">
-	создание нового документа премещения
+	отчет по наличию инструмента
 	<form:form action="./instrumentReport" method="post"
 		modelAttribute="report">
 		<form:errors path="*" cssClass="errorblock" element="div" />
 		<div class="row mb--20">
-			<div class="col-1">виберете инструмент</div>
+			<div class="col-3">виберете инструмент</div>
 			<form:select path="id">
 						<form:options items="${instrumentMap}" />
 					</form:select>
 		</div>
 
 		<div class="row mb--20">
-		<div class="col-2">
+		<div class="col-3">
 		место хран
 		</div>
 		<div class="col-2">
@@ -33,14 +33,14 @@
 		</div>
 		<c:forEach items="${report.locReport}" varStatus="k">
 		<div class="row mb--20">
-		<div class="col-3">
+		<div class="col-3ф">
 					<form:label path="locReport[${k.index}].locationName">
 					${report.locReport[k.index].locationName}
 					</form:label>
 				</div>
-				<div class="col-4">
+				<div class="col-2">
 					<form:label path="locReport[${k.index}].name">
-					${report.locReport[k.index].locationName}
+					${report.locReport[k.index].name}
 					</form:label>
 				</div>
 
@@ -58,9 +58,8 @@
 </c:forEach>
 
 
-		<input type="submit" value="создать документ" class="btn btn-size-md" />
-		<input class="btn btn-size-md" id="searchInstrument" value="add row"
-			onclick="addRow()" />
+		<input type="submit" value="создать отчет" class="btn btn-size-md" />
+		
 	</form:form>
 
 	
